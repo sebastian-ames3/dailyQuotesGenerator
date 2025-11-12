@@ -19,17 +19,11 @@ async function findHTMLFiles() {
     return stdout
       .trim()
       .split('\n')
-      .filter((file) => file);
+      .filter((file) => file && !file.includes('design-preview'));
   } catch (error) {
     // Fallback for Windows or if find command fails
-    return ['design-preview.html'].filter(async (file) => {
-      try {
-        await fs.access(file);
-        return true;
-      } catch {
-        return false;
-      }
-    });
+    // Return empty array since we're skipping preview files
+    return [];
   }
 }
 
