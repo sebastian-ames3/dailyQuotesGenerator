@@ -20,6 +20,7 @@ Five specialized AI sub-agents completed comprehensive research across all criti
 **Endpoint:** `https://dummyjson.com/quotes/random`
 
 **Why DummyJSON:**
+
 - ✅ TRUE FREE ACCESS - No authentication or API keys required
 - ✅ FULL CORS SUPPORT - Works perfectly in browser JavaScript
 - ✅ NO RATE LIMITS - Unlimited reasonable use
@@ -45,31 +46,37 @@ Five specialized AI sub-agents completed comprehensive research across all criti
 ### Key Recommendations:
 
 #### Corner Placement: **Bottom-Right** ✓
+
 - Aligns with Windows user expectations (largest desktop OS)
 - Less intrusive than top corners
 - Peripheral placement = noticeable without blocking workflow
 
 #### Animation: **Slide + Fade**
+
 - Entrance: 400ms ease-out
 - Exit: 1800ms ease-in
 - Must respect `prefers-reduced-motion` for accessibility
 
 #### Timing: **15 Seconds Confirmed** ✓
+
 - Average reading speed: 200-238 words/minute
 - 15 seconds = 45-60 words (perfect for quotes)
 - **Critical:** Hover to pause timer
 
 #### Typography:
+
 - **Font:** Open Sans (body) + Inter (attribution)
 - **Size:** 18px quote text, 14px author
 - **Line height:** 1.6 for readability
 
 #### Color Schemes (3 Options):
+
 1. **Soft Dark** (#2C2C2E bg, white text) - Professional
 2. **Light Sage** (#F8F9F7 bg, dark text) - Calm, modern
 3. **Gradient Accent** - Eye-catching, contemporary
 
 #### Dimensions:
+
 - Width: 400px
 - Height: Auto (100-300px max)
 - Padding: 24px all sides
@@ -77,6 +84,7 @@ Five specialized AI sub-agents completed comprehensive research across all criti
 - Shadow: 0 4px 12px rgba(0,0,0,0.15)
 
 #### Accessibility (WCAG 2.1 AA Compliant):
+
 - ARIA live regions
 - Keyboard navigation (Tab, Escape, Enter)
 - Screen reader support
@@ -97,12 +105,14 @@ Five specialized AI sub-agents completed comprehensive research across all criti
 **15 High-Quality Quotes** curated for offline fallback functionality.
 
 **Themes Covered:**
+
 - 33% Learning & Education
 - 33% Persistence & Resilience
 - 20% Action & Initiative
 - 14% Excellence & Growth
 
 **Featured Authors:**
+
 - Benjamin Franklin, Aristotle, Theodore Roosevelt (2)
 - Thomas Edison, Mahatma Gandhi, Robert Frost
 - Winston Churchill, Abigail Adams, Mortimer Adler
@@ -110,14 +120,16 @@ Five specialized AI sub-agents completed comprehensive research across all criti
 - Steve Jobs, Tony Robbins
 
 **Copyright Status:**
+
 - 10 quotes from public domain authors (died pre-1955)
 - 5 quotes from modern authors (widely quoted, fair use)
 - All verified as safe for personal, non-commercial use
 
 **Ready-to-Use Format:** JavaScript array provided:
+
 ```javascript
 const fallbackQuotes = [
-  { text: "Quote text", author: "Author Name" },
+  { text: 'Quote text', author: 'Author Name' },
   // ... 14 more
 ];
 ```
@@ -132,6 +144,7 @@ const fallbackQuotes = [
 
 **Agent:** A/B Design Agent
 **Reports:**
+
 - [DESIGN_AB_TEST.md](./DESIGN_AB_TEST.md) - Full documentation
 - [DESIGN_QUICK_REFERENCE.md](./DESIGN_QUICK_REFERENCE.md) - Quick guide
 - [design-preview.html](./design-preview.html) - **Interactive preview**
@@ -139,6 +152,7 @@ const fallbackQuotes = [
 ### Three Design Variations Created:
 
 #### Design A: Clean Minimalist
+
 - **Style:** Pure white card with subtle shadow
 - **Animation:** Fade-in with upward motion
 - **Best for:** Maximum simplicity, universal appeal
@@ -147,6 +161,7 @@ const fallbackQuotes = [
 - **Cons:** Less visually distinctive
 
 #### Design B: Modern Gradient ⭐ (RECOMMENDED)
+
 - **Style:** Gradient border with accent line
 - **Animation:** Smooth slide-in from right
 - **Best for:** Balance of modern aesthetics + professional look
@@ -156,6 +171,7 @@ const fallbackQuotes = [
 - **Why recommended:** Best balance across all factors
 
 #### Design C: Glassmorphism
+
 - **Style:** Frosted glass with backdrop blur
 - **Animation:** Scale-in with bounce
 - **Best for:** Cutting-edge aesthetic
@@ -164,6 +180,7 @@ const fallbackQuotes = [
 - **Cons:** Requires modern browser (backdrop-filter support)
 
 ### How to Test:
+
 Open `design-preview.html` in browser to see all three designs side-by-side with live interactions.
 
 **Implementation:** Complete CSS code provided for each design (copy-paste ready).
@@ -178,6 +195,7 @@ Open `design-preview.html` in browser to see all three designs side-by-side with
 ### Recommendation: Startup Folder + Batch File ⭐
 
 **Why This Method:**
+
 - ✅ Easiest setup (2 minutes)
 - ✅ No admin rights needed
 - ✅ Most reliable across Windows updates
@@ -185,6 +203,7 @@ Open `design-preview.html` in browser to see all three designs side-by-side with
 - ✅ Works with any default browser
 
 ### Implementation:
+
 1. Create batch file: `start-quote.bat`
    ```batch
    @echo off
@@ -201,10 +220,12 @@ Open `design-preview.html` in browser to see all three designs side-by-side with
 3. **PowerShell Script** - Most powerful, conditional logic (weekday-only, etc.)
 
 ### Cross-Platform Bonus:
+
 - **macOS:** LaunchAgents method documented
 - **Linux:** XDG autostart desktop entries documented
 
 ### Browser Compatibility:
+
 All methods work with Chrome, Edge, Firefox, and any default browser using the `start` command.
 
 **Complete Instructions:** Step-by-step guide with troubleshooting for non-technical users provided.
@@ -216,11 +237,13 @@ All methods work with Chrome, Edge, Firefox, and any default browser using the `
 Based on research findings, here's the recommended development sequence:
 
 ### Phase 1: Core HTML Structure
+
 - [ ] Create `index.html` skeleton
 - [ ] Implement **Design B: Modern Gradient** (from DESIGN_AB_TEST.md)
 - [ ] Add basic HTML structure for quote display
 
 ### Phase 2: Quote Fetching & Display
+
 - [ ] Implement DummyJSON API integration (from API_RESEARCH_REPORT.md)
 - [ ] Add 15 fallback quotes array (from CURATED_QUOTES.md)
 - [ ] Implement fetch → fallback logic
@@ -228,6 +251,7 @@ Based on research findings, here's the recommended development sequence:
 - [ ] Test online/offline scenarios
 
 ### Phase 3: Interactions & Animations
+
 - [ ] Implement 15-second auto-close timer
 - [ ] Add hover-to-pause functionality
 - [ ] Add click-to-search (Google search integration)
@@ -235,6 +259,7 @@ Based on research findings, here's the recommended development sequence:
 - [ ] Add entrance/exit animations (from UX_RESEARCH_REPORT.md)
 
 ### Phase 4: Accessibility & Polish
+
 - [ ] Add ARIA labels and roles
 - [ ] Implement keyboard navigation (Tab, Escape, Enter)
 - [ ] Add `prefers-reduced-motion` support
@@ -242,17 +267,20 @@ Based on research findings, here's the recommended development sequence:
 - [ ] Verify WCAG 2.1 AA compliance
 
 ### Phase 5: Configuration
+
 - [ ] Add localStorage for timer duration preference
 - [ ] Implement settings UI (optional)
 - [ ] Add last-shown-quote tracking (prevent immediate repeats)
 
 ### Phase 6: Auto-Launch Setup
+
 - [ ] Create `start-quote.bat` batch file
 - [ ] Write user instructions for Startup folder method
 - [ ] Document alternative methods (Task Scheduler, etc.)
 - [ ] Test on clean Windows installation
 
 ### Phase 7: Testing & Documentation
+
 - [ ] Cross-browser testing (Chrome, Edge, Firefox)
 - [ ] Test all error scenarios
 - [ ] Update README.md with usage instructions
@@ -263,16 +291,16 @@ Based on research findings, here's the recommended development sequence:
 
 ## Key Technical Decisions Made
 
-| Decision Area | Choice | Rationale |
-|---------------|--------|-----------|
-| **API** | DummyJSON | Free, CORS-enabled, reliable, no auth |
-| **Corner** | Bottom-right | Windows convention, least intrusive |
-| **Timer** | 15 seconds | Optimal reading time for 45-60 words |
-| **Design** | Modern Gradient (B) | Balance of aesthetics + professionalism |
-| **Font** | Open Sans + Inter | Readable, professional, widely available |
-| **Animation** | Slide + Fade | 400ms in, 1800ms out, smooth |
-| **Auto-launch** | Startup Folder | Easiest, most reliable, user-friendly |
-| **Fallback Quotes** | 15 quotes | 2-3 weeks variety, copyright-safe |
+| Decision Area       | Choice              | Rationale                                |
+| ------------------- | ------------------- | ---------------------------------------- |
+| **API**             | DummyJSON           | Free, CORS-enabled, reliable, no auth    |
+| **Corner**          | Bottom-right        | Windows convention, least intrusive      |
+| **Timer**           | 15 seconds          | Optimal reading time for 45-60 words     |
+| **Design**          | Modern Gradient (B) | Balance of aesthetics + professionalism  |
+| **Font**            | Open Sans + Inter   | Readable, professional, widely available |
+| **Animation**       | Slide + Fade        | 400ms in, 1800ms out, smooth             |
+| **Auto-launch**     | Startup Folder      | Easiest, most reliable, user-friendly    |
+| **Fallback Quotes** | 15 quotes           | 2-3 weeks variety, copyright-safe        |
 
 ---
 

@@ -7,6 +7,7 @@
 ## Visual Preview Descriptions
 
 ### Design A: Clean Minimalist
+
 ```
 ┌─────────────────────────────────────┐
 │                                  ✕  │
@@ -22,6 +23,7 @@ White card, subtle shadow, fade-in animation
 ```
 
 **Choose this if:**
+
 - You want maximum simplicity
 - You need best performance
 - You want it to work everywhere
@@ -30,6 +32,7 @@ White card, subtle shadow, fade-in animation
 ---
 
 ### Design B: Modern Gradient ⭐ RECOMMENDED
+
 ```
 ┌─────────────────────────────────────┐
 │                               (✕)   │
@@ -45,6 +48,7 @@ Gradient border, accent line, slide-in animation
 ```
 
 **Choose this if:**
+
 - You want modern + professional
 - You value visual appeal
 - You want smooth animations
@@ -53,6 +57,7 @@ Gradient border, accent line, slide-in animation
 ---
 
 ### Design C: Glassmorphism
+
 ```
 ┌ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┐
 │                               (✕)   │
@@ -69,6 +74,7 @@ Frosted glass, semi-transparent, scale-in animation
 ```
 
 **Choose this if:**
+
 - You want cutting-edge aesthetics
 - You use modern OS (Windows 11, macOS)
 - You prioritize style over compatibility
@@ -78,16 +84,16 @@ Frosted glass, semi-transparent, scale-in animation
 
 ## Decision Matrix
 
-| Priority | Recommended Design |
-|----------|-------------------|
-| **Performance** → | Clean Minimalist |
-| **Visual Appeal** → | Modern Gradient |
-| **Modern Aesthetic** → | Glassmorphism |
-| **Universal Compatibility** → | Clean Minimalist |
+| Priority                            | Recommended Design |
+| ----------------------------------- | ------------------ |
+| **Performance** →                   | Clean Minimalist   |
+| **Visual Appeal** →                 | Modern Gradient    |
+| **Modern Aesthetic** →              | Glassmorphism      |
+| **Universal Compatibility** →       | Clean Minimalist   |
 | **Professional + Modern Balance** → | Modern Gradient ⭐ |
-| **Conservative/Safe Choice** → | Clean Minimalist |
-| **Wow Factor** → | Glassmorphism |
-| **Easy Maintenance** → | Clean Minimalist |
+| **Conservative/Safe Choice** →      | Clean Minimalist   |
+| **Wow Factor** →                    | Glassmorphism      |
+| **Easy Maintenance** →              | Clean Minimalist   |
 
 ---
 
@@ -125,27 +131,30 @@ Then include ALL three CSS blocks in your `<style>` tag.
 
 ## Animation Cheat Sheet
 
-| Design | Enter Animation | Exit Animation | Duration |
-|--------|----------------|----------------|----------|
-| Clean Minimalist | Fade + Up | Fade Out | 0.4s / 0.3s |
-| Modern Gradient | Slide Right | Slide Right | 0.5s / 0.4s |
-| Glassmorphism | Scale In | Scale Out | 0.5s / 0.3s |
+| Design           | Enter Animation | Exit Animation | Duration    |
+| ---------------- | --------------- | -------------- | ----------- |
+| Clean Minimalist | Fade + Up       | Fade Out       | 0.4s / 0.3s |
+| Modern Gradient  | Slide Right     | Slide Right    | 0.5s / 0.4s |
+| Glassmorphism    | Scale In        | Scale Out      | 0.5s / 0.3s |
 
 ---
 
 ## Color Palettes at a Glance
 
 **Clean Minimalist:**
+
 - `#FFFFFF` white background
 - `#1A1A1A` text
 - `#6B6B6B` author
 
 **Modern Gradient:**
+
 - `#667eea` → `#764ba2` gradient
 - `#2D3748` text
 - `#4A5568` author
 
 **Glassmorphism:**
+
 - `rgba(255, 255, 255, 0.15)` glass background
 - `#1F2937` text
 - `#374151` author
@@ -154,11 +163,11 @@ Then include ALL three CSS blocks in your `<style>` tag.
 
 ## Browser Compatibility
 
-| Design | Chrome | Firefox | Edge | Safari | IE11 |
-|--------|--------|---------|------|--------|------|
-| Clean Minimalist | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Modern Gradient | ✅ | ✅ | ✅ | ✅ | ⚠️ |
-| Glassmorphism | ✅ | ✅ | ✅ | ✅ | ❌ |
+| Design           | Chrome | Firefox | Edge | Safari | IE11 |
+| ---------------- | ------ | ------- | ---- | ------ | ---- |
+| Clean Minimalist | ✅     | ✅      | ✅   | ✅     | ✅   |
+| Modern Gradient  | ✅     | ✅      | ✅   | ✅     | ⚠️   |
+| Glassmorphism    | ✅     | ✅      | ✅   | ✅     | ❌   |
 
 ✅ Full support | ⚠️ Partial support | ❌ No support
 
@@ -169,6 +178,7 @@ Then include ALL three CSS blocks in your `<style>` tag.
 **Start with: Design B - Modern Gradient**
 
 Why?
+
 - Best balance of aesthetics + performance
 - Works on all modern browsers
 - Professional yet contemporary

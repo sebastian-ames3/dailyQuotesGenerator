@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
 - Initial project setup with documentation structure
 - PRD.md - Product Requirements Document
 - CLAUDE.md - Development guide with sub-agent strategy

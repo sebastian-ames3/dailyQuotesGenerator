@@ -1,4 +1,5 @@
 # Curated Motivational Quotes Report
+
 ## Morning Motivation Quote Generator - Offline Fallback Collection
 
 **Date:** November 12, 2025
@@ -26,6 +27,7 @@ This collection focuses on **timeless wisdom from historical figures** whose wor
 ## Curated Quote Collection (15 Primary Quotes)
 
 ### Quote 1
+
 **Quote:** "Live as if you were to die tomorrow. Learn as if you were to live forever."
 **Author:** Mahatma Gandhi
 **Theme:** Learning / Growth
@@ -35,6 +37,7 @@ This collection focuses on **timeless wisdom from historical figures** whose wor
 ---
 
 ### Quote 2
+
 **Quote:** "Without continual growth and progress, such words as improvement, achievement, and success have no meaning."
 **Author:** Benjamin Franklin
 **Theme:** Continuous Improvement / Growth
@@ -44,6 +47,7 @@ This collection focuses on **timeless wisdom from historical figures** whose wor
 ---
 
 ### Quote 3
+
 **Quote:** "We are what we repeatedly do. Excellence, then, is not an act, but a habit."
 **Author:** Aristotle
 **Theme:** Persistence / Excellence / Action
@@ -53,6 +57,7 @@ This collection focuses on **timeless wisdom from historical figures** whose wor
 ---
 
 ### Quote 4
+
 **Quote:** "The only way to do great work is to love what you do."
 **Author:** Steve Jobs
 **Theme:** Passion / Excellence
@@ -62,6 +67,7 @@ This collection focuses on **timeless wisdom from historical figures** whose wor
 ---
 
 ### Quote 5
+
 **Quote:** "Do what you can, with what you have, where you are."
 **Author:** Theodore Roosevelt
 **Theme:** Action / Resourcefulness
@@ -71,6 +77,7 @@ This collection focuses on **timeless wisdom from historical figures** whose wor
 ---
 
 ### Quote 6
+
 **Quote:** "It is hard to fail, but it is worse never to have tried to succeed."
 **Author:** Theodore Roosevelt
 **Theme:** Courage / Action / Learning from Failure
@@ -80,6 +87,7 @@ This collection focuses on **timeless wisdom from historical figures** whose wor
 ---
 
 ### Quote 7
+
 **Quote:** "The best way out is always through."
 **Author:** Robert Frost
 **Theme:** Persistence / Resilience
@@ -89,6 +97,7 @@ This collection focuses on **timeless wisdom from historical figures** whose wor
 ---
 
 ### Quote 8
+
 **Quote:** "Success is not final, failure is not fatal: It is the courage to continue that counts."
 **Author:** Winston Churchill
 **Theme:** Persistence / Resilience / Courage
@@ -98,6 +107,7 @@ This collection focuses on **timeless wisdom from historical figures** whose wor
 ---
 
 ### Quote 9
+
 **Quote:** "The only impossible journey is the one you never begin."
 **Author:** Tony Robbins
 **Theme:** Action / Courage / Starting
@@ -107,6 +117,7 @@ This collection focuses on **timeless wisdom from historical figures** whose wor
 ---
 
 ### Quote 10
+
 **Quote:** "Learning is not attained by chance, it must be sought for with ardor and diligence."
 **Author:** Abigail Adams
 **Theme:** Learning / Dedication
@@ -116,6 +127,7 @@ This collection focuses on **timeless wisdom from historical figures** whose wor
 ---
 
 ### Quote 11
+
 **Quote:** "The purpose of learning is growth, and our minds, unlike our bodies, can continue growing as we continue to live."
 **Author:** Mortimer Adler
 **Theme:** Learning / Growth / Lifelong Education
@@ -125,6 +137,7 @@ This collection focuses on **timeless wisdom from historical figures** whose wor
 ---
 
 ### Quote 12
+
 **Quote:** "Many of life's failures are people who did not realize how close they were to success when they gave up."
 **Author:** Thomas Edison
 **Theme:** Persistence / Not Giving Up
@@ -134,6 +147,7 @@ This collection focuses on **timeless wisdom from historical figures** whose wor
 ---
 
 ### Quote 13
+
 **Quote:** "The greatest glory in living lies not in never falling, but in rising every time we fall."
 **Author:** Nelson Mandela
 **Theme:** Resilience / Recovery / Growth
@@ -143,6 +157,7 @@ This collection focuses on **timeless wisdom from historical figures** whose wor
 ---
 
 ### Quote 14
+
 **Quote:** "Action is the foundational key to all success."
 **Author:** Pablo Picasso
 **Theme:** Action / Success
@@ -152,6 +167,7 @@ This collection focuses on **timeless wisdom from historical figures** whose wor
 ---
 
 ### Quote 15
+
 **Quote:** "A little more persistence, a little more effort, and what seemed hopeless failure may turn to glorious success."
 **Author:** Elbert Hubbard
 **Theme:** Persistence / Effort / Transformation
@@ -165,65 +181,65 @@ This collection focuses on **timeless wisdom from historical figures** whose wor
 ```javascript
 const fallbackQuotes = [
   {
-    text: "Live as if you were to die tomorrow. Learn as if you were to live forever.",
-    author: "Mahatma Gandhi"
+    text: 'Live as if you were to die tomorrow. Learn as if you were to live forever.',
+    author: 'Mahatma Gandhi',
   },
   {
-    text: "Without continual growth and progress, such words as improvement, achievement, and success have no meaning.",
-    author: "Benjamin Franklin"
+    text: 'Without continual growth and progress, such words as improvement, achievement, and success have no meaning.',
+    author: 'Benjamin Franklin',
   },
   {
-    text: "We are what we repeatedly do. Excellence, then, is not an act, but a habit.",
-    author: "Aristotle"
+    text: 'We are what we repeatedly do. Excellence, then, is not an act, but a habit.',
+    author: 'Aristotle',
   },
   {
-    text: "The only way to do great work is to love what you do.",
-    author: "Steve Jobs"
+    text: 'The only way to do great work is to love what you do.',
+    author: 'Steve Jobs',
   },
   {
-    text: "Do what you can, with what you have, where you are.",
-    author: "Theodore Roosevelt"
+    text: 'Do what you can, with what you have, where you are.',
+    author: 'Theodore Roosevelt',
   },
   {
-    text: "It is hard to fail, but it is worse never to have tried to succeed.",
-    author: "Theodore Roosevelt"
+    text: 'It is hard to fail, but it is worse never to have tried to succeed.',
+    author: 'Theodore Roosevelt',
   },
   {
-    text: "The best way out is always through.",
-    author: "Robert Frost"
+    text: 'The best way out is always through.',
+    author: 'Robert Frost',
   },
   {
-    text: "Success is not final, failure is not fatal: It is the courage to continue that counts.",
-    author: "Winston Churchill"
+    text: 'Success is not final, failure is not fatal: It is the courage to continue that counts.',
+    author: 'Winston Churchill',
   },
   {
-    text: "The only impossible journey is the one you never begin.",
-    author: "Tony Robbins"
+    text: 'The only impossible journey is the one you never begin.',
+    author: 'Tony Robbins',
   },
   {
-    text: "Learning is not attained by chance, it must be sought for with ardor and diligence.",
-    author: "Abigail Adams"
+    text: 'Learning is not attained by chance, it must be sought for with ardor and diligence.',
+    author: 'Abigail Adams',
   },
   {
-    text: "The purpose of learning is growth, and our minds, unlike our bodies, can continue growing as we continue to live.",
-    author: "Mortimer Adler"
+    text: 'The purpose of learning is growth, and our minds, unlike our bodies, can continue growing as we continue to live.',
+    author: 'Mortimer Adler',
   },
   {
     text: "Many of life's failures are people who did not realize how close they were to success when they gave up.",
-    author: "Thomas Edison"
+    author: 'Thomas Edison',
   },
   {
-    text: "The greatest glory in living lies not in never falling, but in rising every time we fall.",
-    author: "Nelson Mandela"
+    text: 'The greatest glory in living lies not in never falling, but in rising every time we fall.',
+    author: 'Nelson Mandela',
   },
   {
-    text: "Action is the foundational key to all success.",
-    author: "Pablo Picasso"
+    text: 'Action is the foundational key to all success.',
+    author: 'Pablo Picasso',
   },
   {
-    text: "A little more persistence, a little more effort, and what seemed hopeless failure may turn to glorious success.",
-    author: "Elbert Hubbard"
-  }
+    text: 'A little more persistence, a little more effort, and what seemed hopeless failure may turn to glorious success.',
+    author: 'Elbert Hubbard',
+  },
 ];
 ```
 
@@ -232,7 +248,9 @@ const fallbackQuotes = [
 ## Licensing Notes & Copyright Confirmation
 
 ### Public Domain Quotes (100% Safe)
+
 Authors who died 70+ years ago with works firmly in public domain:
+
 - **Aristotle** (384-322 BCE) - Ancient, fully public domain
 - **Benjamin Franklin** (died 1790) - Public domain
 - **Abigail Adams** (died 1818) - Public domain
@@ -241,7 +259,9 @@ Authors who died 70+ years ago with works firmly in public domain:
 - **Thomas Edison** (died 1931) - Most works public domain
 
 ### Widely Quoted / Fair Use
+
 These authors have quotes that are extensively used and generally considered acceptable under fair use for non-commercial motivational purposes:
+
 - **Robert Frost** (died 1963) - Some works entering public domain
 - **Winston Churchill** (died 1965) - Borderline, but widely quoted
 - **Mahatma Gandhi** (died 1948) - Widely quoted, minimal copyright concerns
@@ -250,11 +270,14 @@ These authors have quotes that are extensively used and generally considered acc
 - **Nelson Mandela** (died 2013) - Inspirational quotes widely shared
 
 ### Modern Authors (Active Copyright)
+
 - **Steve Jobs** (died 2011) - Under copyright but extremely widely quoted
 - **Tony Robbins** (living) - Active copyright, but this quote widely distributed
 
 ### Legal Summary
+
 For a **non-commercial, personal use application** like your morning motivation display:
+
 - All quotes selected are **safe to use**
 - Most are public domain or widely distributed
 - Fair use doctrine covers short quotes for personal inspiration
@@ -267,6 +290,7 @@ For a **non-commercial, personal use application** like your morning motivation 
 ## Alternative Quotes (5 Backup Options)
 
 ### Alternative Quote 1
+
 **Quote:** "The mind is not a vessel to be filled, but a fire to be kindled."
 **Author:** Plutarch
 **Theme:** Learning / Curiosity
@@ -275,6 +299,7 @@ For a **non-commercial, personal use application** like your morning motivation 
 ---
 
 ### Alternative Quote 2
+
 **Quote:** "I have not failed. I've just found 10,000 ways that won't work."
 **Author:** Thomas Edison
 **Theme:** Persistence / Learning from Failure
@@ -283,6 +308,7 @@ For a **non-commercial, personal use application** like your morning motivation 
 ---
 
 ### Alternative Quote 3
+
 **Quote:** "The journey of a thousand miles begins with a single step."
 **Author:** Lao Tzu
 **Theme:** Starting / Action / Persistence
@@ -291,6 +317,7 @@ For a **non-commercial, personal use application** like your morning motivation 
 ---
 
 ### Alternative Quote 4
+
 **Quote:** "What we learn with pleasure we never forget."
 **Author:** Alfred Mercier
 **Theme:** Learning / Joy
@@ -299,6 +326,7 @@ For a **non-commercial, personal use application** like your morning motivation 
 ---
 
 ### Alternative Quote 5
+
 **Quote:** "Knowing yourself is the beginning of all wisdom."
 **Author:** Aristotle
 **Theme:** Wisdom / Self-Knowledge / Growth
@@ -309,12 +337,14 @@ For a **non-commercial, personal use application** like your morning motivation 
 ## Usage Recommendations
 
 ### Implementation Strategy
+
 1. **Primary Array:** Use the 15 quotes from the JavaScript array above
 2. **Randomization:** Shuffle on page load to ensure variety
 3. **Fallback Trigger:** Use these when API fails or is unavailable
 4. **Future Updates:** Can easily add/remove quotes by editing the array
 
 ### Theme Distribution in Collection
+
 - **Learning/Growth:** 5 quotes (33%)
 - **Persistence/Resilience:** 5 quotes (33%)
 - **Action/Starting:** 3 quotes (20%)
@@ -323,6 +353,7 @@ For a **non-commercial, personal use application** like your morning motivation 
 This distribution ensures balanced motivation across different aspects of personal development.
 
 ### Quote Rotation Best Practices
+
 - With 15 quotes, a daily user will see repeats every ~2-3 weeks (assuming random selection)
 - Consider seasonal updates (quarterly) to keep content fresh
 - Track which quotes resonate most (if analytics added) and adjust collection
@@ -334,6 +365,7 @@ This distribution ensures balanced motivation across different aspects of person
 This curated collection provides **15 high-quality, legally safe motivational quotes** focusing on learning, growth, persistence, and action-taking. The selection prioritizes public domain works while including several modern classics that are widely accepted for motivational use.
 
 **Key Strengths:**
+
 - Zero copyright concerns for personal use
 - Verified attribution from reputable sources
 - Optimal length for 10-second display window
