@@ -19,6 +19,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Release History
 
+## [0.9.5] - 2025-11-12
+
+### Added
+
+- **LaunchQuote.bat** - Windows auto-launch batch file with relative path support
+- **SETUP.md** - Quick setup guide with 5-minute installation instructions
+  - Windows auto-launch setup (Startup Folder method)
+  - Customization instructions (timer, position, browser)
+  - Troubleshooting section
+  - FAQ and support information
+
+### Changed
+
+- **README.md** - Updated with comprehensive auto-launch instructions
+  - Added quick setup section for Windows 10/11
+  - Updated project structure with new files
+  - Updated roadmap to show 90% V1 completion
+  - Added links to SETUP.md and AUTO_LAUNCH_GUIDE.md
+  - Updated "Built With" section with DummyJSON and fallback quotes
+  - Enhanced acknowledgments section
+
+### Documentation
+
+- Phase 4 (Deployment & Launch) now 75% complete
+- Auto-launch setup completed for Windows
+- Cross-platform instructions available in AUTO_LAUNCH_GUIDE.md
+
 ## [0.9.0] - 2025-11-12
 
 ### Added

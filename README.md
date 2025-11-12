@@ -49,36 +49,62 @@
    ```
 
 3. **Set up auto-launch** (optional):
-   See [Auto-Launch Instructions](#auto-launch-setup) below.
+   See [SETUP.md](SETUP.md) for detailed instructions on auto-launching on Windows, macOS, or Linux.
 
 ## Configuration
 
-You can customize the quote display behavior by editing the configuration in `index.html`:
+You can customize the quote display behavior by editing `index.html`:
+
+### Change Auto-Close Timer
+
+Edit the `TIMER_DURATION` constant (around line 11):
 
 ```javascript
-// Example configuration (coming soon)
-const config = {
-  timerDuration: 15, // seconds
-  position: 'bottom-right', // corner placement
-  // ... more options
-};
+const TIMER_DURATION = 15000; // 15 seconds (change to your preference)
+```
+
+### Change Quote Position
+
+Edit the CSS positioning (around line 40-50):
+
+```css
+/* Default: bottom-right */
+bottom: 20px;
+right: 20px;
+
+/* Other options: top-right, top-left, bottom-left */
 ```
 
 ## Auto-Launch Setup
 
-### Windows
+### Quick Setup (Windows 10/11)
 
-<!-- TODO: Add Windows startup instructions after research -->
+1. **Test the batch file:**
 
-Coming soon - detailed instructions for auto-launching on Windows using Task Scheduler or Startup folder.
+   ```bash
+   # Double-click LaunchQuote.bat to test
+   ```
 
-### macOS
+2. **Add to Windows Startup:**
 
-<!-- TODO: Add macOS instructions if needed -->
+   - Press `Windows + R`
+   - Type: `shell:startup`
+   - Press Enter
+   - Create a shortcut to `LaunchQuote.bat` in this folder
+   - Optional: Right-click shortcut → Properties → Run: **Minimized**
 
-### Linux
+3. **Test:** Log out and log back in - the quote should appear automatically!
 
-<!-- TODO: Add Linux instructions if needed -->
+### Detailed Instructions
+
+For comprehensive setup guides including:
+
+- **Windows:** Startup Folder, Task Scheduler, Registry, PowerShell
+- **macOS:** LaunchAgents and Login Items
+- **Linux:** XDG Autostart (GNOME, KDE, XFCE)
+- **Troubleshooting** and customization options
+
+See **[SETUP.md](SETUP.md)** for quick start or **[AUTO_LAUNCH_GUIDE.md](AUTO_LAUNCH_GUIDE.md)** for the complete guide.
 
 ## Development
 
@@ -88,13 +114,20 @@ This project is actively developed with a focus on simplicity and user experienc
 
 ```
 dailyQuotesGenerator/
-├── index.html          # Main application (coming soon)
-├── README.md           # This file
-├── PRD.md              # Product Requirements Document
-├── CLAUDE.md           # Development guide
-├── CHANGELOG.md        # Version history
-├── LICENSE             # MIT License
-└── .gitignore          # Git ignore rules
+├── index.html                # Main application
+├── LaunchQuote.bat           # Auto-launch batch file (Windows)
+├── README.md                 # This file
+├── SETUP.md                  # Quick setup guide
+├── AUTO_LAUNCH_GUIDE.md      # Comprehensive auto-launch guide
+├── PRD.md                    # Product Requirements Document
+├── CLAUDE.md                 # Development guide
+├── CHANGELOG.md              # Version history
+├── LICENSE                   # MIT License
+├── API_RESEARCH_REPORT.md    # Quote API research
+├── UX_RESEARCH_REPORT.md     # UX/UI research
+├── CURATED_QUOTES.md         # Fallback quotes collection
+├── DESIGN_AB_TEST.md         # Design variations research
+└── .gitignore                # Git ignore rules
 ```
 
 ### Built With
@@ -102,7 +135,8 @@ dailyQuotesGenerator/
 - **HTML5** - Structure
 - **CSS3** - Styling and animations
 - **JavaScript (ES6+)** - Logic and API integration
-- **Free Quotes API** - Quote source (TBD via research)
+- **DummyJSON Quotes API** - Primary quote source
+- **Curated Fallback Quotes** - Offline support
 
 ### Development Workflow
 
@@ -131,14 +165,19 @@ Please read [PRD.md](PRD.md) for details on our product requirements and [CLAUDE
 
 ## Roadmap
 
-### V1 (Current)
+### V1 (Current - 90% Complete)
 
 - [x] Project setup and documentation
-- [ ] API research and selection
-- [ ] Core HTML/CSS/JS implementation
-- [ ] Offline fallback quotes
-- [ ] Auto-launch instructions
-- [ ] Initial release
+- [x] API research and selection (DummyJSON)
+- [x] Core HTML/CSS/JS implementation
+- [x] Modern Gradient design (Design B)
+- [x] Offline fallback quotes (15 curated quotes)
+- [x] Auto-launch batch file (Windows)
+- [x] Auto-launch instructions (Windows/macOS/Linux)
+- [x] Accessibility (WCAG 2.1 AA)
+- [x] CI/CD pipeline (8 quality checks)
+- [ ] Screenshot/demo for README
+- [ ] v1.0.0 release
 
 ### V2 (Future)
 
@@ -157,9 +196,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Acknowledgments
 
-- Quote APIs (TBD - research in progress)
+- [DummyJSON](https://dummyjson.com/) for the free quotes API
 - Inspired by the desire to start each day with purpose and motivation
 - Built with Claude Code for efficient AI-assisted development
+- Research conducted by 5 specialized AI sub-agents for optimal design and implementation
 
 ## Support
 
