@@ -229,7 +229,7 @@
           author: 'Leonardo da Vinci',
         },
         {
-          text: 'The more that you read, the more things you will know. The more that you learn, the more places you'll go.',
+          text: 'The more that you read, the more things you will know. The more that you learn, the more places you\'ll go.',
           author: 'Dr. Seuss',
         },
         {
@@ -241,7 +241,7 @@
           author: 'Confucius',
         },
         {
-          text: 'Believe you can and you're halfway there.',
+          text: 'Believe you can and you\'re halfway there.',
           author: 'Theodore Roosevelt',
         },
         {
@@ -437,17 +437,23 @@
 
       // Initialize app
       async function init() {
+        console.log('Init starting...');
         const quote = await getQuote();
+        console.log('Quote fetched:', quote);
         displayQuote(quote);
+        console.log('Quote displayed');
 
         // Show container with animation
         setTimeout(() => {
+          console.log('Showing container...');
           container.classList.add('show');
+          console.log('Container classes:', container.className);
           startTimer();
         }, 100);
       }
 
       // Start the app
+      console.log('Starting app...');
       init();
     </script>
   </body>
