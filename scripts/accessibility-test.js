@@ -19,10 +19,10 @@ async function findHTMLFiles() {
     return stdout
       .trim()
       .split('\n')
-      .filter((file) => file && !file.includes('design-preview'));
+      .filter((file) => file && !file.includes('design-preview') && !file.includes('index'));
   } catch (error) {
     // Fallback for Windows or if find command fails
-    // Return empty array since we're skipping preview files
+    // Return empty array since we're skipping application files
     return [];
   }
 }
