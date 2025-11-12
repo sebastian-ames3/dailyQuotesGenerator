@@ -1,0 +1,51 @@
+{
+  "name": "daily-quotes-generator",
+  "version": "0.1.0",
+  "description": "Start your day with inspiration. A simple web app that displays motivational quotes when you log into your computer.",
+  "main": "index.html",
+  "scripts": {
+    "format": "prettier --write \"**/*.{html,css,js,md,json}\"",
+    "format:check": "prettier --check \"**/*.{html,css,js,md,json}\"",
+    "lint:js": "eslint \"**/*.{js,html}\"",
+    "lint:md": "markdownlint \"**/*.md\" --ignore node_modules",
+    "validate:html": "html-validate \"**/*.html\" --ignore node_modules",
+    "validate:css": "stylelint \"**/*.{css,html}\" --ignore-pattern node_modules",
+    "test:a11y": "node scripts/accessibility-test.js",
+    "check:links": "markdown-link-check README.md CLAUDE.md PRD.md --config .markdown-link-check.json",
+    "spell:check": "cspell \"**/*.md\" --no-progress --ignore node_modules",
+    "lint:all": "npm run format:check && npm run lint:js && npm run lint:md",
+    "validate:all": "npm run validate:html && npm run validate:css",
+    "test:all": "npm run lint:all && npm run validate:all && npm run test:a11y && npm run check:links && npm run spell:check"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sebastian-ames3/dailyQuotesGenerator.git"
+  },
+  "keywords": [
+    "motivation",
+    "quotes",
+    "productivity",
+    "inspiration",
+    "learning",
+    "startup"
+  ],
+  "author": "Sebastian Ames",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sebastian-ames3/dailyQuotesGenerator/issues"
+  },
+  "homepage": "https://github.com/sebastian-ames3/dailyQuotesGenerator#readme",
+  "devDependencies": {
+    "@axe-core/cli": "^4.9.0",
+    "cspell": "^8.14.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-html": "^8.1.1",
+    "html-validate": "^8.22.0",
+    "markdown-link-check": "^3.12.2",
+    "markdownlint-cli": "^0.41.0",
+    "prettier": "^3.3.3",
+    "stylelint": "^16.9.0",
+    "stylelint-config-standard": "^36.0.1"
+  }
+}

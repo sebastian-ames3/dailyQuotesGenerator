@@ -45,3 +45,9 @@ build/
 # Testing
 coverage/
 .nyc_output/
+
+# ESLint cache
+.eslintcache
+
+# Prettier cache
+.prettiercache
