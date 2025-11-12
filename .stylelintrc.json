@@ -1,0 +1,14 @@
+{
+  "extends": "stylelint-config-standard",
+  "rules": {
+    "indentation": 2,
+    "string-quotes": "single",
+    "no-duplicate-selectors": true,
+    "color-hex-length": "short",
+    "selector-max-id": 1,
+    "selector-class-pattern": null,
+    "custom-property-pattern": null,
+    "CssSyntaxError": "off"
+  },
+  "ignoreFiles": ["node_modules/**", "dist/**", "build/**", "*.html"]
+}

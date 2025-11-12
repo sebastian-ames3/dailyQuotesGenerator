@@ -29,12 +29,14 @@
 ### Installation
 
 1. **Download the file:**
+
    ```bash
-   git clone https://github.com/yourusername/dailyQuotesGenerator.git
+   git clone https://github.com/sebastian-ames3/dailyQuotesGenerator.git
    cd dailyQuotesGenerator
    ```
 
 2. **Open `index.html` in your browser:**
+
    ```bash
    # Windows
    start index.html
@@ -56,8 +58,8 @@ You can customize the quote display behavior by editing the configuration in `in
 ```javascript
 // Example configuration (coming soon)
 const config = {
-  timerDuration: 15,  // seconds
-  position: 'bottom-right',  // corner placement
+  timerDuration: 15, // seconds
+  position: 'bottom-right', // corner placement
   // ... more options
 };
 ```
@@ -130,6 +132,7 @@ Please read [PRD.md](PRD.md) for details on our product requirements and [CLAUDE
 ## Roadmap
 
 ### V1 (Current)
+
 - [x] Project setup and documentation
 - [ ] API research and selection
 - [ ] Core HTML/CSS/JS implementation
@@ -138,6 +141,7 @@ Please read [PRD.md](PRD.md) for details on our product requirements and [CLAUDE
 - [ ] Initial release
 
 ### V2 (Future)
+
 - [ ] Quote history/favorites
 - [ ] Theme customization
 - [ ] Dark/light mode
@@ -161,8 +165,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 Found a bug? Have a suggestion?
 
-- **Issues:** [GitHub Issues](https://github.com/yourusername/dailyQuotesGenerator/issues)
-- **Discussions:** [GitHub Discussions](https://github.com/yourusername/dailyQuotesGenerator/discussions)
+- **Issues:** [GitHub Issues](https://github.com/sebastian-ames3/dailyQuotesGenerator/issues)
 
 ---
 
