@@ -25,7 +25,8 @@
       "Bash(npm run lint:md:*)",
       "Bash(npm run validate:html:*)",
       "Bash(npm run test:all:*)",
-      "Bash(npm run validate:css:*)"
+      "Bash(npm run validate:css:*)",
+      "Bash(start index.html)"
     ],
     "deny": [],
     "ask": []

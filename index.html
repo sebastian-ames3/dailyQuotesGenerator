@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Start your day with inspiration - Morning Motivation Quote Generator"
+    />
+    <title>Morning Motivation</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: #f5f5f5;
+        overflow: hidden;
+      }
+
+      /* Quote Container - Modern Gradient Design (Design B) */
+      .quote-container {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        width: 400px;
+        max-width: calc(100vw - 48px);
+        background: white;
+        border-radius: 12px;
+        padding: 24px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        border-left: 4px solid transparent;
+        border-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-image-slice: 1;
+        opacity: 0;
+        transform: translateX(450px);
+        transition:
+          opacity 0.4s ease-out,
+          transform 0.4s ease-out;
+        z-index: 10000;
+      }
+
+      .quote-container.show {
+        opacity: 1;
+        transform: translateX(0);
+      }
+
+      .quote-container.hide {
+        opacity: 0;
+        transform: translateX(450px);
+        transition:
+          opacity 1.8s ease-in,
+          transform 1.8s ease-in;
+      }
+
+      /* Gradient accent line */
+      .quote-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        border-radius: 12px 12px 0 0;
+      }
+
+      .quote-text {
+        font-size: 18px;
+        line-height: 1.6;
+        color: #1a1a1a;
+        margin-bottom: 16px;
+        cursor: pointer;
+        transition: color 0.2s ease;
+      }
+
+      .quote-text:hover {
+        color: #667eea;
+      }
+
+      .quote-text:focus {
+        outline: 2px solid #667eea;
+        outline-offset: 4px;
+        border-radius: 4px;
+      }
+
+      .quote-author {
+        font-size: 14px;
+        color: #666;
+        font-style: italic;
+        text-align: right;
+      }
+
+      .close-button {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        background: transparent;
+        border: none;
+        font-size: 24px;
+        color: #999;
+        cursor: pointer;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 4px;
+        transition:
+          background-color 0.2s ease,
+          color 0.2s ease;
+      }
+
+      .close-button:hover {
+        background-color: #f0f0f0;
+        color: #333;
+      }
+
+      .close-button:focus {
+        outline: 2px solid #667eea;
+        outline-offset: 2px;
+      }
+
+      .progress-bar {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        border-radius: 0 0 0 12px;
+        transition: width 0.1s linear;
+      }
+
+      /* Loading state */
+      .loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px;
+        color: #999;
+      }
+
+      /* Accessibility: Reduced motion support */
+      @media (prefers-reduced-motion: reduce) {
+        .quote-container {
+          transition: opacity 0.2s ease;
+          transform: none !important;
+        }
+
+        .quote-container.show {
+          transform: none;
+        }
+
+        .quote-container.hide {
+          transition: opacity 0.5s ease;
+        }
+      }
+
+      /* Mobile responsive */
+      @media (max-width: 768px) {
+        .quote-container {
+          width: calc(100vw - 32px);
+          bottom: 16px;
+          right: 16px;
+          left: 16px;
+          margin: 0 auto;
+        }
+
+        .quote-text {
+          font-size: 16px;
+        }
+      }
+
+      /* Screen reader only class */
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      class="quote-container"
+      id="quoteContainer"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+    >
+      <button
+        class="close-button"
+        id="closeButton"
+        aria-label="Close quote notification"
+        title="Close (Esc)"
+      >
+        ×
+      </button>
+      <div
+        class="quote-text"
+        id="quoteText"
+        tabindex="0"
+        role="button"
+        aria-label="Click to search for this quote"
+      ></div>
+      <div class="quote-author" id="quoteAuthor"></div>
+      <div class="progress-bar" id="progressBar" aria-hidden="true"></div>
+    </div>
+
+    <div class="sr-only" id="status-message" role="status" aria-live="assertive"></div>
+
+    <script>
+      // Fallback quotes from research (CURATED_QUOTES.md)
+      const fallbackQuotes = [
+        {
+          text: 'The capacity to learn is a gift; the ability to learn is a skill; the willingness to learn is a choice.',
+          author: 'Brian Herbert',
+        },
+        {
+          text: 'Learning never exhausts the mind.',
+          author: 'Leonardo da Vinci',
+        },
+        {
+          text: 'The more that you read, the more things you will know. The more that you learn, the more places you'll go.',
+          author: 'Dr. Seuss',
+        },
+        {
+          text: 'Education is not the filling of a pail, but the lighting of a fire.',
+          author: 'William Butler Yeats',
+        },
+        {
+          text: 'It does not matter how slowly you go as long as you do not stop.',
+          author: 'Confucius',
+        },
+        {
+          text: 'Believe you can and you're halfway there.',
+          author: 'Theodore Roosevelt',
+        },
+        {
+          text: 'Genius is one percent inspiration and ninety-nine percent perspiration.',
+          author: 'Thomas Edison',
+        },
+        {
+          text: 'The only real mistake is the one from which we learn nothing.',
+          author: 'Henry Ford',
+        },
+        {
+          text: 'Live as if you were to die tomorrow. Learn as if you were to live forever.',
+          author: 'Mahatma Gandhi',
+        },
+        {
+          text: 'Two roads diverged in a wood, and I took the one less traveled by, and that has made all the difference.',
+          author: 'Robert Frost',
+        },
+        {
+          text: 'Success is not final, failure is not fatal: it is the courage to continue that counts.',
+          author: 'Winston Churchill',
+        },
+        {
+          text: 'Learning is not attained by chance, it must be sought for with ardor and attended to with diligence.',
+          author: 'Abigail Adams',
+        },
+        {
+          text: 'The person who says he knows what he thinks but cannot express it usually does not know what he thinks.',
+          author: 'Mortimer Adler',
+        },
+        {
+          text: 'Education is the most powerful weapon which you can use to change the world.',
+          author: 'Nelson Mandela',
+        },
+        {
+          text: 'Learn the rules like a pro, so you can break them like an artist.',
+          author: 'Pablo Picasso',
+        },
+      ];
+
+      // Configuration
+      const config = {
+        timerDuration: 15000, // 15 seconds in milliseconds
+        apiUrl: 'https://dummyjson.com/quotes/random',
+        apiTimeout: 5000, // 5 second timeout for API
+      };
+
+      // State
+      let timerInterval = null;
+      let startTime = null;
+      let remainingTime = config.timerDuration;
+      let isPaused = false;
+
+      // Elements
+      const container = document.getElementById('quoteContainer');
+      const quoteText = document.getElementById('quoteText');
+      const quoteAuthor = document.getElementById('quoteAuthor');
+      const closeButton = document.getElementById('closeButton');
+      const progressBar = document.getElementById('progressBar');
+      const statusMessage = document.getElementById('status-message');
+
+      // Fetch quote with timeout
+      async function fetchQuoteWithTimeout() {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), config.apiTimeout);
+
+        try {
+          const response = await fetch(config.apiUrl, {
+            signal: controller.signal,
+          });
+          clearTimeout(timeoutId);
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          const data = await response.json();
+          return {
+            text: data.quote,
+            author: data.author,
+          };
+        } catch (error) {
+          clearTimeout(timeoutId);
+          console.warn('API fetch failed, using fallback quote:', error.message);
+          return null;
+        }
+      }
+
+      // Get random fallback quote
+      function getRandomFallbackQuote() {
+        return fallbackQuotes[Math.floor(Math.random() * fallbackQuotes.length)];
+      }
+
+      // Get quote (API with fallback)
+      async function getQuote() {
+        const apiQuote = await fetchQuoteWithTimeout();
+        return apiQuote || getRandomFallbackQuote();
+      }
+
+      // Display quote
+      function displayQuote(quote) {
+        quoteText.textContent = `"${quote.text}"`;
+        quoteAuthor.textContent = `— ${quote.author}`;
+        statusMessage.textContent = `New quote loaded: ${quote.text} by ${quote.author}`;
+      }
+
+      // Update progress bar
+      function updateProgressBar() {
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min((elapsed / config.timerDuration) * 100, 100);
+        progressBar.style.width = `${100 - progress}%`;
+
+        if (elapsed >= config.timerDuration) {
+          closeQuote();
+        }
+      }
+
+      // Start timer
+      function startTimer() {
+        if (timerInterval) {
+          clearInterval(timerInterval);
+        }
+
+        startTime = Date.now();
+        remainingTime = config.timerDuration;
+        isPaused = false;
+
+        timerInterval = setInterval(updateProgressBar, 100);
+      }
+
+      // Pause timer
+      function pauseTimer() {
+        if (isPaused || !timerInterval) return;
+
+        clearInterval(timerInterval);
+        timerInterval = null;
+        const elapsed = Date.now() - startTime;
+        remainingTime = config.timerDuration - elapsed;
+        isPaused = true;
+      }
+
+      // Resume timer
+      function resumeTimer() {
+        if (!isPaused) return;
+
+        startTime = Date.now() - (config.timerDuration - remainingTime);
+        isPaused = false;
+        timerInterval = setInterval(updateProgressBar, 100);
+      }
+
+      // Close quote
+      function closeQuote() {
+        if (timerInterval) {
+          clearInterval(timerInterval);
+          timerInterval = null;
+        }
+
+        container.classList.add('hide');
+        container.classList.remove('show');
+
+        setTimeout(() => {
+          window.close();
+        }, 2000);
+      }
+
+      // Search quote on Google
+      function searchQuote() {
+        const searchQuery = encodeURIComponent(quoteText.textContent);
+        window.open(`https://www.google.com/search?q=${searchQuery}`, '_blank');
+      }
+
+      // Event listeners
+      closeButton.addEventListener('click', closeQuote);
+
+      quoteText.addEventListener('click', searchQuote);
+
+      quoteText.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          searchQuote();
+        }
+      });
+
+      container.addEventListener('mouseenter', pauseTimer);
+      container.addEventListener('mouseleave', resumeTimer);
+
+      // Keyboard shortcuts
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          closeQuote();
+        }
+      });
+
+      // Initialize app
+      async function init() {
+        const quote = await getQuote();
+        displayQuote(quote);
+
+        // Show container with animation
+        setTimeout(() => {
+          container.classList.add('show');
+          startTimer();
+        }, 100);
+      }
+
+      // Start the app
+      init();
+    </script>
+  </body>
+</html>
