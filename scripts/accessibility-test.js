@@ -8,7 +8,6 @@
 const { exec } = require('child_process');
 const { promisify } = require('util');
 const fs = require('fs').promises;
-const path = require('path');
 
 const execAsync = promisify(exec);
 
@@ -59,24 +58,24 @@ async function runAccessibilityTests() {
       try {
         await fs.access(file);
       } catch {
-        console.log(`  ⚠️  File not found, skipping...\n`);
+        console.log('  ⚠️  File not found, skipping...\n');
         continue;
       }
 
       // Run axe-core CLI on the file
-      const { stdout, stderr } = await execAsync(`npx axe ${file} --exit`);
+      const { stdout } = await execAsync(`npx axe ${file} --exit`);
 
       if (stdout.includes('0 violations found')) {
-        console.log(`  ✅ No accessibility issues found\n`);
+        console.log('  ✅ No accessibility issues found\n');
       } else {
-        console.log(`  ❌ Accessibility issues detected:`);
+        console.log('  ❌ Accessibility issues detected:');
         console.log(stdout);
         hasErrors = true;
       }
     } catch (error) {
       // axe returns non-zero exit code when violations are found
       if (error.stdout) {
-        console.log(`  ❌ Accessibility issues detected:`);
+        console.log('  ❌ Accessibility issues detected:');
         console.log(error.stdout);
         hasErrors = true;
       } else {

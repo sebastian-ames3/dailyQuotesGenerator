@@ -20,7 +20,8 @@
       "Bash(gh run view:*)",
       "Bash(npm install)",
       "Bash(gh pr checks:*)",
-      "Bash(npm run format:*)"
+      "Bash(npm run format:*)",
+      "Bash(npm run lint:js:*)"
     ],
     "deny": [],
     "ask": []
