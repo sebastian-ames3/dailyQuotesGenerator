@@ -31,7 +31,7 @@
 1. **Download the file:**
 
    ```bash
-   git clone https://github.com/yourusername/dailyQuotesGenerator.git
+   git clone https://github.com/sebastian-ames3/dailyQuotesGenerator.git
    cd dailyQuotesGenerator
    ```
 
@@ -165,8 +165,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 Found a bug? Have a suggestion?
 
-- **Issues:** [GitHub Issues](https://github.com/yourusername/dailyQuotesGenerator/issues)
-- **Discussions:** [GitHub Discussions](https://github.com/yourusername/dailyQuotesGenerator/discussions)
+- **Issues:** [GitHub Issues](https://github.com/sebastian-ames3/dailyQuotesGenerator/issues)
+- **Discussions:** [GitHub Discussions](https://github.com/sebastian-ames3/dailyQuotesGenerator/discussions)
 
 ---
 
