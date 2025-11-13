@@ -196,6 +196,159 @@
         outline-offset: 2px;
       }
 
+      /* Settings button */
+      .settings-button {
+        position: absolute;
+        top: 16px;
+        right: 88px;
+        background: transparent;
+        border: none;
+        font-size: 20px;
+        color: var(--hint-color);
+        cursor: pointer;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 4px;
+        transition:
+          background-color 0.2s ease,
+          color 0.2s ease;
+      }
+
+      .settings-button:hover {
+        background-color: var(--close-hover-bg);
+        color: var(--close-hover-color);
+      }
+
+      .settings-button:focus {
+        outline: 2px solid var(--accent-solid);
+        outline-offset: 2px;
+      }
+
+      /* Settings Panel */
+      .settings-panel {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        margin-top: 8px;
+        width: 300px;
+        background: var(--bg-color);
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: var(--shadow);
+        opacity: 0;
+        transform: translateY(-10px);
+        pointer-events: none;
+        transition:
+          opacity 0.3s ease,
+          transform 0.3s ease;
+        z-index: 10001;
+      }
+
+      .settings-panel.show {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+      }
+
+      .settings-panel h3 {
+        margin: 0 0 16px 0;
+        font-size: 16px;
+        color: var(--text-color);
+        font-weight: 600;
+      }
+
+      .setting-group {
+        margin-bottom: 16px;
+      }
+
+      .setting-group:last-child {
+        margin-bottom: 0;
+      }
+
+      .setting-label {
+        display: block;
+        font-size: 13px;
+        color: var(--author-color);
+        margin-bottom: 8px;
+        font-weight: 500;
+      }
+
+      .setting-input {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid var(--hint-color);
+        border-radius: 6px;
+        background: var(--bg-color);
+        color: var(--text-color);
+        font-size: 14px;
+        font-family: inherit;
+      }
+
+      .setting-input:focus {
+        outline: 2px solid var(--accent-solid);
+        outline-offset: 2px;
+        border-color: var(--accent-solid);
+      }
+
+      .setting-slider {
+        width: 100%;
+        height: 6px;
+        border-radius: 3px;
+        background: var(--hint-color);
+        opacity: 0.3;
+        outline: none;
+        -webkit-appearance: none;
+        appearance: none;
+      }
+
+      .setting-slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: var(--accent-solid);
+        cursor: pointer;
+      }
+
+      .setting-slider::-moz-range-thumb {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: var(--accent-solid);
+        cursor: pointer;
+        border: none;
+      }
+
+      .setting-value {
+        display: inline-block;
+        margin-left: 8px;
+        font-size: 13px;
+        color: var(--accent-solid);
+        font-weight: 600;
+      }
+
+      .setting-select {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid var(--hint-color);
+        border-radius: 6px;
+        background: var(--bg-color);
+        color: var(--text-color);
+        font-size: 14px;
+        font-family: inherit;
+        cursor: pointer;
+      }
+
+      .setting-select:focus {
+        outline: 2px solid var(--accent-solid);
+        outline-offset: 2px;
+        border-color: var(--accent-solid);
+      }
+
       .progress-bar {
         position: absolute;
         bottom: 0;
@@ -269,6 +422,14 @@
       aria-atomic="true"
     >
       <button
+        class="settings-button"
+        id="settingsButton"
+        aria-label="Open settings"
+        title="Settings"
+      >
+        ⚙️
+      </button>
+      <button
         class="theme-toggle"
         id="themeToggle"
         aria-label="Toggle dark mode"
@@ -284,6 +445,46 @@
       >
         ×
       </button>
+
+      <!-- Settings Panel -->
+      <div class="settings-panel" id="settingsPanel">
+        <h3>Settings</h3>
+
+        <div class="setting-group">
+          <label class="setting-label">
+            Timer Duration
+            <span class="setting-value" id="timerValue">15s</span>
+          </label>
+          <input
+            type="range"
+            class="setting-slider"
+            id="timerSlider"
+            min="5"
+            max="60"
+            value="15"
+            step="5"
+          />
+        </div>
+
+        <div class="setting-group">
+          <label class="setting-label" for="positionSelect">Position</label>
+          <select class="setting-select" id="positionSelect">
+            <option value="bottomRight">Bottom Right</option>
+            <option value="bottomLeft">Bottom Left</option>
+            <option value="topRight">Top Right</option>
+            <option value="topLeft">Top Left</option>
+          </select>
+        </div>
+
+        <div class="setting-group">
+          <label class="setting-label" for="fontSizeSelect">Font Size</label>
+          <select class="setting-select" id="fontSizeSelect">
+            <option value="small">Small</option>
+            <option value="medium" selected>Medium</option>
+            <option value="large">Large</option>
+          </select>
+        </div>
+      </div>
       <div
         class="quote-text"
         id="quoteText"
@@ -383,6 +584,12 @@
       const quoteAuthor = document.getElementById('quoteAuthor');
       const closeButton = document.getElementById('closeButton');
       const themeToggle = document.getElementById('themeToggle');
+      const settingsButton = document.getElementById('settingsButton');
+      const settingsPanel = document.getElementById('settingsPanel');
+      const timerSlider = document.getElementById('timerSlider');
+      const timerValue = document.getElementById('timerValue');
+      const positionSelect = document.getElementById('positionSelect');
+      const fontSizeSelect = document.getElementById('fontSizeSelect');
       const progressBar = document.getElementById('progressBar');
       const statusMessage = document.getElementById('status-message');
 
@@ -420,6 +627,112 @@
           setTheme(e.matches ? 'dark' : 'light');
         }
       });
+
+      // Settings Management
+      function getSettings() {
+        const defaults = {
+          timerDuration: 15,
+          position: 'bottomRight',
+          fontSize: 'medium'
+        };
+        const saved = localStorage.getItem('quoteSettings');
+        return saved ? {...defaults, ...JSON.parse(saved)} : defaults;
+      }
+
+      function saveSettings(settings) {
+        localStorage.setItem('quoteSettings', JSON.stringify(settings));
+      }
+
+      function applySettings() {
+        const settings = getSettings();
+
+        // Apply timer duration
+        config.timerDuration = settings.timerDuration * 1000;
+        timerSlider.value = settings.timerDuration;
+        timerValue.textContent = `${settings.timerDuration}s`;
+
+        // Apply position
+        positionSelect.value = settings.position;
+        applyPosition(settings.position);
+
+        // Apply font size
+        fontSizeSelect.value = settings.fontSize;
+        applyFontSize(settings.fontSize);
+      }
+
+      function applyPosition(position) {
+        // Reset all positions
+        container.style.top = '';
+        container.style.bottom = '';
+        container.style.left = '';
+        container.style.right = '';
+        container.style.transform = '';
+
+        switch (position) {
+          case 'bottomRight':
+            container.style.bottom = '24px';
+            container.style.right = '24px';
+            container.style.transform = 'translateX(450px)';
+            break;
+          case 'bottomLeft':
+            container.style.bottom = '24px';
+            container.style.left = '24px';
+            container.style.transform = 'translateX(-450px)';
+            break;
+          case 'topRight':
+            container.style.top = '24px';
+            container.style.right = '24px';
+            container.style.transform = 'translateX(450px)';
+            break;
+          case 'topLeft':
+            container.style.top = '24px';
+            container.style.left = '24px';
+            container.style.transform = 'translateX(-450px)';
+            break;
+        }
+      }
+
+      function applyFontSize(size) {
+        const sizes = {
+          small: '16px',
+          medium: '18px',
+          large: '20px'
+        };
+        quoteText.style.fontSize = sizes[size] || sizes.medium;
+      }
+
+      function toggleSettings() {
+        settingsPanel.classList.toggle('show');
+      }
+
+      // Settings event listeners
+      timerSlider.addEventListener('input', (e) => {
+        const value = e.target.value;
+        timerValue.textContent = `${value}s`;
+        const settings = getSettings();
+        settings.timerDuration = parseInt(value);
+        saveSettings(settings);
+        config.timerDuration = parseInt(value) * 1000;
+      });
+
+      positionSelect.addEventListener('change', (e) => {
+        const position = e.target.value;
+        const settings = getSettings();
+        settings.position = position;
+        saveSettings(settings);
+        applyPosition(position);
+      });
+
+      fontSizeSelect.addEventListener('change', (e) => {
+        const fontSize = e.target.value;
+        const settings = getSettings();
+        settings.fontSize = fontSize;
+        saveSettings(settings);
+        applyFontSize(fontSize);
+      });
+
+      // Initialize settings
+      applySettings();
 
       // Fetch quote with timeout
       async function fetchQuoteWithTimeout() {
@@ -572,6 +885,7 @@
       // Event listeners
       closeButton.addEventListener('click', closeQuote);
       themeToggle.addEventListener('click', toggleTheme);
+      settingsButton.addEventListener('click', toggleSettings);
 
       quoteText.addEventListener('click', searchQuote);
 
