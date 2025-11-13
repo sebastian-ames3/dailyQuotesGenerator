@@ -12,67 +12,68 @@ import json
 import sys
 from urllib.parse import quote as url_quote
 
-# Fallback quotes (from CURATED_QUOTES.md)
+# Fallback quotes - MOTIVATIONAL & INSPIRATIONAL ONLY
+# Focused on action, growth, persistence, and achieving goals
 FALLBACK_QUOTES = [
-    {
-        "text": "The capacity to learn is a gift; the ability to learn is a skill; the willingness to learn is a choice.",
-        "author": "Brian Herbert"
-    },
-    {
-        "text": "Learning never exhausts the mind.",
-        "author": "Leonardo da Vinci"
-    },
-    {
-        "text": "The more that you read, the more things you will know. The more that you learn, the more places you'll go.",
-        "author": "Dr. Seuss"
-    },
-    {
-        "text": "Education is not the filling of a pail, but the lighting of a fire.",
-        "author": "William Butler Yeats"
-    },
-    {
-        "text": "It does not matter how slowly you go as long as you do not stop.",
-        "author": "Confucius"
-    },
     {
         "text": "Believe you can and you're halfway there.",
         "author": "Theodore Roosevelt"
-    },
-    {
-        "text": "Genius is one percent inspiration and ninety-nine percent perspiration.",
-        "author": "Thomas Edison"
-    },
-    {
-        "text": "The only real mistake is the one from which we learn nothing.",
-        "author": "Henry Ford"
-    },
-    {
-        "text": "Live as if you were to die tomorrow. Learn as if you were to live forever.",
-        "author": "Mahatma Gandhi"
-    },
-    {
-        "text": "Two roads diverged in a wood, and I took the one less traveled by, and that has made all the difference.",
-        "author": "Robert Frost"
     },
     {
         "text": "Success is not final, failure is not fatal: it is the courage to continue that counts.",
         "author": "Winston Churchill"
     },
     {
-        "text": "Learning is not attained by chance, it must be sought for with ardor and attended to with diligence.",
-        "author": "Abigail Adams"
+        "text": "The only way to do great work is to love what you do.",
+        "author": "Steve Jobs"
     },
     {
-        "text": "The person who says he knows what he thinks but cannot express it usually does not know what he thinks.",
-        "author": "Mortimer Adler"
+        "text": "Don't watch the clock; do what it does. Keep going.",
+        "author": "Sam Levenson"
     },
     {
-        "text": "Education is the most powerful weapon which you can use to change the world.",
+        "text": "The future belongs to those who believe in the beauty of their dreams.",
+        "author": "Eleanor Roosevelt"
+    },
+    {
+        "text": "It does not matter how slowly you go as long as you do not stop.",
+        "author": "Confucius"
+    },
+    {
+        "text": "Everything you've ever wanted is on the other side of fear.",
+        "author": "George Addair"
+    },
+    {
+        "text": "Believe in yourself. You are braver than you think, more talented than you know, and capable of more than you imagine.",
+        "author": "Roy T. Bennett"
+    },
+    {
+        "text": "I learned that courage was not the absence of fear, but the triumph over it.",
         "author": "Nelson Mandela"
     },
     {
-        "text": "Learn the rules like a pro, so you can break them like an artist.",
-        "author": "Pablo Picasso"
+        "text": "Start where you are. Use what you have. Do what you can.",
+        "author": "Arthur Ashe"
+    },
+    {
+        "text": "Don't be pushed around by the fears in your mind. Be led by the dreams in your heart.",
+        "author": "Roy T. Bennett"
+    },
+    {
+        "text": "Hardships often prepare ordinary people for an extraordinary destiny.",
+        "author": "C.S. Lewis"
+    },
+    {
+        "text": "The only impossible journey is the one you never begin.",
+        "author": "Tony Robbins"
+    },
+    {
+        "text": "Your limitation—it's only your imagination.",
+        "author": "Unknown"
+    },
+    {
+        "text": "Great things never come from comfort zones.",
+        "author": "Unknown"
     }
 ]
 
@@ -157,20 +158,58 @@ class QuoteOverlay:
         else:
             self.root.quit()
 
-    def get_quote(self):
-        """Fetch quote from API with fallback"""
-        try:
-            response = requests.get(CONFIG["api_url"], timeout=CONFIG["api_timeout"])
-            if response.status_code == 200:
-                data = response.json()
-                return {
-                    "text": data.get("quote", ""),
-                    "author": data.get("author", "Unknown")
-                }
-        except Exception as e:
-            print(f"API fetch failed, using fallback: {e}")
+    def is_motivational(self, quote_text):
+        """Check if a quote is motivational/inspirational (not just wisdom)"""
+        # Keywords that indicate motivational/inspirational content
+        motivational_keywords = [
+            'believe', 'can', 'will', 'achieve', 'success', 'dream', 'goal',
+            'start', 'begin', 'do', 'action', 'courage', 'brave', 'try',
+            'possible', 'impossible', 'never give up', 'keep going', 'persist',
+            'overcome', 'conquer', 'triumph', 'victory', 'win', 'fight',
+            'inspire', 'motivate', 'passion', 'purpose', 'destiny', 'future',
+            'change', 'grow', 'improve', 'better', 'greatest', 'potential'
+        ]
 
-        # Fallback to random quote
+        # Keywords that suggest wisdom/philosophy (filter these out)
+        wisdom_keywords = [
+            'think', 'know', 'knowledge', 'wise', 'wisdom', 'understand',
+            'philosophy', 'truth', 'reality', 'existence', 'meaning'
+        ]
+
+        quote_lower = quote_text.lower()
+
+        # Count motivational vs wisdom keywords
+        motivational_count = sum(1 for keyword in motivational_keywords if keyword in quote_lower)
+        wisdom_count = sum(1 for keyword in wisdom_keywords if keyword in quote_lower)
+
+        # Prefer motivational quotes (more motivational than wisdom keywords)
+        return motivational_count > wisdom_count
+
+    def get_quote(self):
+        """Fetch quote from API with fallback, filtering for motivational content"""
+        max_attempts = 5  # Try up to 5 times to get a motivational quote
+
+        for attempt in range(max_attempts):
+            try:
+                response = requests.get(CONFIG["api_url"], timeout=CONFIG["api_timeout"])
+                if response.status_code == 200:
+                    data = response.json()
+                    quote_text = data.get("quote", "")
+
+                    # Check if quote is motivational/inspirational
+                    if self.is_motivational(quote_text):
+                        return {
+                            "text": quote_text,
+                            "author": data.get("author", "Unknown")
+                        }
+                    # If not motivational, try again
+                    continue
+
+            except Exception as e:
+                print(f"API fetch attempt {attempt + 1} failed: {e}")
+                break
+
+        # Fallback to curated motivational quotes
         return random.choice(FALLBACK_QUOTES)
 
     def create_widgets(self, quote_data):
