@@ -59,9 +59,12 @@
         right: 24px;
         width: 400px;
         max-width: calc(100vw - 48px);
+        min-height: 180px;
+        max-height: calc(100vh - 48px);
         background: var(--bg-color);
         border-radius: 12px;
         padding: 24px;
+        padding-bottom: 32px;
         box-shadow: var(--shadow);
         border-left: 4px solid transparent;
         border-image: var(--accent-gradient);
@@ -74,6 +77,9 @@
           background 0.3s ease,
           box-shadow 0.3s ease;
         z-index: 10000;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
       }
 
       .quote-container.show {
@@ -101,6 +107,14 @@
         border-radius: 12px 12px 0 0;
       }
 
+      .quote-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        padding-top: 32px;
+      }
+
       .quote-text {
         font-size: 18px;
         line-height: 1.6;
@@ -125,6 +139,7 @@
         color: var(--author-color);
         font-style: italic;
         text-align: right;
+        margin-bottom: 8px;
       }
 
       .learn-more-hint {
@@ -132,6 +147,7 @@
         color: var(--hint-color);
         text-align: center;
         margin-top: 12px;
+        margin-bottom: 16px;
         font-style: italic;
       }
 
@@ -496,15 +512,19 @@
           </select>
         </div>
       </div>
-      <div
-        class="quote-text"
-        id="quoteText"
-        tabindex="0"
-        role="button"
-        aria-label="Click to search for this quote"
-      ></div>
-      <div class="quote-author" id="quoteAuthor"></div>
-      <div class="learn-more-hint">Click quote to learn more</div>
+
+      <div class="quote-content">
+        <div
+          class="quote-text"
+          id="quoteText"
+          tabindex="0"
+          role="button"
+          aria-label="Click to search for this quote"
+        ></div>
+        <div class="quote-author" id="quoteAuthor"></div>
+        <div class="learn-more-hint">Click quote to learn more</div>
+      </div>
+
       <div class="progress-bar" id="progressBar" aria-hidden="true"></div>
     </div>
 
