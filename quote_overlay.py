@@ -295,17 +295,17 @@ class QuoteOverlay:
         # Bind click to search
         self.quote_label.bind('<Button-1>', lambda e: self.search_quote(quote_data["text"]))
 
-        # Author text - darker, refined
-        author_font = font.Font(family='Segoe UI', size=11, slant='italic', weight='normal')
+        # Author text - darker and more prominent
+        author_font = font.Font(family='Segoe UI', size=12, slant='italic', weight='normal')
         author_label = tk.Label(
             content_frame,
             text=f'— {quote_data["author"]}',
             font=author_font,
-            fg='#5a6c7d',
+            fg='#3a4a5a',
             bg='#e8eaed',
             justify=tk.RIGHT
         )
-        author_label.pack(anchor='e', pady=(0, 6))
+        author_label.pack(anchor='e', pady=(0, 8))
 
         # Progress bar (thinner, more subtle)
         self.progress_frame = tk.Frame(content_frame, bg='#c0c0c0', height=2)
