@@ -19,6 +19,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Release History
 
+## [1.0.0] - 2025-11-12
+
+### Added
+
+- **Demo screenshot** - Added quote_demo_screenshot.png to README.md
+- **Complete project documentation** - All documentation finalized for v1.0.0 release
+
+### Changed
+
+- **Roadmap updated** - Marked V1 as complete with all 14 planned features
+- **Project status** - Updated from 90% to 100% complete
+
+### Milestone
+
+- **V1.0.0 Release** - First stable release
+  - Python frameless overlay working perfectly
+  - HTML/CSS/JavaScript fallback fully functional
+  - Auto-launch installation scripts tested
+  - Smart quote filtering with text normalization
+  - 15 curated fallback quotes for offline use
+  - Full accessibility support (WCAG 2.1 AA)
+  - Comprehensive documentation and setup guides
+  - Production-ready for daily use
+
 ## [0.9.14] - 2025-11-12
 
 ### Added

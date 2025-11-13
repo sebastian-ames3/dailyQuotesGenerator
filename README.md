@@ -22,7 +22,9 @@
 
 ## Demo
 
-<!-- TODO: Add screenshot/GIF here once UI is built -->
+![Morning Motivation Quote Demo](quote_demo_screenshot.png)
+
+*A clean, minimal notification displaying an inspiring quote in the bottom-right corner of your screen.*
 
 ## Quick Start
 
@@ -165,19 +167,22 @@ Please read [PRD.md](PRD.md) for details on our product requirements and [CLAUDE
 
 ## Roadmap
 
-### V1 (Current - 90% Complete)
+### V1 (Complete - v1.0.0)
 
 - [x] Project setup and documentation
 - [x] API research and selection (DummyJSON)
 - [x] Core HTML/CSS/JS implementation
+- [x] Python frameless overlay (quote_overlay.py)
 - [x] Modern Gradient design (Design B)
 - [x] Offline fallback quotes (15 curated quotes)
-- [x] Auto-launch batch file (Windows)
+- [x] Smart quote filtering (motivational/inspirational only)
+- [x] Text normalization (fixes all capitalization issues)
+- [x] Auto-launch installation scripts (Windows)
 - [x] Auto-launch instructions (Windows/macOS/Linux)
 - [x] Accessibility (WCAG 2.1 AA)
 - [x] CI/CD pipeline (8 quality checks)
-- [ ] Screenshot/demo for README
-- [ ] v1.0.0 release
+- [x] Screenshot/demo for README
+- [x] v1.0.0 release
 
 ### V2 (Future)
 
