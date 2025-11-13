@@ -1,0 +1,8 @@
+{
+  "theme": "auto",
+  "timerDuration": 15000,
+  "position": "bottomRight",
+  "fontSize": "medium",
+  "category": "motivation",
+  "animationSpeed": "normal"
+}

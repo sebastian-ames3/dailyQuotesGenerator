@@ -9,6 +9,32 @@
     />
     <title>Morning Motivation</title>
     <style>
+      :root {
+        /* Light theme (default) */
+        --bg-color: #ffffff;
+        --text-color: #1a1a1a;
+        --author-color: #666666;
+        --hint-color: #999999;
+        --accent-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --accent-solid: #667eea;
+        --close-hover-bg: #f0f0f0;
+        --close-hover-color: #333333;
+        --shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      }
+
+      /* Dark theme */
+      [data-theme="dark"] {
+        --bg-color: #1e1e1e;
+        --text-color: #e0e0e0;
+        --author-color: #a0a0a0;
+        --hint-color: #707070;
+        --accent-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --accent-solid: #667eea;
+        --close-hover-bg: #2d2d2d;
+        --close-hover-color: #cccccc;
+        --shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+      }
+
       * {
         margin: 0;
         padding: 0;
@@ -33,18 +59,20 @@
         right: 24px;
         width: 400px;
         max-width: calc(100vw - 48px);
-        background: white;
+        background: var(--bg-color);
         border-radius: 12px;
         padding: 24px;
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        box-shadow: var(--shadow);
         border-left: 4px solid transparent;
-        border-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-image: var(--accent-gradient);
         border-image-slice: 1;
         opacity: 0;
         transform: translateX(450px);
         transition:
           opacity 0.4s ease-out,
-          transform 0.4s ease-out;
+          transform 0.4s ease-out,
+          background 0.3s ease,
+          box-shadow 0.3s ease;
         z-index: 10000;
       }
 
@@ -69,39 +97,39 @@
         left: 0;
         right: 0;
         height: 3px;
-        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        background: var(--accent-gradient);
         border-radius: 12px 12px 0 0;
       }
 
       .quote-text {
         font-size: 18px;
         line-height: 1.6;
-        color: #1a1a1a;
+        color: var(--text-color);
         margin-bottom: 16px;
         cursor: pointer;
         transition: color 0.2s ease;
       }
 
       .quote-text:hover {
-        color: #667eea;
+        color: var(--accent-solid);
       }
 
       .quote-text:focus {
-        outline: 2px solid #667eea;
+        outline: 2px solid var(--accent-solid);
         outline-offset: 4px;
         border-radius: 4px;
       }
 
       .quote-author {
         font-size: 14px;
-        color: #666;
+        color: var(--author-color);
         font-style: italic;
         text-align: right;
       }
 
       .learn-more-hint {
         font-size: 11px;
-        color: #999;
+        color: var(--hint-color);
         text-align: center;
         margin-top: 12px;
         font-style: italic;
@@ -114,7 +142,7 @@
         background: transparent;
         border: none;
         font-size: 24px;
-        color: #999;
+        color: var(--hint-color);
         cursor: pointer;
         width: 32px;
         height: 32px;
@@ -128,12 +156,43 @@
       }
 
       .close-button:hover {
-        background-color: #f0f0f0;
-        color: #333;
+        background-color: var(--close-hover-bg);
+        color: var(--close-hover-color);
       }
 
       .close-button:focus {
-        outline: 2px solid #667eea;
+        outline: 2px solid var(--accent-solid);
+        outline-offset: 2px;
+      }
+
+      /* Theme toggle button */
+      .theme-toggle {
+        position: absolute;
+        top: 16px;
+        right: 52px;
+        background: transparent;
+        border: none;
+        font-size: 20px;
+        color: var(--hint-color);
+        cursor: pointer;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 4px;
+        transition:
+          background-color 0.2s ease,
+          color 0.2s ease;
+      }
+
+      .theme-toggle:hover {
+        background-color: var(--close-hover-bg);
+        color: var(--close-hover-color);
+      }
+
+      .theme-toggle:focus {
+        outline: 2px solid var(--accent-solid);
         outline-offset: 2px;
       }
 
@@ -142,7 +201,7 @@
         bottom: 0;
         left: 0;
         height: 3px;
-        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        background: var(--accent-gradient);
         border-radius: 0 0 0 12px;
         transition: width 0.1s linear;
       }
@@ -209,6 +268,14 @@
       aria-live="polite"
       aria-atomic="true"
     >
+      <button
+        class="theme-toggle"
+        id="themeToggle"
+        aria-label="Toggle dark mode"
+        title="Toggle Theme"
+      >
+        🌙
+      </button>
       <button
         class="close-button"
         id="closeButton"
@@ -315,8 +382,44 @@
       const quoteText = document.getElementById('quoteText');
       const quoteAuthor = document.getElementById('quoteAuthor');
       const closeButton = document.getElementById('closeButton');
+      const themeToggle = document.getElementById('themeToggle');
       const progressBar = document.getElementById('progressBar');
       const statusMessage = document.getElementById('status-message');
+
+      // Theme Management
+      function getPreferredTheme() {
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+          return savedTheme;
+        }
+        // Check system preference
+        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+
+      function setTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+        // Update theme toggle icon
+        themeToggle.textContent = theme === 'dark' ? '☀️' : '🌙';
+        themeToggle.setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+      }
+
+      function toggleTheme() {
+        const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        setTheme(newTheme);
+      }
+
+      // Initialize theme on load
+      setTheme(getPreferredTheme());
+
+      // Listen for system theme changes
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+        // Only auto-switch if user hasn't manually set a preference
+        if (!localStorage.getItem('theme')) {
+          setTheme(e.matches ? 'dark' : 'light');
+        }
+      });
 
       // Fetch quote with timeout
       async function fetchQuoteWithTimeout() {
@@ -468,6 +571,7 @@
 
       // Event listeners
       closeButton.addEventListener('click', closeQuote);
+      themeToggle.addEventListener('click', toggleTheme);
 
       quoteText.addEventListener('click', searchQuote);
 
