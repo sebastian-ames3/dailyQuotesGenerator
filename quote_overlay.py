@@ -127,9 +127,9 @@ class QuoteOverlay:
 
         # Calculate position (bottom-right) - notification size
         x = screen_width - CONFIG["window_width"] - CONFIG["corner_offset"]
-        y = screen_height - 180 - CONFIG["corner_offset"]  # Compact notification height
+        y = screen_height - 200 - CONFIG["corner_offset"]  # Increased height to show author
 
-        self.root.geometry(f'{CONFIG["window_width"]}x180+{x}+{y}')
+        self.root.geometry(f'{CONFIG["window_width"]}x200+{x}+{y}')
 
         # Fade in animation
         self.root.attributes('-alpha', 0.0)
