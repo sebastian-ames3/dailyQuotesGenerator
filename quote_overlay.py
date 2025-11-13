@@ -167,7 +167,10 @@ class QuoteOverlay:
             'possible', 'impossible', 'never give up', 'keep going', 'persist',
             'overcome', 'conquer', 'triumph', 'victory', 'win', 'fight',
             'inspire', 'motivate', 'passion', 'purpose', 'destiny', 'future',
-            'change', 'grow', 'improve', 'better', 'greatest', 'potential'
+            'change', 'grow', 'improve', 'better', 'greatest', 'potential',
+            # User-requested keywords
+            'productivity', 'productive', 'inspirational', 'creativity',
+            'creative', 'innovation', 'innovative', 'create', 'make', 'build'
         ]
 
         # Keywords that suggest wisdom/philosophy (filter these out)
