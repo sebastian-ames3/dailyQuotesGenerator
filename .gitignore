@@ -53,3 +53,6 @@ coverage/
 
 # Quote tracker (user-specific state)
 .quote_tracker.json
+
+# Developer archive folder (personal use only)
+_archive_developer_files/
