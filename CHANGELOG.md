@@ -19,6 +19,105 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Release History
 
+## [0.9.14] - 2025-11-12
+
+### Added
+
+- **Expanded keyword filtering** - Added productivity, creativity, innovation keywords
+  - New keywords: productivity, productive, inspirational, creativity, creative, innovation, innovative, create, make, build
+  - Better variety of motivational quotes focused on action and achievement
+
+### Changed
+
+- **Author display** - Increased font size (11pt → 12pt) and darkened color for better visibility
+- **Window height** - Increased from 180px to 200px to ensure author name is always visible
+
+## [0.9.13] - 2025-11-12
+
+### Fixed
+
+- **Author visibility** - Fixed author text being cut off by increasing window height to 200px
+
+## [0.9.12] - 2025-11-12
+
+### Fixed
+
+- **Text capitalization** - Enhanced normalization to fix ALL capitalization issues
+  - Now catches mid-word capitals (They'Re → They're, It'S → It's, DoN'T → Don't)
+  - Detects capital letters anywhere in words, not just ALL CAPS
+  - Applied to both Python overlay and HTML fallback
+
+## [0.9.11] - 2025-11-12
+
+### Changed
+
+- **Author attribution** - Made author name more prominent
+  - Increased font size from 11pt to 12pt
+  - Darkened text color for better contrast (#5a6c7d → #3a4a5a)
+  - Increased padding for better readability
+
+## [0.9.10] - 2025-11-12
+
+### Fixed
+
+- **Text normalization** - Fixed weird capitalizations from DummyJSON API
+  - Converts ALL CAPS words to proper case
+  - Ensures first word of sentences is capitalized
+  - Removes extra whitespace
+  - Preserves acronyms (single letter like "I")
+
+## [0.9.9] - 2025-11-12
+
+### Changed
+
+- **Simplified auto-launch** - Removed time-window complexity
+  - Now shows quote on every login (simple and straightforward)
+  - No tracking files, no time checking, just works
+  - Updated install/uninstall scripts for simpler behavior
+
+### Removed
+
+- **quote_scheduler.py** - No longer needed (removed time-window logic)
+- **SCHEDULED_QUOTES.md** - Removed overcomplicated documentation
+
+## [0.9.8] - 2025-11-12
+
+### Added
+
+- **Scheduled quotes system** - Time-window based quote display (later simplified in 0.9.9)
+  - quote_scheduler.py for time-window checking
+  - install_scheduled_quotes.bat for one-click installation
+  - uninstall_scheduled_quotes.bat for one-click removal
+  - SCHEDULED_QUOTES.md with complete guide
+
+## [0.9.7] - 2025-11-12
+
+### Changed
+
+- **Quote filtering** - Filtered for motivational/inspirational content only
+  - API tries up to 5 times to find motivational quotes
+  - Filters based on action-oriented keywords (believe, achieve, courage, etc.)
+  - Blocks wisdom quotes (knowledge, philosophy, truth, etc.)
+  - Updated all 15 fallback quotes to purely motivational content
+  - Updated both quote_overlay.py and index.html with identical quotes
+
+## [0.9.6] - 2025-11-12
+
+### Added
+
+- **Python-based frameless overlay** - True frameless window using tkinter
+  - quote_overlay.py: Frameless desktop overlay with no window decorations
+  - requirements.txt: Python dependencies (requests)
+  - Compact notification size (340x180px)
+  - Elegant shaded design (#e8eaed background)
+  - Normal case typography
+  - All interactive features maintained (hover, click, keyboard, timer)
+  - Cross-platform ready (Windows/Mac/Linux)
+
+### Changed
+
+- **LaunchQuote.bat** - Updated to try Python first, then fall back to browser
+
 ## [0.9.5] - 2025-11-12
 
 ### Added

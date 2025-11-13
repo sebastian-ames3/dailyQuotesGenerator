@@ -2,15 +2,45 @@
 
 ## Project Overview
 
-A simple, open-source web app that displays a random motivational quote when I log into my laptop. The quote should inspire learning, growth, and persistence. Displays in a corner pop-up and auto-closes after 15 seconds.
+A simple, open-source desktop app that displays a motivational quote when you log into your laptop. The quote inspires action, productivity, creativity, and achievement. Displays as a frameless notification in the corner and auto-closes after 15 seconds.
 
-## Technical Approach
+## Current Implementation (v0.9.14)
 
-- **Single HTML file** with embedded JavaScript and CSS
-- **Fetch quotes via API** (free quotes API - to be determined via sub-agent research)
-- **Auto-launch on startup** (setup instructions for Windows)
-- **Configurable auto-close timer** (15 seconds default, user-adjustable)
-- **Interactive features** (hover-to-stay, click-to-search)
+### Tech Stack
+
+- **Python + tkinter** - Frameless desktop overlay (primary implementation)
+- **HTML/CSS/JavaScript** - Browser fallback (index.html)
+- **DummyJSON API** - Primary quote source with intelligent filtering
+- **15 curated fallback quotes** - Offline support
+
+### Key Features
+
+- **Frameless overlay** - No window decorations, looks like native notification
+- **Auto-launch on login** - Task Scheduler integration (Windows)
+- **Smart quote filtering** - Only motivational/inspirational quotes (filters out wisdom/philosophy)
+- **Text normalization** - Fixes ALL capitalization issues from API
+- **15-second auto-close** - Configurable timer with progress bar
+- **Hover-to-pause** - Timer pauses when hovering
+- **Click-to-search** - Opens Google search for quote
+- **Keyboard shortcuts** - Esc to close, full accessibility support
+- **Author attribution** - Always shows who said the quote
+- **Compact design** - 340x200px notification-sized window
+- **Elegant styling** - Shaded gray background (#e8eaed) with blue accent
+
+### Installation
+
+1. **Double-click** `install_scheduled_quotes.bat`
+2. Quote appears on every login
+3. To uninstall: Double-click `uninstall_scheduled_quotes.bat`
+
+## Technical Approach (Original Design)
+
+- **Python frameless overlay** (quote_overlay.py) - Primary implementation
+- **HTML fallback** (index.html) - Browser-based backup
+- **Fetch quotes via DummyJSON API** with intelligent filtering
+- **Auto-launch on startup** via Windows Task Scheduler
+- **Configurable auto-close timer** (15 seconds default)
+- **Interactive features** (hover-to-pause, click-to-search, keyboard shortcuts)
 
 ## Core Features (V1)
 
@@ -151,15 +181,19 @@ To ensure high-quality development, Claude Code will use specialized sub-agents 
 - [x] Accessibility testing (ARIA, screen readers, reduced motion)
 - [x] All CI/CD quality checks passing
 
-### Phase 4: Deployment & Launch 🚧 IN PROGRESS (75% Complete)
+### Phase 4: Deployment & Launch ✅ COMPLETE
 
 - [x] Write comprehensive README
-- [x] Create auto-launch batch file for Windows
-- [x] Create SETUP.md quick setup guide
+- [x] Create Python frameless overlay (quote_overlay.py)
+- [x] Create auto-launch batch file for Windows (LaunchQuote.bat)
+- [x] Create install/uninstall scripts (install_scheduled_quotes.bat, uninstall_scheduled_quotes.bat)
 - [x] Update README with auto-launch instructions
-- [ ] Add screenshot/demo to README
-- [ ] Final user testing
-- [ ] v1.0.0 release
+- [x] Implement motivational quote filtering with keyword matching
+- [x] Fix text capitalization normalization (handles all API formatting issues)
+- [x] Ensure author attribution is visible and prominent
+- [x] Add productivity, creativity, innovation keywords
+- [x] Polish and refine UI (compact 340x200px notification design)
+- [x] Comprehensive testing and bug fixes
 
 ## Future Enhancements (V2)
 
