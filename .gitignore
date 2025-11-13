@@ -50,3 +50,6 @@ coverage/
 
 # Prettier cache
 .prettiercache
+
+# Quote tracker (user-specific state)
+.quote_tracker.json
