@@ -30,28 +30,39 @@
 
 ### Installation
 
-1. **Download the file:**
+1. **Download the repository:**
 
    ```bash
    git clone https://github.com/sebastian-ames3/dailyQuotesGenerator.git
    cd dailyQuotesGenerator
    ```
 
-2. **Open `index.html` in your browser:**
+   Or download as ZIP from GitHub and extract to your preferred location.
+
+2. **Install Python dependencies (required for frameless overlay):**
 
    ```bash
-   # Windows
-   start index.html
-
-   # Mac
-   open index.html
-
-   # Linux
-   xdg-open index.html
+   pip install -r requirements.txt
    ```
 
-3. **Set up auto-launch** (optional):
-   See [SETUP.md](SETUP.md) for detailed instructions on auto-launching on Windows, macOS, or Linux.
+   **Note:** If you don't have Python installed, the tool will automatically fall back to using your web browser (index.html).
+
+3. **Test the quote generator:**
+
+   ```bash
+   # Method 1: Python overlay (recommended)
+   python quote_overlay.py
+
+   # Method 2: Browser fallback
+   # Windows: start index.html
+   # Mac: open index.html
+   # Linux: xdg-open index.html
+   ```
+
+4. **Set up auto-launch** (optional):
+
+   - **Windows:** Double-click `install_scheduled_quotes.bat` (one-click installation)
+   - **Other platforms:** See [SETUP.md](SETUP.md) for detailed instructions
 
 ## Configuration
 
