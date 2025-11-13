@@ -16,6 +16,7 @@ Desktop.ini
 *~
 *.sublime-project
 *.sublime-workspace
+.claude/settings.local.json
 
 # Logs
 *.log
@@ -44,6 +45,7 @@ build/
 # Testing
 coverage/
 .nyc_output/
+test-results/
 
 # ESLint cache
 .eslintcache

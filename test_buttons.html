@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Button Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .info {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            background: #e8f5e9;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="info">
+        <h1>Testing Button Visibility</h1>
+        <p>This page will open index.html with cache disabled.</p>
+
+        <button onclick="openWithCacheBuster()">Open index.html (Fresh Load)</button>
+        <button onclick="checkFile()">Check File Contents</button>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function openWithCacheBuster() {
+            const timestamp = new Date().getTime();
+            const url = `index.html?v=${timestamp}`;
+            window.open(url, '_blank');
+            document.getElementById('result').innerHTML =
+                `<strong>Opened:</strong> index.html?v=${timestamp}<br>` +
+                `This forces a fresh load bypassing cache.<br><br>` +
+                `<strong>Look for these 3 buttons in top-right:</strong><br>` +
+                `⚙️ Settings (leftmost)<br>` +
+                `🌙 Theme toggle (middle)<br>` +
+                `× Close (rightmost)`;
+        }
+
+        async function checkFile() {
+            try {
+                const response = await fetch('index.html?v=' + new Date().getTime());
+                const text = await response.text();
+
+                const hasSettings = text.includes('class="settings-button"');
+                const hasTheme = text.includes('class="theme-toggle"');
+                const hasClose = text.includes('class="close-button"');
+                const hasPaddingTop = text.includes('padding-top: 56px');
+
+                document.getElementById('result').innerHTML =
+                    `<strong>File Check Results:</strong><br>` +
+                    `Settings button in HTML: ${hasSettings ? '✓ YES' : '✗ NO'}<br>` +
+                    `Theme button in HTML: ${hasTheme ? '✓ YES' : '✗ NO'}<br>` +
+                    `Close button in HTML: ${hasClose ? '✓ YES' : '✗ NO'}<br>` +
+                    `CSS padding-top fix: ${hasPaddingTop ? '✓ YES' : '✗ NO'}<br><br>` +
+                    `${hasSettings && hasTheme && hasClose && hasPaddingTop ?
+                        '<strong style="color: green;">All fixes are in the file! Try opening with the button above.</strong>' :
+                        '<strong style="color: red;">Some fixes are missing from the file.</strong>'}`;
+            } catch (error) {
+                document.getElementById('result').innerHTML =
+                    `<strong style="color: red;">Error reading file: ${error.message}</strong>`;
+            }
+        }
+
+        // Auto-check on load
+        window.onload = () => {
+            checkFile();
+        };
+    </script>
+</body>
+</html>
