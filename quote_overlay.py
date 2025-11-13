@@ -1,0 +1,322 @@
+#!/usr/bin/env python3
+"""
+Morning Motivation Quote Generator - Frameless Overlay
+A true frameless desktop overlay window that displays motivational quotes.
+"""
+
+import tkinter as tk
+from tkinter import font
+import requests
+import random
+import json
+import sys
+from urllib.parse import quote as url_quote
+
+# Fallback quotes (from CURATED_QUOTES.md)
+FALLBACK_QUOTES = [
+    {
+        "text": "The capacity to learn is a gift; the ability to learn is a skill; the willingness to learn is a choice.",
+        "author": "Brian Herbert"
+    },
+    {
+        "text": "Learning never exhausts the mind.",
+        "author": "Leonardo da Vinci"
+    },
+    {
+        "text": "The more that you read, the more things you will know. The more that you learn, the more places you'll go.",
+        "author": "Dr. Seuss"
+    },
+    {
+        "text": "Education is not the filling of a pail, but the lighting of a fire.",
+        "author": "William Butler Yeats"
+    },
+    {
+        "text": "It does not matter how slowly you go as long as you do not stop.",
+        "author": "Confucius"
+    },
+    {
+        "text": "Believe you can and you're halfway there.",
+        "author": "Theodore Roosevelt"
+    },
+    {
+        "text": "Genius is one percent inspiration and ninety-nine percent perspiration.",
+        "author": "Thomas Edison"
+    },
+    {
+        "text": "The only real mistake is the one from which we learn nothing.",
+        "author": "Henry Ford"
+    },
+    {
+        "text": "Live as if you were to die tomorrow. Learn as if you were to live forever.",
+        "author": "Mahatma Gandhi"
+    },
+    {
+        "text": "Two roads diverged in a wood, and I took the one less traveled by, and that has made all the difference.",
+        "author": "Robert Frost"
+    },
+    {
+        "text": "Success is not final, failure is not fatal: it is the courage to continue that counts.",
+        "author": "Winston Churchill"
+    },
+    {
+        "text": "Learning is not attained by chance, it must be sought for with ardor and attended to with diligence.",
+        "author": "Abigail Adams"
+    },
+    {
+        "text": "The person who says he knows what he thinks but cannot express it usually does not know what he thinks.",
+        "author": "Mortimer Adler"
+    },
+    {
+        "text": "Education is the most powerful weapon which you can use to change the world.",
+        "author": "Nelson Mandela"
+    },
+    {
+        "text": "Learn the rules like a pro, so you can break them like an artist.",
+        "author": "Pablo Picasso"
+    }
+]
+
+# Configuration
+CONFIG = {
+    "timer_duration": 15000,  # 15 seconds in milliseconds
+    "api_url": "https://dummyjson.com/quotes/random",
+    "api_timeout": 5,  # 5 seconds
+    "window_width": 340,  # Smaller, notification-sized width
+    "window_padding": 18,  # Tighter padding
+    "corner_offset": 24,  # Distance from screen edges
+}
+
+
+class QuoteOverlay:
+    def __init__(self):
+        self.root = tk.Tk()
+        self.timer_id = None
+        self.is_paused = False
+        self.start_time = None
+        self.remaining_time = CONFIG["timer_duration"]
+
+        # Setup window
+        self.setup_window()
+
+        # Fetch and display quote
+        quote_data = self.get_quote()
+        self.create_widgets(quote_data)
+
+        # Start timer
+        self.start_timer()
+
+    def setup_window(self):
+        """Configure the frameless overlay window"""
+        # Remove window decorations (frameless)
+        self.root.overrideredirect(True)
+
+        # Set window properties
+        self.root.attributes('-topmost', True)  # Always on top
+        self.root.configure(bg='#e8eaed')
+
+        # Set transparency for modern look
+        try:
+            self.root.attributes('-alpha', 0.96)  # Slight transparency for elegance
+        except:
+            pass  # Some systems don't support alpha
+
+        # Position window in bottom-right corner
+        screen_width = self.root.winfo_screenwidth()
+        screen_height = self.root.winfo_screenheight()
+
+        # Calculate position (bottom-right) - notification size
+        x = screen_width - CONFIG["window_width"] - CONFIG["corner_offset"]
+        y = screen_height - 180 - CONFIG["corner_offset"]  # Compact notification height
+
+        self.root.geometry(f'{CONFIG["window_width"]}x180+{x}+{y}')
+
+        # Fade in animation
+        self.root.attributes('-alpha', 0.0)
+        self.fade_in()
+
+    def fade_in(self, alpha=0.0):
+        """Fade in animation"""
+        if alpha < 0.96:
+            alpha += 0.05
+            try:
+                self.root.attributes('-alpha', alpha)
+                self.root.after(20, lambda: self.fade_in(alpha))
+            except:
+                pass
+
+    def fade_out(self):
+        """Fade out animation then close"""
+        current_alpha = self.root.attributes('-alpha')
+        if current_alpha > 0:
+            new_alpha = current_alpha - 0.05
+            try:
+                self.root.attributes('-alpha', new_alpha)
+                self.root.after(50, self.fade_out)
+            except:
+                self.root.quit()
+        else:
+            self.root.quit()
+
+    def get_quote(self):
+        """Fetch quote from API with fallback"""
+        try:
+            response = requests.get(CONFIG["api_url"], timeout=CONFIG["api_timeout"])
+            if response.status_code == 200:
+                data = response.json()
+                return {
+                    "text": data.get("quote", ""),
+                    "author": data.get("author", "Unknown")
+                }
+        except Exception as e:
+            print(f"API fetch failed, using fallback: {e}")
+
+        # Fallback to random quote
+        return random.choice(FALLBACK_QUOTES)
+
+    def create_widgets(self, quote_data):
+        """Create the UI widgets"""
+        # Main frame with shaded background
+        main_frame = tk.Frame(
+            self.root,
+            bg='#e8eaed',
+            highlightbackground='#d0d0d0',
+            highlightthickness=1,
+            bd=0
+        )
+        main_frame.pack(fill=tk.BOTH, expand=True, padx=0, pady=0)
+
+        # Top accent bar (gradient blue)
+        top_bar = tk.Frame(main_frame, bg='#667eea', height=4)
+        top_bar.pack(fill=tk.X, side=tk.TOP)
+
+        # Content frame with padding
+        content_frame = tk.Frame(main_frame, bg='#e8eaed')
+        content_frame.pack(fill=tk.BOTH, expand=True, padx=CONFIG["window_padding"], pady=CONFIG["window_padding"])
+
+        # Close button (top-right, subtle)
+        close_btn = tk.Button(
+            content_frame,
+            text='×',
+            font=('Segoe UI', 16, 'normal'),
+            fg='#888',
+            bg='#e8eaed',
+            bd=0,
+            cursor='hand2',
+            command=self.close_quote,
+            activebackground='#d8dadd',
+            activeforeground='#333',
+            padx=6,
+            pady=2
+        )
+        close_btn.place(relx=1.0, rely=0.0, anchor='ne', x=0, y=0)
+
+        # Quote text - NORMAL CASE, elegant typography
+        quote_font = font.Font(family='Segoe UI', size=13, weight='normal')
+        self.quote_label = tk.Label(
+            content_frame,
+            text=f'"{quote_data["text"]}"',
+            font=quote_font,
+            fg='#2c3e50',
+            bg='#e8eaed',
+            wraplength=CONFIG["window_width"] - CONFIG["window_padding"] * 2 - 30,
+            justify=tk.LEFT,
+            cursor='hand2'
+        )
+        self.quote_label.pack(pady=(6, 10), anchor='w')
+
+        # Bind click to search
+        self.quote_label.bind('<Button-1>', lambda e: self.search_quote(quote_data["text"]))
+
+        # Author text - darker, refined
+        author_font = font.Font(family='Segoe UI', size=11, slant='italic', weight='normal')
+        author_label = tk.Label(
+            content_frame,
+            text=f'— {quote_data["author"]}',
+            font=author_font,
+            fg='#5a6c7d',
+            bg='#e8eaed',
+            justify=tk.RIGHT
+        )
+        author_label.pack(anchor='e', pady=(0, 6))
+
+        # Progress bar (thinner, more subtle)
+        self.progress_frame = tk.Frame(content_frame, bg='#c0c0c0', height=2)
+        self.progress_frame.pack(fill=tk.X, side=tk.BOTTOM, pady=(6, 0))
+
+        self.progress_bar = tk.Frame(self.progress_frame, bg='#667eea', height=2)
+        self.progress_bar.place(relwidth=1.0, relheight=1.0)
+
+        # Hover events for pause/resume
+        main_frame.bind('<Enter>', lambda e: self.pause_timer())
+        main_frame.bind('<Leave>', lambda e: self.resume_timer())
+
+        # Keyboard shortcuts
+        self.root.bind('<Escape>', lambda e: self.close_quote())
+
+    def start_timer(self):
+        """Start the countdown timer"""
+        import time
+        self.start_time = time.time()
+        self.is_paused = False
+        self.update_progress()
+
+    def update_progress(self):
+        """Update progress bar and check if time is up"""
+        if self.is_paused:
+            return
+
+        import time
+        elapsed = (time.time() - self.start_time) * 1000  # Convert to milliseconds
+        progress = min(elapsed / CONFIG["timer_duration"], 1.0)
+
+        # Update progress bar width (shrinking from right)
+        self.progress_bar.place(relwidth=1.0 - progress, relheight=1.0)
+
+        if progress >= 1.0:
+            self.close_quote()
+        else:
+            self.timer_id = self.root.after(100, self.update_progress)
+
+    def pause_timer(self):
+        """Pause the timer on hover"""
+        if not self.is_paused and self.timer_id:
+            self.root.after_cancel(self.timer_id)
+            self.is_paused = True
+            import time
+            elapsed = (time.time() - self.start_time) * 1000
+            self.remaining_time = CONFIG["timer_duration"] - elapsed
+
+    def resume_timer(self):
+        """Resume the timer when mouse leaves"""
+        if self.is_paused:
+            import time
+            self.start_time = time.time() - ((CONFIG["timer_duration"] - self.remaining_time) / 1000)
+            self.is_paused = False
+            self.update_progress()
+
+    def close_quote(self):
+        """Close the window with fade out animation"""
+        if self.timer_id:
+            self.root.after_cancel(self.timer_id)
+        self.fade_out()
+
+    def search_quote(self, text):
+        """Open Google search for the quote"""
+        import webbrowser
+        search_query = url_quote(f'"{text}"')
+        webbrowser.open(f'https://www.google.com/search?q={search_query}')
+
+    def run(self):
+        """Start the application"""
+        self.root.mainloop()
+
+
+if __name__ == "__main__":
+    try:
+        app = QuoteOverlay()
+        app.run()
+    except KeyboardInterrupt:
+        sys.exit(0)
+    except Exception as e:
+        print(f"Error: {e}")
+        sys.exit(1)
