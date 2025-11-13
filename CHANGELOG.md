@@ -19,6 +19,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Release History
 
+## [2.0.1] - 2025-11-13
+
+### Fixed
+
+- **Button visibility issues**
+  - Removed translateX transforms from applyPosition() that pushed container off-screen
+  - Fixed container overflow causing buttons to be clipped outside viewport
+  - Added padding-top: 56px to container for button clearance
+  - Moved overflow-y: auto from container to quote-content wrapper
+  - All three buttons (⚙️ settings, 🌙 theme, × close) now properly visible
+
+- **Container layout for long quotes**
+  - Added min-height: 180px and max-height constraints
+  - Implemented flexbox layout for proper content flow
+  - Quote content scrolls independently while buttons stay fixed
+  - Author and progress bar always visible regardless of quote length
+
+- **CSS positioning**
+  - Centered container during debugging (temporarily)
+  - Fixed z-index issues with buttons (z-index: 10)
+  - Removed animation transforms that conflicted with position settings
+
+### Development
+
+- **Playwright testing infrastructure**
+  - Added comprehensive button visibility tests
+  - Created visual regression test suite
+  - Automated screenshot comparison
+  - Test coverage for keyboard navigation and accessibility
+  - Identified and fixed viewport clipping issues through automated testing
+
+### Technical Debt
+
+- Created test helper files (test_buttons.html, simple_test.html)
+- Added Playwright configuration and test scripts
+- Documented debugging process for future reference
+
+---
+
 ## [2.0.0] - 2025-11-13
 
 ### Added

@@ -55,29 +55,25 @@
       /* Quote Container - Modern Gradient Design (Design B) */
       .quote-container {
         position: fixed;
-        bottom: 24px;
-        right: 24px;
-        width: 400px;
-        max-width: calc(100vw - 48px);
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 500px;
+        max-width: 90vw;
         min-height: 180px;
-        max-height: calc(100vh - 48px);
+        max-height: 80vh;
         background: var(--bg-color);
         border-radius: 12px;
         padding: 24px;
         padding-top: 56px;
         padding-bottom: 32px;
         box-shadow: var(--shadow);
-        border-left: 4px solid transparent;
-        border-image: var(--accent-gradient);
-        border-image-slice: 1;
-        opacity: 0;
-        transform: translateX(450px);
+        border: 4px solid red;
+        opacity: 1;
         transition:
-          opacity 0.4s ease-out,
-          transform 0.4s ease-out,
           background 0.3s ease,
           box-shadow 0.3s ease;
-        z-index: 10000;
+        z-index: 999999;
         display: flex;
         flex-direction: column;
       }
@@ -744,28 +740,23 @@
         container.style.bottom = '';
         container.style.left = '';
         container.style.right = '';
-        container.style.transform = '';
 
         switch (position) {
           case 'bottomRight':
             container.style.bottom = '24px';
             container.style.right = '24px';
-            container.style.transform = 'translateX(450px)';
             break;
           case 'bottomLeft':
             container.style.bottom = '24px';
             container.style.left = '24px';
-            container.style.transform = 'translateX(-450px)';
             break;
           case 'topRight':
             container.style.top = '24px';
             container.style.right = '24px';
-            container.style.transform = 'translateX(450px)';
             break;
           case 'topLeft':
             container.style.top = '24px';
             container.style.left = '24px';
-            container.style.transform = 'translateX(-450px)';
             break;
         }
       }
