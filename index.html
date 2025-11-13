@@ -99,6 +99,14 @@
         text-align: right;
       }
 
+      .learn-more-hint {
+        font-size: 11px;
+        color: #999;
+        text-align: center;
+        margin-top: 12px;
+        font-style: italic;
+      }
+
       .close-button {
         position: absolute;
         top: 16px;
@@ -217,6 +225,7 @@
         aria-label="Click to search for this quote"
       ></div>
       <div class="quote-author" id="quoteAuthor"></div>
+      <div class="learn-more-hint">Click quote to learn more</div>
       <div class="progress-bar" id="progressBar" aria-hidden="true"></div>
     </div>
 
@@ -336,55 +345,32 @@
         }
       }
 
-      // Normalize text to fix ALL capitalization issues
+      // Normalize text to fix capitalization issues
+      // Preserves punctuation (!, ?, ...) and handles curly apostrophes
+      const SENTENCE_SPLIT = /(?<=[.!?…])\s+(?=["""''(\[]?\w)/u;
+      const INTERIOR_UPPER = /(?<!^)(?<![''])[A-Z]/gu;
+
       function normalizeText(text) {
-        // Remove extra whitespace
-        text = text.replace(/\s+/g, ' ').trim();
-
-        // Split into sentences
-        const sentences = text.split('. ');
-        const normalized = [];
-
-        for (let sentence of sentences) {
-          if (sentence) {
-            const words = sentence.split(' ');
-            const fixedWords = words.map((word, i) => {
-              if (!word) return word;
-
-              // Check if word has weird capitalization (capital letters in middle)
-              // Examples: "They'Re", "It'S", "DoN'T"
-              let hasWeirdCaps = false;
-              if (word.length > 1) {
-                for (let j = 1; j < word.length; j++) {
-                  const char = word[j];
-                  const prevChar = word[j - 1];
-                  if (char === char.toUpperCase() && char !== char.toLowerCase() &&
-                      (j === 1 || !"''"​.includes(prevChar))) {
-                    hasWeirdCaps = true;
-                    break;
-                  }
+        const sentences = text.replace(/\s+/g, ' ').trim().split(SENTENCE_SPLIT);
+        return sentences
+          .map((sentence) => {
+            const words = sentence.split(' ').filter(Boolean);
+            const fixed = words.map((word, index) => {
+              let core = word.replace(INTERIOR_UPPER, (ch) => ch.toLowerCase());
+              if (core === core.toUpperCase() && core.length > 3) {
+                core = core[0] + core.slice(1).toLowerCase();
+              }
+              if (index === 0) {
+                const pos = core.search(/[A-Za-zÀ-ÖØ-öø-ÿ]/u);
+                if (pos !== -1) {
+                  core = core.slice(0, pos) + core[pos].toUpperCase() + core.slice(pos + 1);
                 }
               }
-
-              // Fix the word
-              if (word === word.toUpperCase() && word.length > 1) {
-                // ALL CAPS word → Capitalize
-                return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-              } else if (hasWeirdCaps) {
-                // Weird caps in middle → Convert to lowercase, then capitalize first letter
-                word = word.toLowerCase();
-                return word.charAt(0).toUpperCase() + word.slice(1);
-              } else if (i === 0) {
-                // First word → Ensure starts with capital
-                return word.charAt(0).toUpperCase() + word.slice(1);
-              }
-              return word;
+              return core;
             });
-            normalized.push(fixedWords.join(' '));
-          }
-        }
-
-        return normalized.join('. ');
+            return fixed.join(' ');
+          })
+          .join(' ');
       }
 
       // Get random fallback quote
@@ -463,8 +449,14 @@
         container.classList.add('hide');
         container.classList.remove('show');
 
+        // Try to close window (works if opened by script)
+        // If that fails, just hide the container permanently
         setTimeout(() => {
           window.close();
+          // If window.close() didn't work (most browsers), hide the element
+          setTimeout(() => {
+            container.style.display = 'none';
+          }, 100);
         }, 2000);
       }
 

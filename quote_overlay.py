@@ -8,7 +8,6 @@ import tkinter as tk
 from tkinter import font
 import requests
 import random
-import json
 import sys
 from urllib.parse import quote as url_quote
 
@@ -159,83 +158,71 @@ class QuoteOverlay:
             self.root.quit()
 
     def is_motivational(self, quote_text):
-        """Check if a quote is motivational/inspirational (not just wisdom)"""
+        """Check if a quote is motivational/inspirational (not just wisdom)
+        Uses word-boundary matching to avoid false positives"""
+        import re
+
         # Keywords that indicate motivational/inspirational content
         motivational_keywords = [
-            'believe', 'can', 'will', 'achieve', 'success', 'dream', 'goal',
-            'start', 'begin', 'do', 'action', 'courage', 'brave', 'try',
-            'possible', 'impossible', 'never give up', 'keep going', 'persist',
-            'overcome', 'conquer', 'triumph', 'victory', 'win', 'fight',
+            'believe', 'achieve', 'success', 'dream', 'goal',
+            'start', 'begin', 'action', 'courage', 'brave', 'try',
+            'possible', 'impossible', 'persist', 'persevere',
+            'overcome', 'conquer', 'triumph', 'victory', 'fight',
             'inspire', 'motivate', 'passion', 'purpose', 'destiny', 'future',
             'change', 'grow', 'improve', 'better', 'greatest', 'potential',
-            # User-requested keywords
             'productivity', 'productive', 'inspirational', 'creativity',
-            'creative', 'innovation', 'innovative', 'create', 'make', 'build'
+            'creative', 'innovation', 'innovative', 'create', 'build'
         ]
 
         # Keywords that suggest wisdom/philosophy (filter these out)
         wisdom_keywords = [
-            'think', 'know', 'knowledge', 'wise', 'wisdom', 'understand',
-            'philosophy', 'truth', 'reality', 'existence', 'meaning'
+            'philosophy', 'wisdom', 'knowledge', 'truth', 'reality',
+            'existence', 'meaning', 'understand', 'wise'
         ]
 
-        quote_lower = quote_text.lower()
+        # Count matches using word boundaries to avoid false positives
+        # (e.g., "can" won't match "candle", "win" won't match "twin")
+        motivational_count = 0
+        wisdom_count = 0
 
-        # Count motivational vs wisdom keywords
-        motivational_count = sum(1 for keyword in motivational_keywords if keyword in quote_lower)
-        wisdom_count = sum(1 for keyword in wisdom_keywords if keyword in quote_lower)
+        for keyword in motivational_keywords:
+            if re.search(r'\b' + re.escape(keyword) + r'\b', quote_text, re.IGNORECASE):
+                motivational_count += 1
+
+        for keyword in wisdom_keywords:
+            if re.search(r'\b' + re.escape(keyword) + r'\b', quote_text, re.IGNORECASE):
+                wisdom_count += 1
 
         # Prefer motivational quotes (more motivational than wisdom keywords)
         return motivational_count > wisdom_count
 
     def normalize_text(self, text):
-        """Normalize text to proper sentence case, removing ALL weird capitalizations"""
+        """Normalize text to fix capitalization issues
+        Preserves punctuation (!, ?, ...) and handles curly apostrophes"""
         import re
 
-        # Remove extra whitespace
-        text = ' '.join(text.split())
+        SENTENCE_SPLIT = re.compile(r'(?<=[.!?…])\s+(?=[\"""''(\[]?\w)')
+        INTERIOR_UPPER = re.compile(r"(?<!^)(?<![''])[A-Z]")
 
-        # Split into sentences
-        sentences = text.split('. ')
-        normalized = []
+        text = re.sub(r'\s+', ' ', text).strip()
+        sentences = SENTENCE_SPLIT.split(text) or [text]
 
+        cleaned = []
         for sentence in sentences:
-            if sentence:
-                words = sentence.split()
-                fixed_words = []
-
-                for i, word in enumerate(words):
-                    # Skip empty words
-                    if not word:
-                        continue
-
-                    # Check if word has weird capitalization (capital letters in middle)
-                    # Examples: "They'Re", "It'S", "DoN'T"
-                    has_weird_caps = False
-                    if len(word) > 1:
-                        # Check for capital letters after the first character (excluding after apostrophes at start)
-                        for j, char in enumerate(word[1:], 1):
-                            if char.isupper() and (j == 1 or word[j-1] not in ["'", "'"]):
-                                has_weird_caps = True
-                                break
-
-                    # Fix the word
-                    if word.isupper() and len(word) > 1:
-                        # ALL CAPS word → Capitalize
-                        word = word.capitalize()
-                    elif has_weird_caps:
-                        # Weird caps in middle → Convert to lowercase, then capitalize first letter
-                        word = word.lower()
-                        word = word[0].upper() + word[1:] if len(word) > 1 else word.upper()
-                    elif i == 0:
-                        # First word → Ensure starts with capital
-                        word = word[0].upper() + word[1:] if len(word) > 1 else word.upper()
-
-                    fixed_words.append(word)
-
-                normalized.append(' '.join(fixed_words))
-
-        return '. '.join(normalized)
+            words = sentence.split()
+            fixed = []
+            for idx, word in enumerate(words):
+                core = INTERIOR_UPPER.sub(lambda m: m.group(0).lower(), word)
+                if core.isupper() and len(core) > 3:
+                    core = core[0] + core[1:].lower()
+                if idx == 0:
+                    match = re.search(r'[A-Za-zÀ-ÖØ-öø-ÿ]', core)
+                    if match:
+                        pos = match.start()
+                        core = core[:pos] + core[pos].upper() + core[pos + 1:]
+                fixed.append(core)
+            cleaned.append(' '.join(fixed))
+        return ' '.join(cleaned)
 
     def get_quote(self):
         """Fetch quote from API with fallback, filtering for motivational content"""
@@ -331,6 +318,18 @@ class QuoteOverlay:
             justify=tk.RIGHT
         )
         author_label.pack(anchor='e', pady=(0, 8))
+
+        # Learn more hint
+        hint_font = font.Font(family='Segoe UI', size=9, slant='italic')
+        hint_label = tk.Label(
+            content_frame,
+            text='Click quote to learn more',
+            font=hint_font,
+            fg='#999',
+            bg='#e8eaed',
+            justify=tk.CENTER
+        )
+        hint_label.pack(anchor='center', pady=(4, 6))
 
         # Progress bar (thinner, more subtle)
         self.progress_frame = tk.Frame(content_frame, bg='#c0c0c0', height=2)
