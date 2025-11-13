@@ -336,7 +336,7 @@
         }
       }
 
-      // Normalize text to fix capitalization issues
+      // Normalize text to fix ALL capitalization issues
       function normalizeText(text) {
         // Remove extra whitespace
         text = text.replace(/\s+/g, ' ').trim();
@@ -349,12 +349,33 @@
           if (sentence) {
             const words = sentence.split(' ');
             const fixedWords = words.map((word, i) => {
-              // If word is ALL CAPS and longer than 1 char (not an acronym like "I")
-              if (word === word.toUpperCase() && word.length > 1) {
-                return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+              if (!word) return word;
+
+              // Check if word has weird capitalization (capital letters in middle)
+              // Examples: "They'Re", "It'S", "DoN'T"
+              let hasWeirdCaps = false;
+              if (word.length > 1) {
+                for (let j = 1; j < word.length; j++) {
+                  const char = word[j];
+                  const prevChar = word[j - 1];
+                  if (char === char.toUpperCase() && char !== char.toLowerCase() &&
+                      (j === 1 || !"''"​.includes(prevChar))) {
+                    hasWeirdCaps = true;
+                    break;
+                  }
+                }
               }
-              // If first word, ensure it starts with capital
-              if (i === 0) {
+
+              // Fix the word
+              if (word === word.toUpperCase() && word.length > 1) {
+                // ALL CAPS word → Capitalize
+                return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+              } else if (hasWeirdCaps) {
+                // Weird caps in middle → Convert to lowercase, then capitalize first letter
+                word = word.toLowerCase();
+                return word.charAt(0).toUpperCase() + word.slice(1);
+              } else if (i === 0) {
+                // First word → Ensure starts with capital
                 return word.charAt(0).toUpperCase() + word.slice(1);
               }
               return word;

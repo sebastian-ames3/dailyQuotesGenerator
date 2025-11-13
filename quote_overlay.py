@@ -186,28 +186,50 @@ class QuoteOverlay:
         return motivational_count > wisdom_count
 
     def normalize_text(self, text):
-        """Normalize text to proper sentence case, removing weird capitalizations"""
+        """Normalize text to proper sentence case, removing ALL weird capitalizations"""
+        import re
+
         # Remove extra whitespace
         text = ' '.join(text.split())
 
-        # Convert to sentence case (first letter capital, rest lowercase)
-        # But preserve proper nouns and intentional caps
+        # Split into sentences
         sentences = text.split('. ')
         normalized = []
 
         for sentence in sentences:
             if sentence:
-                # Capitalize first letter, keep rest as-is but fix ALL CAPS words
                 words = sentence.split()
                 fixed_words = []
+
                 for i, word in enumerate(words):
-                    # If word is ALL CAPS and longer than 1 char (not an acronym like "I")
+                    # Skip empty words
+                    if not word:
+                        continue
+
+                    # Check if word has weird capitalization (capital letters in middle)
+                    # Examples: "They'Re", "It'S", "DoN'T"
+                    has_weird_caps = False
+                    if len(word) > 1:
+                        # Check for capital letters after the first character (excluding after apostrophes at start)
+                        for j, char in enumerate(word[1:], 1):
+                            if char.isupper() and (j == 1 or word[j-1] not in ["'", "'"]):
+                                has_weird_caps = True
+                                break
+
+                    # Fix the word
                     if word.isupper() and len(word) > 1:
+                        # ALL CAPS word → Capitalize
                         word = word.capitalize()
-                    # If first word, ensure it starts with capital
-                    elif i == 0:
+                    elif has_weird_caps:
+                        # Weird caps in middle → Convert to lowercase, then capitalize first letter
+                        word = word.lower()
                         word = word[0].upper() + word[1:] if len(word) > 1 else word.upper()
+                    elif i == 0:
+                        # First word → Ensure starts with capital
+                        word = word[0].upper() + word[1:] if len(word) > 1 else word.upper()
+
                     fixed_words.append(word)
+
                 normalized.append(' '.join(fixed_words))
 
         return '. '.join(normalized)
