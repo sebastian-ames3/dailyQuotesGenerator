@@ -19,6 +19,75 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Release History
 
+## [2.0.0] - 2025-11-13
+
+### Added
+
+- **V2 Phase 1: Critical Bug Fixes**
+  - Improved text normalization using regex-based sentence splitting
+  - Preserves all punctuation (!, ?, ...) not just periods
+  - Handles both straight (') and curly (', ') apostrophes
+  - Preserves acronyms (U.S., A.I.)
+  - Removed hidden zero-width space character in JavaScript
+  - Fixed window.close() behavior with graceful fallback
+  - Improved motivation filter with word-boundary regex
+  - Added "Click quote to learn more" hint text
+  - Removed unused imports
+
+- **V2 Feature: Dark/Light Mode**
+  - Theme toggle button (🌙/☀️) in quote notification
+  - Auto-detect system color scheme preference
+  - Persist user theme choice in localStorage
+  - CSS variables for all colors (light and dark themes)
+  - Smooth 0.3s transitions between themes
+  - WCAG AA compliant contrast ratios in both themes
+  - Auto-switch with system preference changes
+
+- **V2 Feature: Settings Panel**
+  - ⚙️ Settings button to toggle settings panel
+  - Timer duration slider (5-60 seconds, 5s increments)
+  - Position selector (bottom-right, bottom-left, top-right, top-left)
+  - Font size selector (small, medium, large)
+  - All settings persist in localStorage
+  - Real-time preview of changes
+  - Clean, minimal design matching current theme
+  - Theme-aware colors (works in both light/dark mode)
+
+- **V2 Feature: Quote Categories**
+  - Category selector in settings panel
+  - 4 pre-defined categories:
+    * Motivation & Inspiration (default)
+    * Learning & Growth
+    * Creativity & Innovation
+    * Productivity & Focus
+  - "All Categories" option for no filtering
+  - Keyword-based category matching using word boundaries
+  - API quotes filtered in real-time (up to 5 attempts)
+  - Fallback quotes filtered by category
+  - Category preference persists in localStorage
+
+- **Configuration Files**
+  - config/quotes_config.json: Centralized theme colors, timer settings, API config, categories
+  - config/user_settings.json: User preferences storage template
+
+### Changed
+
+- Text normalization algorithm completely rewritten
+- Motivation filter now uses word-boundary regex to avoid false positives
+- window.close() now has graceful fallback for better browser compatibility
+- Quote container positioning system overhauled for settings panel
+
+### Fixed
+
+- Text normalization no longer mangles quotes with varied punctuation
+- Sentence splitting preserves exclamation points and question marks
+- Abbreviations like "U.S." no longer broken into "U. S"
+- Contractions with curly apostrophes now handled correctly
+- Motivation filter false positives ("can" matching "candle")
+- Browser close behavior when window.close() is blocked
+
+---
+
 ## [1.0.0] - 2025-11-12
 
 ### Added

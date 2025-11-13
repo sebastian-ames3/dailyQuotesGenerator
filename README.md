@@ -11,14 +11,21 @@
 
 ### Key Features
 
+#### Core Features
 - **Random Motivational Quotes** - Fetches fresh, inspiring quotes from a curated API
 - **Clean Corner Pop-up** - Minimal, professional design that doesn't interrupt your workflow
-- **Smart Auto-close** - Disappears after 15 seconds (configurable)
+- **Smart Auto-close** - Disappears after 15 seconds (configurable 5-60s)
 - **Hover to Keep** - Pause the timer by hovering over the quote
 - **Click to Learn More** - Click the quote to search or explore its source
 - **Offline Support** - Works without internet using fallback quotes
 - **Auto-launch** - Opens automatically on system login
 - **Zero Dependencies** - Pure HTML, CSS, and JavaScript
+
+#### V2 Features (New!)
+- **🌙 Dark/Light Mode** - Toggle between themes or auto-detect system preference
+- **⚙️ Customization Panel** - Adjust timer, position, font size, and more
+- **📚 Quote Categories** - Filter by Motivation, Learning, Creativity, or Productivity
+- **💾 Persistent Settings** - All preferences saved locally
 
 ## Demo
 
@@ -66,26 +73,35 @@
 
 ## Configuration
 
-You can customize the quote display behavior by editing `index.html`:
+### V2 Settings Panel (Recommended)
 
-### Change Auto-Close Timer
+Click the ⚙️ settings button in the quote notification to customize:
 
-Edit the `TIMER_DURATION` constant (around line 11):
+- **Timer Duration**: 5-60 seconds (slider)
+- **Position**: Bottom-right, bottom-left, top-right, or top-left
+- **Font Size**: Small, medium, or large
+- **Quote Category**: Motivation, Learning, Creativity, Productivity, or All
+- **Theme**: Toggle 🌙 dark mode / ☀️ light mode
 
+All settings are saved automatically and persist between sessions.
+
+### Manual Configuration (Advanced)
+
+You can also customize by editing `index.html`:
+
+**Change Auto-Close Timer**
 ```javascript
-const TIMER_DURATION = 15000; // 15 seconds (change to your preference)
+const config = {
+  timerDuration: 15000, // 15 seconds (in milliseconds)
+  ...
+};
 ```
 
-### Change Quote Position
-
-Edit the CSS positioning (around line 40-50):
-
+**Change Quote Position**
 ```css
 /* Default: bottom-right */
-bottom: 20px;
-right: 20px;
-
-/* Other options: top-right, top-left, bottom-left */
+bottom: 24px;
+right: 24px;
 ```
 
 ## Auto-Launch Setup
@@ -195,14 +211,27 @@ Please read [PRD.md](PRD.md) for details on our product requirements and [CLAUDE
 - [x] Screenshot/demo for README
 - [x] v1.0.0 release
 
-### V2 (Future)
+### V2 (Complete - v2.0.0)
 
-- [ ] Quote history/favorites
-- [ ] Theme customization
-- [ ] Dark/light mode
-- [ ] Quote sharing
+- [x] Critical bug fixes (text normalization, punctuation handling)
+- [x] Dark/light mode with auto-detection
+- [x] Settings panel with live customization
+- [x] Timer duration control (5-60s)
+- [x] Position customization (4 corners)
+- [x] Font size options (S/M/L)
+- [x] Quote categories (Motivation, Learning, Creativity, Productivity)
+- [x] Smart category filtering
+- [x] Persistent user preferences (localStorage)
+- [x] v2.0.0 release
+
+### V3 (Future)
+
+- [ ] Python overlay V2 updates (dark mode, settings)
+- [ ] Quote sharing (social media, clipboard)
+- [ ] Custom quote collections
 - [ ] Multi-language support
 - [ ] Browser extension version
+- [ ] Mobile app version
 
 See the [CHANGELOG.md](CHANGELOG.md) for a detailed version history.
 
