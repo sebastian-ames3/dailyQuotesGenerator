@@ -484,6 +484,17 @@
             <option value="large">Large</option>
           </select>
         </div>
+
+        <div class="setting-group">
+          <label class="setting-label" for="categorySelect">Quote Category</label>
+          <select class="setting-select" id="categorySelect">
+            <option value="motivation" selected>Motivation & Inspiration</option>
+            <option value="learning">Learning & Growth</option>
+            <option value="creativity">Creativity & Innovation</option>
+            <option value="productivity">Productivity & Focus</option>
+            <option value="all">All Categories</option>
+          </select>
+        </div>
       </div>
       <div
         class="quote-text"
@@ -590,6 +601,7 @@
       const timerValue = document.getElementById('timerValue');
       const positionSelect = document.getElementById('positionSelect');
       const fontSizeSelect = document.getElementById('fontSizeSelect');
+      const categorySelect = document.getElementById('categorySelect');
       const progressBar = document.getElementById('progressBar');
       const statusMessage = document.getElementById('status-message');
 
@@ -629,11 +641,51 @@
       });
 
       // Settings Management
+      // Category keywords for filtering
+      const categoryKeywords = {
+        motivation: [
+          'believe', 'achieve', 'success', 'dream', 'goal',
+          'start', 'begin', 'action', 'courage', 'brave', 'try',
+          'possible', 'impossible', 'persist', 'persevere',
+          'overcome', 'conquer', 'triumph', 'victory', 'fight',
+          'inspire', 'motivate', 'passion', 'purpose', 'destiny', 'future'
+        ],
+        learning: [
+          'learn', 'grow', 'improve', 'better', 'change', 'adapt',
+          'develop', 'evolve', 'transform', 'progress', 'advance', 'knowledge'
+        ],
+        creativity: [
+          'create', 'build', 'make', 'innovation', 'innovative',
+          'creativity', 'creative', 'imagine', 'invention', 'design', 'art'
+        ],
+        productivity: [
+          'productivity', 'productive', 'focus', 'discipline',
+          'work', 'effort', 'dedication', 'commitment', 'perseverance', 'do'
+        ]
+      };
+
+      function matchesCategory(quoteText, category) {
+        if (category === 'all') return true;
+
+        const keywords = categoryKeywords[category];
+        if (!keywords) return true;
+
+        const text = quoteText.toLowerCase();
+        for (const keyword of keywords) {
+          const regex = new RegExp(`\\b${keyword}\\b`, 'i');
+          if (regex.test(text)) {
+            return true;
+          }
+        }
+        return false;
+      }
+
       function getSettings() {
         const defaults = {
           timerDuration: 15,
           position: 'bottomRight',
-          fontSize: 'medium'
+          fontSize: 'medium',
+          category: 'motivation'
         };
         const saved = localStorage.getItem('quoteSettings');
         return saved ? {...defaults, ...JSON.parse(saved)} : defaults;
@@ -658,6 +710,9 @@
         // Apply font size
         fontSizeSelect.value = settings.fontSize;
         applyFontSize(settings.fontSize);
+
+        // Apply category
+        categorySelect.value = settings.category;
       }
 
       function applyPosition(position) {
@@ -731,6 +786,13 @@
         applyFontSize(fontSize);
       });
 
+      categorySelect.addEventListener('change', (e) => {
+        const category = e.target.value;
+        const settings = getSettings();
+        settings.category = category;
+        saveSettings(settings);
+      });
+
       // Initialize settings
       applySettings();
 
@@ -789,19 +851,48 @@
           .join(' ');
       }
 
-      // Get random fallback quote
-      function getRandomFallbackQuote() {
+      // Get random fallback quote (filtered by category)
+      function getRandomFallbackQuote(category = 'all') {
+        if (category === 'all') {
+          return fallbackQuotes[Math.floor(Math.random() * fallbackQuotes.length)];
+        }
+
+        // Filter fallback quotes by category
+        const filtered = fallbackQuotes.filter(q => matchesCategory(q.text, category));
+
+        if (filtered.length > 0) {
+          return filtered[Math.floor(Math.random() * filtered.length)];
+        }
+
+        // If no matches, return any quote
         return fallbackQuotes[Math.floor(Math.random() * fallbackQuotes.length)];
       }
 
-      // Get quote (API with fallback)
+      // Get quote (API with fallback, filtered by category)
       async function getQuote() {
-        const apiQuote = await fetchQuoteWithTimeout();
-        if (apiQuote) {
-          // Normalize text to fix capitalization
-          apiQuote.text = normalizeText(apiQuote.text);
+        const settings = getSettings();
+        const selectedCategory = settings.category;
+
+        // Try to fetch from API with category filtering
+        let attempts = 0;
+        const maxAttempts = 5;
+
+        while (attempts < maxAttempts) {
+          const apiQuote = await fetchQuoteWithTimeout();
+          if (apiQuote) {
+            // Normalize text to fix capitalization
+            apiQuote.text = normalizeText(apiQuote.text);
+
+            // Check if quote matches selected category
+            if (matchesCategory(apiQuote.text, selectedCategory)) {
+              return apiQuote;
+            }
+          }
+          attempts++;
         }
-        return apiQuote || getRandomFallbackQuote();
+
+        // Fallback to local quotes filtered by category
+        return getRandomFallbackQuote(selectedCategory);
       }
 
       // Display quote
