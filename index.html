@@ -336,6 +336,36 @@
         }
       }
 
+      // Normalize text to fix capitalization issues
+      function normalizeText(text) {
+        // Remove extra whitespace
+        text = text.replace(/\s+/g, ' ').trim();
+
+        // Split into sentences
+        const sentences = text.split('. ');
+        const normalized = [];
+
+        for (let sentence of sentences) {
+          if (sentence) {
+            const words = sentence.split(' ');
+            const fixedWords = words.map((word, i) => {
+              // If word is ALL CAPS and longer than 1 char (not an acronym like "I")
+              if (word === word.toUpperCase() && word.length > 1) {
+                return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+              }
+              // If first word, ensure it starts with capital
+              if (i === 0) {
+                return word.charAt(0).toUpperCase() + word.slice(1);
+              }
+              return word;
+            });
+            normalized.push(fixedWords.join(' '));
+          }
+        }
+
+        return normalized.join('. ');
+      }
+
       // Get random fallback quote
       function getRandomFallbackQuote() {
         return fallbackQuotes[Math.floor(Math.random() * fallbackQuotes.length)];
@@ -344,6 +374,10 @@
       // Get quote (API with fallback)
       async function getQuote() {
         const apiQuote = await fetchQuoteWithTimeout();
+        if (apiQuote) {
+          // Normalize text to fix capitalization
+          apiQuote.text = normalizeText(apiQuote.text);
+        }
         return apiQuote || getRandomFallbackQuote();
       }
 

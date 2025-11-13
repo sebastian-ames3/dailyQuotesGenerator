@@ -185,6 +185,33 @@ class QuoteOverlay:
         # Prefer motivational quotes (more motivational than wisdom keywords)
         return motivational_count > wisdom_count
 
+    def normalize_text(self, text):
+        """Normalize text to proper sentence case, removing weird capitalizations"""
+        # Remove extra whitespace
+        text = ' '.join(text.split())
+
+        # Convert to sentence case (first letter capital, rest lowercase)
+        # But preserve proper nouns and intentional caps
+        sentences = text.split('. ')
+        normalized = []
+
+        for sentence in sentences:
+            if sentence:
+                # Capitalize first letter, keep rest as-is but fix ALL CAPS words
+                words = sentence.split()
+                fixed_words = []
+                for i, word in enumerate(words):
+                    # If word is ALL CAPS and longer than 1 char (not an acronym like "I")
+                    if word.isupper() and len(word) > 1:
+                        word = word.capitalize()
+                    # If first word, ensure it starts with capital
+                    elif i == 0:
+                        word = word[0].upper() + word[1:] if len(word) > 1 else word.upper()
+                    fixed_words.append(word)
+                normalized.append(' '.join(fixed_words))
+
+        return '. '.join(normalized)
+
     def get_quote(self):
         """Fetch quote from API with fallback, filtering for motivational content"""
         max_attempts = 5  # Try up to 5 times to get a motivational quote
@@ -198,8 +225,10 @@ class QuoteOverlay:
 
                     # Check if quote is motivational/inspirational
                     if self.is_motivational(quote_text):
+                        # Normalize the text to fix capitalization issues
+                        normalized_text = self.normalize_text(quote_text)
                         return {
-                            "text": quote_text,
+                            "text": normalized_text,
                             "author": data.get("author", "Unknown")
                         }
                     # If not motivational, try again
