@@ -3,7 +3,7 @@ const { test, expect } = require('@playwright/test');
 test.describe('Settings Panel and Quote Box Analysis', () => {
   test('should capture current settings panel behavior', async ({ page }) => {
     // Start local server and navigate
-    await page.goto('http://localhost:8080/index.html');
+    await page.goto('http://localhost:8081/index.html');
 
     // Wait for quote to appear
     await page.waitForSelector('.quote-container', { timeout: 10000 });
@@ -53,7 +53,7 @@ test.describe('Settings Panel and Quote Box Analysis', () => {
     // Intercept API to force fallback quotes
     await page.route('**/dummyjson.com/**', route => route.abort());
 
-    await page.goto('http://localhost:8080/index.html');
+    await page.goto('http://localhost:8081/index.html');
     await page.waitForSelector('.quote-container', { timeout: 10000 });
 
     // Take screenshot
@@ -69,7 +69,7 @@ test.describe('Settings Panel and Quote Box Analysis', () => {
   });
 
   test('should test settings panel at different positions', async ({ page }) => {
-    await page.goto('http://localhost:8080/index.html');
+    await page.goto('http://localhost:8081/index.html');
     await page.waitForSelector('.quote-container', { timeout: 10000 });
 
     // Open settings
@@ -100,7 +100,7 @@ test.describe('Settings Panel and Quote Box Analysis', () => {
   });
 
   test('should analyze quote box with various quote lengths', async ({ page }) => {
-    await page.goto('http://localhost:8080/index.html');
+    await page.goto('http://localhost:8081/index.html');
 
     // Inject custom quotes of different lengths
     await page.evaluate(() => {

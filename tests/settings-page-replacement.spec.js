@@ -2,7 +2,7 @@ const { test, expect } = require('@playwright/test');
 
 test.describe('Settings Page Replacement', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('http://localhost:8082/index.html');
+    await page.goto('http://localhost:8081/index.html');
     await page.waitForSelector('.quote-container', { timeout: 10000 });
   });
 
@@ -145,7 +145,7 @@ test.describe('Settings Page Replacement', () => {
     // Set mobile viewport
     await page.setViewportSize({ width: 375, height: 667 });
 
-    await page.goto('http://localhost:8082/index.html');
+    await page.goto('http://localhost:8081/index.html');
     await page.waitForSelector('.quote-container', { timeout: 10000 });
 
     // Clear any saved positioning

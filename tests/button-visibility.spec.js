@@ -93,8 +93,9 @@ test.describe('Button Visibility Tests', () => {
     await expect(page.locator('#fontSizeSelect')).toBeVisible();
     await expect(page.locator('#categorySelect')).toBeVisible();
 
-    // Test 7: Close settings panel by clicking button again
-    await settingsButton.click();
+    // Test 7: Close settings panel using back button (V3.0 behavior)
+    const backButton = page.locator('#backButton');
+    await backButton.click();
     await expect(settingsPanel).not.toHaveClass(/show/);
 
     console.log('Settings panel closed successfully');

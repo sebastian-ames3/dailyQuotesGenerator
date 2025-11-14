@@ -138,8 +138,9 @@ test.describe('Button Visibility - Simple Tests', () => {
       fullPage: true
     });
 
-    // Close panel
-    await settingsButton.click({ force: true });
+    // Close panel (V3.0: use back button instead of settings button)
+    const backButton = page.locator('#backButton');
+    await backButton.click({ force: true });
     await expect(settingsPanel).not.toHaveClass(/show/);
 
     console.log('  - Panel closed: YES ✓');

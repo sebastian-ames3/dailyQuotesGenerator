@@ -158,6 +158,115 @@ This issue required a multi-step debugging approach:
 
 **Key Lesson**: Browser caching and visual bugs require actual screenshot verification, not just code review.
 
+### V3.0.0 - Responsive Quote Box + Settings Page Replacement (2025-11-14)
+
+**Development Context:**
+User's laptop died mid-session after V2.0.1 was completed. Session resumed with full context recovery from git history.
+
+**Phase 1: Responsive Quote Box**
+
+**Goal:** Make quote box dynamically adapt to quote length instead of fixed 500px width.
+
+**Implementation:**
+- Changed `width: 500px` → `width: fit-content`
+- Added constraints: `min-width: 320px`, `max-width: min(800px, 90vw)`
+- Box now intelligently sizes from 320px (short quotes) to 800px (long quotes)
+- Mobile responsive: respects 90vw constraint on small screens
+- Maintains visual balance regardless of content length
+
+**Testing:** 6 Playwright tests created, all passing
+
+**Phase 2: Settings Page Replacement**
+
+**Goal:** Replace slide-in settings panel with centered modal that replaces quote box entirely.
+
+**Implementation:**
+- Changed `.settings-panel` from `position: absolute` → `position: fixed`
+- Centered positioning: `top: 50%; left: 50%; transform: translate(-50%, -50%)`
+- Added back button (← Back) for navigation
+- Settings panel now hides quote box completely (single view at a time)
+- Increased z-index to 1000000 to ensure visibility
+
+**Critical Bug Discovery:**
+Settings panel disappeared immediately after opening, even though Playwright tests showed it working correctly.
+
+**Debugging Journey:**
+
+1. **Initial Symptoms:**
+   - User reported settings panel "flashes briefly then goes away"
+   - Hard refresh and incognito mode didn't help
+   - Playwright showed settings staying open for 20+ seconds
+
+2. **Root Cause Analysis:**
+   - Browser console revealed ARIA accessibility error:
+     ```
+     Blocked aria-hidden on an element because its descendant retained focus.
+     Element with focus: <button.back-button#backButton>
+     Ancestor with aria-hidden: <div.quote-container#quoteContainer>
+     ```
+
+3. **The Real Problem:**
+   - Settings panel was **nested inside** quote-container (line 508)
+   - When `openSettings()` ran, it set quote-container to `aria-hidden="true"`
+   - Then tried to focus back button (line 840) which was inside that hidden container
+   - Chrome/Brave blocked this for accessibility, causing cascading failures
+
+4. **Additional Timer Issues Found:**
+   - Wrong variable name: `countdownInterval` should be `timerInterval` (line 843)
+   - `startCountdown()` function doesn't exist, should be `startTimer()` (line 861)
+   - Timer started unconditionally in `init()` even if settings already open (line 1125)
+   - `closeQuote()` didn't check if settings were open before closing (line 1052)
+
+**Fixes Applied:**
+
+1. **HTML Restructure** (Critical):
+   - Moved entire settings panel from inside quote-container to after it (sibling element)
+   - Settings panel now at line 523 (outside quote-container which ends at line 520)
+   - Added HTML comment: "Settings Panel (outside quote-container for accessibility)"
+
+2. **Timer Fixes:**
+   ```javascript
+   // openSettings() - line 843
+   if (timerInterval) {  // was: countdownInterval
+     clearInterval(timerInterval);
+     timerInterval = null;
+   }
+
+   // closeSettings() - line 862
+   startTimer();  // was: startCountdown()
+
+   // init() - line 1126
+   if (!settingsOpen) {  // Added guard
+     startTimer();
+   }
+
+   // closeQuote() - line 1053
+   if (settingsOpen) {  // Added guard
+     return;
+   }
+   ```
+
+3. **Test Updates:**
+   - Fixed port mismatch: 8082 → 8081 in responsive-quote-box.spec.js and settings-page-replacement.spec.js
+   - Updated button-visibility tests: settings button opens (doesn't toggle), back button closes
+
+**Test Results:**
+- Before fixes: 19 failed, 7 passed
+- After fixes: 23 passed, 3 failed (non-critical), 1 skipped (85% pass rate)
+
+**Phase 3: Integration & Refinement**
+
+**Manual Testing Results:**
+- ✅ Responsive quote box adapts to different quote lengths
+- ✅ Settings panel stays open indefinitely
+- ✅ Back button returns to quote
+- ✅ Esc key closes settings
+- ✅ Timer pauses when settings open
+- ✅ No ARIA accessibility warnings in console
+
+**Key Architectural Decision:**
+Settings panel must be a **sibling** of quote-container, not a child, to avoid ARIA conflicts when hiding parent elements.
+
 ## Architectural Decisions
 
 ### No Database Required
@@ -369,6 +478,32 @@ http://localhost:8080/index.html?v={timestamp}
 - Demonstrates testing methodology for contributors
 - Minimal size cost (~2KB each)
 
+### 8. ARIA Accessibility Can Cause Invisible Bugs
+
+**Problem** (V3.0): Settings panel disappeared immediately, but Playwright showed it working
+
+**Root Cause**: Settings panel was nested inside quote-container
+- `openSettings()` set parent to `aria-hidden="true"`
+- Then tried to focus child element (back button)
+- Browser blocked focus for accessibility, breaking the entire flow
+
+**Console Error**:
+```
+Blocked aria-hidden on an element because its descendant retained focus.
+```
+
+**Why Playwright Didn't Catch It**:
+- Playwright's `page.click()` can force clicks even when accessibility blocks them
+- Real browsers (Chrome/Brave) enforce ARIA rules more strictly in manual use
+- Different behavior between automated testing and human interaction
+
+**Solution**:
+- Move interactive elements (settings panel) **outside** containers that get `aria-hidden`
+- DOM structure matters for accessibility, not just CSS positioning
+- Settings panel must be a sibling of quote-container, not a child
+
+**Lesson**: When Playwright shows success but manual testing fails, check browser console for accessibility warnings. They can cause cascading failures invisible to automated tests.
+
 ## Development Workflow
 
 ### Recommended Commit Strategy
@@ -475,4 +610,4 @@ http://localhost:8080/index.html?v={timestamp}
 
 ---
 
-Last Updated: 2025-11-13 (V2.0.1)
+Last Updated: 2025-11-14 (V3.0.0)

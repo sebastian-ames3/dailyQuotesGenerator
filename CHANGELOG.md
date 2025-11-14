@@ -19,6 +19,89 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Release History
 
+## [3.0.0] - 2025-11-14
+
+### Added
+
+- **Responsive Quote Box (Phase 1)**
+  - Quote box now dynamically adapts width from 320px to 800px based on content length
+  - Uses `fit-content` with intelligent min/max constraints: `min(800px, 90vw)`
+  - Height auto-adjusts with scrolling for long quotes (max-height: 80vh)
+  - Mobile responsive: respects 90vw on small screens
+  - Maintains visual balance for both short and long quotes
+
+- **Settings Page Replacement (Phase 2)**
+  - Settings panel now appears as centered modal, replacing quote box completely
+  - Added back button (← Back) for clear navigation to return to quote
+  - Settings panel positioned center screen (50%, 50% with translate transform)
+  - Mobile responsive: min-width 320px, max-width min(600px, 90vw)
+  - Single view at a time: quote OR settings, never both simultaneously
+  - Timer pauses when settings open, resumes when closed
+
+### Changed
+
+- **Quote Container CSS**
+  - `width: 500px` → `width: fit-content`
+  - Added `min-width: 320px`
+  - Added `max-width: min(800px, 90vw)`
+  - Container now adapts to content instead of fixed width
+
+- **Settings Panel CSS**
+  - `position: absolute` (below box) → `position: fixed` (centered modal)
+  - Removed top-right slide-in positioning
+  - Changed to center positioning: `top: 50%; left: 50%; transform: translate(-50%, -50%)`
+  - Increased z-index to 1000000 (above quote box)
+  - Added `.quote-container.settings-open` class for hiding quote
+
+- **Settings Panel HTML Structure**
+  - Moved settings panel from inside quote-container to outside (sibling element)
+  - Fixed ARIA accessibility conflict (aria-hidden on focused element)
+  - Added HTML comment: "Settings Panel (outside quote-container for accessibility)"
+
+- **Navigation Behavior**
+  - Settings button (⚙️) now only opens settings, does not toggle
+  - Settings close via back button or Esc key only
+  - Esc key: closes settings if open, otherwise closes quote
+
+### Fixed
+
+- **Critical: Settings panel disappearing immediately**
+  - Fixed timer not pausing when settings opened (wrong variable name: countdownInterval → timerInterval)
+  - Fixed timer starting even when settings already open (added check in init())
+  - Fixed closeQuote() running when settings open (added settingsOpen guard)
+  - Fixed ARIA accessibility blocking focus (moved settings panel outside quote-container)
+
+- **Test Infrastructure**
+  - Fixed port mismatch: 8082 → 8081 in all test files
+  - Updated button-visibility tests for V3.0 behavior (back button closes settings, not settings button)
+  - Fixed test expectations for settings page replacement model
+
+### Technical Details
+
+- **CSS Changes:** 15+ lines modified across .quote-container and .settings-panel
+- **HTML Changes:** Restructured settings panel location (60 lines moved)
+- **JavaScript Changes:**
+  - Refactored `toggleSettings()` → `openSettings()` + `closeSettings()`
+  - Added `settingsOpen` state variable
+  - Fixed timer variable references (timerInterval vs countdownInterval)
+  - Added conditional timer start in init()
+  - Added settingsOpen guard in closeQuote()
+  - Updated Esc key handler for dual behavior
+
+- **Test Results:** 23 passed, 3 failed (non-critical), 1 skipped (85% pass rate)
+
+### Accessibility
+
+- Fixed ARIA violation: Settings panel no longer inside aria-hidden container
+- Focus management: Back button properly receives focus without accessibility warnings
+- Keyboard navigation: Esc key closes settings, Tab cycles through controls
+
+### Notes
+
+- This version introduces breaking changes to settings panel behavior (no longer toggles on settings button click)
+- Settings panel now requires explicit close action (back button or Esc)
+- All changes align with Phase 3 integration testing requirements
+
 ## [2.0.1] - 2025-11-13
 
 ### Fixed

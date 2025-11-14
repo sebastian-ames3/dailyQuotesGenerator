@@ -2,7 +2,7 @@ const { test, expect } = require('@playwright/test');
 
 test.describe('Responsive Quote Box', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('http://localhost:8082/index.html');
+    await page.goto('http://localhost:8081/index.html');
     await page.waitForSelector('.quote-container', { timeout: 10000 });
   });
 
@@ -88,7 +88,7 @@ test.describe('Responsive Quote Box', () => {
     // Set mobile viewport
     await page.setViewportSize({ width: 375, height: 667 });
 
-    await page.goto('http://localhost:8082/index.html');
+    await page.goto('http://localhost:8081/index.html');
     await page.waitForSelector('.quote-container', { timeout: 10000 });
 
     // Clear any saved positioning and re-center the box for mobile test

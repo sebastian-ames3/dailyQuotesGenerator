@@ -504,66 +504,6 @@
         ×
       </button>
 
-      <!-- Settings Panel -->
-      <div class="settings-panel" id="settingsPanel">
-        <button
-          class="back-button"
-          id="backButton"
-          aria-label="Back to quote"
-          title="Back to Quote (Esc)"
-        >
-          ← Back
-        </button>
-
-        <h3>Settings</h3>
-
-        <div class="setting-group">
-          <label class="setting-label">
-            Timer Duration
-            <span class="setting-value" id="timerValue">15s</span>
-          </label>
-          <input
-            type="range"
-            class="setting-slider"
-            id="timerSlider"
-            min="5"
-            max="60"
-            value="15"
-            step="5"
-          />
-        </div>
-
-        <div class="setting-group">
-          <label class="setting-label" for="positionSelect">Position</label>
-          <select class="setting-select" id="positionSelect">
-            <option value="bottomRight">Bottom Right</option>
-            <option value="bottomLeft">Bottom Left</option>
-            <option value="topRight">Top Right</option>
-            <option value="topLeft">Top Left</option>
-          </select>
-        </div>
-
-        <div class="setting-group">
-          <label class="setting-label" for="fontSizeSelect">Font Size</label>
-          <select class="setting-select" id="fontSizeSelect">
-            <option value="small">Small</option>
-            <option value="medium" selected>Medium</option>
-            <option value="large">Large</option>
-          </select>
-        </div>
-
-        <div class="setting-group">
-          <label class="setting-label" for="categorySelect">Quote Category</label>
-          <select class="setting-select" id="categorySelect">
-            <option value="motivation" selected>Motivation & Inspiration</option>
-            <option value="learning">Learning & Growth</option>
-            <option value="creativity">Creativity & Innovation</option>
-            <option value="productivity">Productivity & Focus</option>
-            <option value="all">All Categories</option>
-          </select>
-        </div>
-      </div>
-
       <div class="quote-content">
         <div
           class="quote-text"
@@ -577,6 +517,66 @@
       </div>
 
       <div class="progress-bar" id="progressBar" aria-hidden="true"></div>
+    </div>
+
+    <!-- Settings Panel (outside quote-container for accessibility) -->
+    <div class="settings-panel" id="settingsPanel">
+      <button
+        class="back-button"
+        id="backButton"
+        aria-label="Back to quote"
+        title="Back to Quote (Esc)"
+      >
+        ← Back
+      </button>
+
+      <h3>Settings</h3>
+
+      <div class="setting-group">
+        <label class="setting-label">
+          Timer Duration
+          <span class="setting-value" id="timerValue">15s</span>
+        </label>
+        <input
+          type="range"
+          class="setting-slider"
+          id="timerSlider"
+          min="5"
+          max="60"
+          value="15"
+          step="5"
+        />
+      </div>
+
+      <div class="setting-group">
+        <label class="setting-label" for="positionSelect">Position</label>
+        <select class="setting-select" id="positionSelect">
+          <option value="bottomRight">Bottom Right</option>
+          <option value="bottomLeft">Bottom Left</option>
+          <option value="topRight">Top Right</option>
+          <option value="topLeft">Top Left</option>
+        </select>
+      </div>
+
+      <div class="setting-group">
+        <label class="setting-label" for="fontSizeSelect">Font Size</label>
+        <select class="setting-select" id="fontSizeSelect">
+          <option value="small">Small</option>
+          <option value="medium" selected>Medium</option>
+          <option value="large">Large</option>
+        </select>
+      </div>
+
+      <div class="setting-group">
+        <label class="setting-label" for="categorySelect">Quote Category</label>
+        <select class="setting-select" id="categorySelect">
+          <option value="motivation" selected>Motivation & Inspiration</option>
+          <option value="learning">Learning & Growth</option>
+          <option value="creativity">Creativity & Innovation</option>
+          <option value="productivity">Productivity & Focus</option>
+          <option value="all">All Categories</option>
+        </select>
+      </div>
     </div>
 
     <div class="sr-only" id="status-message" role="status" aria-live="assertive"></div>
@@ -840,8 +840,9 @@
         document.getElementById('backButton').focus();
 
         // Pause timer
-        if (countdownInterval) {
-          clearInterval(countdownInterval);
+        if (timerInterval) {
+          clearInterval(timerInterval);
+          timerInterval = null;
         }
       }
 
@@ -858,7 +859,7 @@
         settingsButton.focus();
 
         // Resume timer
-        startCountdown();
+        startTimer();
       }
 
       // Settings event listeners
@@ -1049,6 +1050,11 @@
 
       // Close quote
       function closeQuote() {
+        // Don't close if settings are open
+        if (settingsOpen) {
+          return;
+        }
+
         if (timerInterval) {
           clearInterval(timerInterval);
           timerInterval = null;
@@ -1116,7 +1122,10 @@
           console.log('Showing container...');
           container.classList.add('show');
           console.log('Container classes:', container.className);
-          startTimer();
+          // Only start timer if settings aren't open
+          if (!settingsOpen) {
+            startTimer();
+          }
         }, 100);
       }
 
