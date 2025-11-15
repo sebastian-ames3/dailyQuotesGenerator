@@ -602,31 +602,78 @@ class QuoteOverlay:
 
     def normalize_text(self, text):
         """Normalize text to fix capitalization issues
-        Preserves punctuation (!, ?, ...) and handles curly apostrophes"""
+
+        Handles:
+        - ALL CAPS words: "HELLO WORLD" → "Hello world"
+        - ALL CAPS with apostrophes: "WHO'S THERE" → "Who's there"
+        - Interior capitals: "HeLLo" → "Hello"
+        - Capitals after apostrophes: "It'S" → "It's"
+        - Proper sentence capitalization (only first word capitalized)
+        - Preserves punctuation (!, ?, ..., etc.)
+        - Properly handles both straight (') and curly (') quotes
+        """
         import re
 
-        SENTENCE_SPLIT = re.compile(r'(?<=[.!?…])\s+(?=[\"""''(\[]?\w)')
-        INTERIOR_UPPER = re.compile(r"(?<!^)(?<![''])[A-Z]")
+        # Fixed sentence splitter - properly handles straight and curly quotes
+        # Uses raw string with proper character class for quotes
+        SENTENCE_SPLIT = re.compile(
+            r'(?<=[.!?…])\s+(?=["\'""''(\[]?\w)',
+            re.UNICODE
+        )
 
+        # Clean up whitespace
         text = re.sub(r'\s+', ' ', text).strip()
-        sentences = SENTENCE_SPLIT.split(text) or [text]
 
-        cleaned = []
+        # Split into sentences
+        sentences = SENTENCE_SPLIT.split(text) if SENTENCE_SPLIT.search(text) else [text]
+
+        cleaned_sentences = []
+
         for sentence in sentences:
             words = sentence.split()
-            fixed = []
-            for idx, word in enumerate(words):
-                core = INTERIOR_UPPER.sub(lambda m: m.group(0).lower(), word)
-                if core.isupper() and len(core) > 3:
-                    core = core[0] + core[1:].lower()
-                if idx == 0:
-                    match = re.search(r'[A-Za-zÀ-ÖØ-öø-ÿ]', core)
-                    if match:
-                        pos = match.start()
-                        core = core[:pos] + core[pos].upper() + core[pos + 1:]
-                fixed.append(core)
-            cleaned.append(' '.join(fixed))
-        return ' '.join(cleaned)
+            fixed_words = []
+
+            for word_idx, word in enumerate(words):
+                # Step 1: Check if word is ALL CAPS
+                # Extract only alphabetic characters to check
+                alpha_chars = [c for c in word if c.isalpha()]
+
+                if alpha_chars and len(alpha_chars) > 1 and all(c.isupper() for c in alpha_chars):
+                    # ALL CAPS word (like "HELLO" or "WHO'S") - lowercase everything
+                    word = word.lower()
+
+                # Step 2: Fix interior capitals
+                # Process character by character to handle apostrophes correctly
+                new_chars = []
+                for char_idx, char in enumerate(word):
+                    if char_idx == 0:
+                        # Lowercase first char for now (will capitalize later if needed)
+                        new_chars.append(char.lower() if char.isalpha() else char)
+                    elif char.isupper() and char.isalpha():
+                        # Check if previous char was apostrophe
+                        if char_idx > 0 and word[char_idx - 1] in ["'", "'"]:
+                            # Capital after apostrophe - lowercase it (fixes "It'S" → "It's")
+                            new_chars.append(char.lower())
+                        else:
+                            # Interior capital not after apostrophe - lowercase it
+                            new_chars.append(char.lower())
+                    else:
+                        new_chars.append(char)
+
+                word = ''.join(new_chars)
+
+                # Step 3: Capitalize first letter ONLY if this is the first word in sentence
+                if word_idx == 0:
+                    for i, char in enumerate(word):
+                        if char.isalpha():
+                            word = word[:i] + word[i].upper() + word[i+1:]
+                            break
+
+                fixed_words.append(word)
+
+            cleaned_sentences.append(' '.join(fixed_words))
+
+        return ' '.join(cleaned_sentences)
 
     def get_quote(self):
         """Fetch quote from API with fallback, filtering by selected category"""
