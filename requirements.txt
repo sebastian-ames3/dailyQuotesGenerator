@@ -1,9 +1,16 @@
 # Morning Motivation Quote Generator - Python Dependencies
 # Install with: pip install -r requirements.txt
+#
+# SECURITY: Versions are pinned to specific releases to prevent
+# installation of potentially vulnerable future versions.
+# Update periodically and test after updating.
 
 # Required for all versions (V1.0.0+)
 # HTTP requests for API calls
-requests>=2.31.0
+# https://pypi.org/project/requests/
+requests==2.32.3
 
 # Required for V5.0.0+ (Advanced Visual Design)
-Pillow>=10.0.0
+# Image processing for gradient backgrounds
+# https://pypi.org/project/Pillow/
+Pillow==11.0.0

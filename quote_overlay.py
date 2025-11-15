@@ -1,25 +1,78 @@
 #!/usr/bin/env python3
 """
 Morning Motivation Quote Generator - Frameless Overlay
-A true frameless desktop overlay window that displays motivational quotes.
+
+A lightweight desktop overlay that displays motivational quotes from DummyJSON API
+with offline fallback support. Features include customizable dark/light themes,
+screen positions, quote categories, font sizes, and auto-close timer with
+hover-to-pause functionality.
+
+Author: Sebastian Ames
+License: MIT
+Version: 5.0.2
+Python: 3.7+
+
+Usage:
+    python quote_overlay.py          # Run normally
+    python quote_overlay.py --debug  # Run with debug output
+
+Dependencies:
+    - requests==2.32.3 (API calls)
+    - Pillow==11.0.0 (optional, for gradient backgrounds)
+
+Features:
+    - Frameless overlay window (always-on-top)
+    - Dark/Light theme support
+    - 4 screen positions (corners)
+    - 4 quote categories + All
+    - Adjustable font size (small/medium/large)
+    - Configurable timer (5-60 seconds)
+    - Hover to pause timer
+    - Click quote to search Google
+    - Settings persistence (JSON file)
+    - Responsive window sizing
+    - Diagonal gradient backgrounds (with Pillow)
+
+For setup and installation, see README.md and SETUP.md
 """
 
-import tkinter as tk
-from tkinter import font, ttk
-import requests
-import random
-import sys
 import json
 import os
+import random
+import re
+import shutil
+import sys
+import tempfile
+import time
+import tkinter as tk
+import webbrowser
+from tkinter import font, ttk
 from urllib.parse import quote as url_quote
+
+import requests
 
 # PIL for advanced visual effects (V5.0.0+)
 try:
-    from PIL import Image, ImageDraw, ImageFilter, ImageTk
+    from PIL import Image, ImageTk
     PIL_AVAILABLE = True
 except ImportError:
     PIL_AVAILABLE = False
     print("Warning: Pillow not installed. Advanced visual effects disabled.")
+
+# Debug mode - controlled via command line argument (--debug)
+DEBUG_MODE = '--debug' in sys.argv
+
+# Version information
+__version__ = "5.0.2"
+__author__ = "Sebastian Ames"
+__license__ = "MIT"
+
+# Animation and UI constants
+WINDOW_OPACITY = 0.96          # Slight transparency for elegant look
+FADE_IN_STEP = 0.12            # Opacity increment per frame (faster)
+FADE_OUT_STEP = 0.16           # Opacity decrement per frame (faster)
+FADE_IN_DELAY_MS = 15          # Milliseconds between fade-in frames
+FADE_OUT_DELAY_MS = 12         # Milliseconds between fade-out frames
 
 # Fallback quotes - MOTIVATIONAL & INSPIRATIONAL ONLY
 # Focused on action, growth, persistence, and achieving goals
@@ -157,6 +210,13 @@ CONFIG = {
 # Settings file path
 SETTINGS_FILE = os.path.join(os.path.dirname(__file__), 'user_settings.json')
 
+# Pre-compiled regex patterns for performance
+# Sentence splitter - handles straight and curly quotes properly
+SENTENCE_SPLIT_PATTERN = re.compile(
+    r'(?<=[.!?…])\s+(?=["\'""''(\[]?\w)',
+    re.UNICODE
+)
+
 
 def create_diagonal_gradient(width, height, color1, color2):
     """
@@ -170,10 +230,18 @@ def create_diagonal_gradient(width, height, color1, color2):
         color2: Ending color (hex string like '#f3ede6')
 
     Returns:
-        PIL Image object with diagonal gradient
+        PIL Image object with diagonal gradient, or None if PIL unavailable or invalid size
     """
     if not PIL_AVAILABLE:
         # Fallback: solid color image
+        return None
+
+    # SECURITY: Validate image dimensions to prevent excessive memory usage
+    MAX_WIDTH = 1920   # Full HD width
+    MAX_HEIGHT = 1080  # Full HD height
+
+    if width <= 0 or height <= 0 or width > MAX_WIDTH or height > MAX_HEIGHT:
+        print(f"Warning: Invalid gradient size {width}x{height}, using fallback")
         return None
 
     # Convert hex to RGB
@@ -208,121 +276,6 @@ def create_diagonal_gradient(width, height, color1, color2):
 
     # Apply all pixels at once (much faster than point-by-point)
     image.putdata(pixels)
-
-    return image
-
-
-def create_icon_button(icon_type, size=24, fg_color='#ffffff', bg_color='#d97706'):
-    """
-    Create a filled icon button using PIL.
-
-    Args:
-        icon_type: 'settings', 'moon', 'sun', or 'close'
-        size: Icon size in pixels (default 24)
-        fg_color: Foreground/icon color (hex)
-        bg_color: Background color (hex)
-
-    Returns:
-        PIL Image object or None if PIL not available
-    """
-    if not PIL_AVAILABLE:
-        return None
-
-    # Convert hex to RGB
-    def hex_to_rgb(hex_color):
-        hex_color = hex_color.lstrip('#')
-        return tuple(int(hex_color[i:i+2], 16) for i in (0, 2, 4))
-
-    bg_rgb = hex_to_rgb(bg_color)
-    fg_rgb = hex_to_rgb(fg_color)
-
-    # Create image with rounded background
-    image = Image.new('RGBA', (size, size), (0, 0, 0, 0))
-    draw = ImageDraw.Draw(image)
-
-    # Draw rounded rectangle background
-    radius = size // 4
-    draw.rounded_rectangle(
-        [(0, 0), (size-1, size-1)],
-        radius=radius,
-        fill=bg_rgb
-    )
-
-    # Draw icon based on type
-    padding = size // 4
-    icon_area = size - (padding * 2)
-
-    if icon_type == 'settings':
-        # Draw gear icon (simplified - circle with notches)
-        center = size // 2
-        outer_radius = icon_area // 2
-        inner_radius = outer_radius - 2
-
-        # Draw circle
-        draw.ellipse(
-            [center - outer_radius, center - outer_radius,
-             center + outer_radius, center + outer_radius],
-            fill=fg_rgb
-        )
-        # Inner circle (to create ring)
-        draw.ellipse(
-            [center - inner_radius, center - inner_radius,
-             center + inner_radius, center + inner_radius],
-            fill=bg_rgb
-        )
-
-    elif icon_type == 'moon':
-        # Draw crescent moon
-        center = size // 2
-        radius = icon_area // 2
-        # Draw full circle
-        draw.ellipse(
-            [center - radius, center - radius,
-             center + radius, center + radius],
-            fill=fg_rgb
-        )
-        # Cut out crescent by drawing smaller circle offset
-        offset = radius // 3
-        draw.ellipse(
-            [center - radius + offset, center - radius,
-             center + radius + offset, center + radius],
-            fill=bg_rgb
-        )
-
-    elif icon_type == 'sun':
-        # Draw sun (circle with rays)
-        center = size // 2
-        radius = icon_area // 3
-
-        # Draw center circle
-        draw.ellipse(
-            [center - radius, center - radius,
-             center + radius, center + radius],
-            fill=fg_rgb
-        )
-
-        # Draw 8 rays
-        ray_length = radius // 2
-        import math
-        for angle in range(0, 360, 45):
-            rad = math.radians(angle)
-            x1 = center + (radius + 1) * math.cos(rad)
-            y1 = center + (radius + 1) * math.sin(rad)
-            x2 = center + (radius + ray_length) * math.cos(rad)
-            y2 = center + (radius + ray_length) * math.sin(rad)
-            draw.line([(x1, y1), (x2, y2)], fill=fg_rgb, width=2)
-
-    elif icon_type == 'close':
-        # Draw X symbol
-        margin = padding
-        draw.line(
-            [(margin, margin), (size - margin, size - margin)],
-            fill=fg_rgb, width=3
-        )
-        draw.line(
-            [(size - margin, margin), (margin, size - margin)],
-            fill=fg_rgb, width=3
-        )
 
     return image
 
@@ -369,7 +322,7 @@ class QuoteOverlay:
         self.start_timer()
 
     def load_settings(self):
-        """Load settings from JSON file"""
+        """Load settings from JSON file with validation"""
         defaults = {
             "timerDuration": 15,
             "position": "bottomRight",
@@ -382,20 +335,77 @@ class QuoteOverlay:
             if os.path.exists(SETTINGS_FILE):
                 with open(SETTINGS_FILE, 'r') as f:
                     saved = json.load(f)
-                    # Merge with defaults to ensure all keys exist
-                    return {**defaults, **saved}
+
+                    # SECURITY: Validate all settings values before using them
+                    validated = {}
+
+                    # Validate timerDuration (must be int/float in range 5-60)
+                    if 'timerDuration' in saved:
+                        timer = saved['timerDuration']
+                        if isinstance(timer, (int, float)) and 5 <= timer <= 60:
+                            validated['timerDuration'] = int(timer)
+
+                    # Validate position (must be one of allowed values)
+                    if 'position' in saved:
+                        allowed_positions = ['bottomRight', 'bottomLeft', 'topRight', 'topLeft']
+                        if saved['position'] in allowed_positions:
+                            validated['position'] = saved['position']
+
+                    # Validate fontSize (must be one of allowed values)
+                    if 'fontSize' in saved:
+                        allowed_sizes = ['small', 'medium', 'large']
+                        if saved['fontSize'] in allowed_sizes:
+                            validated['fontSize'] = saved['fontSize']
+
+                    # Validate category (must be one of allowed categories)
+                    if 'category' in saved:
+                        allowed_categories = ['motivation', 'learning', 'creativity', 'productivity', 'all']
+                        if saved['category'] in allowed_categories:
+                            validated['category'] = saved['category']
+
+                    # Validate theme (must be light or dark)
+                    if 'theme' in saved:
+                        if saved['theme'] in ['light', 'dark']:
+                            validated['theme'] = saved['theme']
+
+                    # Merge validated settings with defaults
+                    return {**defaults, **validated}
         except Exception as e:
-            print(f"Error loading settings: {e}")
+            if DEBUG_MODE:
+                print(f"Error loading settings: {e}")
+            else:
+                print("Unable to load saved settings. Using defaults.")
 
         return defaults
 
     def save_settings(self):
-        """Save settings to JSON file"""
+        """Save settings to JSON file using atomic write to prevent corruption"""
+        tmp_path = None
         try:
-            with open(SETTINGS_FILE, 'w') as f:
-                json.dump(self.settings, f, indent=2)
+            # Write to temporary file first (atomic write pattern)
+            with tempfile.NamedTemporaryFile(
+                mode='w',
+                delete=False,
+                dir=os.path.dirname(SETTINGS_FILE),
+                suffix='.tmp'
+            ) as tmp:
+                json.dump(self.settings, tmp, indent=2)
+                tmp_path = tmp.name
+
+            # Atomic rename (replaces old file only after new one is complete)
+            shutil.move(tmp_path, SETTINGS_FILE)
+
         except Exception as e:
-            print(f"Error saving settings: {e}")
+            if DEBUG_MODE:
+                print(f"Error saving settings: {e}")
+            else:
+                print("Unable to save settings. Changes may not persist.")
+            # Clean up temporary file if it exists
+            if tmp_path and os.path.exists(tmp_path):
+                try:
+                    os.remove(tmp_path)
+                except:
+                    pass  # Best effort cleanup
 
     def calculate_window_width(self, quote_text):
         """Calculate optimal window width based on quote text length"""
@@ -549,7 +559,7 @@ class QuoteOverlay:
 
         # Set transparency for modern look
         try:
-            self.root.attributes('-alpha', 0.96)  # Slight transparency for elegance
+            self.root.attributes('-alpha', WINDOW_OPACITY)
         except:
             pass  # Some systems don't support alpha
 
@@ -561,11 +571,11 @@ class QuoteOverlay:
 
     def fade_in(self, alpha=0.0):
         """Fade in animation - snappy and fast (V5.0.0)"""
-        if alpha < 0.96:
-            alpha += 0.12  # Larger step for faster animation
+        if alpha < WINDOW_OPACITY:
+            alpha += FADE_IN_STEP
             try:
                 self.root.attributes('-alpha', alpha)
-                self.root.after(15, lambda: self.fade_in(alpha))  # Faster timing
+                self.root.after(FADE_IN_DELAY_MS, lambda: self.fade_in(alpha))
             except:
                 pass
 
@@ -573,10 +583,10 @@ class QuoteOverlay:
         """Fade out animation then close - snappy and fast (V5.0.0)"""
         current_alpha = self.root.attributes('-alpha')
         if current_alpha > 0:
-            new_alpha = current_alpha - 0.16  # Larger step for faster fade out
+            new_alpha = current_alpha - FADE_OUT_STEP
             try:
                 self.root.attributes('-alpha', new_alpha)
-                self.root.after(12, self.fade_out)  # Faster timing
+                self.root.after(FADE_OUT_DELAY_MS, self.fade_out)
             except:
                 self.root.quit()
         else:
@@ -584,8 +594,6 @@ class QuoteOverlay:
 
     def matches_category(self, quote_text, category='all'):
         """Check if a quote matches the selected category using word-boundary matching"""
-        import re
-
         if category == 'all':
             return True
 
@@ -612,20 +620,11 @@ class QuoteOverlay:
         - Preserves punctuation (!, ?, ..., etc.)
         - Properly handles both straight (') and curly (') quotes
         """
-        import re
-
-        # Fixed sentence splitter - properly handles straight and curly quotes
-        # Uses raw string with proper character class for quotes
-        SENTENCE_SPLIT = re.compile(
-            r'(?<=[.!?…])\s+(?=["\'""''(\[]?\w)',
-            re.UNICODE
-        )
-
         # Clean up whitespace
         text = re.sub(r'\s+', ' ', text).strip()
 
-        # Split into sentences
-        sentences = SENTENCE_SPLIT.split(text) if SENTENCE_SPLIT.search(text) else [text]
+        # Split into sentences using pre-compiled pattern
+        sentences = SENTENCE_SPLIT_PATTERN.split(text) if SENTENCE_SPLIT_PATTERN.search(text) else [text]
 
         cleaned_sentences = []
 
@@ -686,6 +685,14 @@ class QuoteOverlay:
                 if response.status_code == 200:
                     data = response.json()
                     quote_text = data.get("quote", "")
+                    author = data.get("author", "Unknown")
+
+                    # SECURITY: Validate API response data types and lengths
+                    if not isinstance(quote_text, str) or not isinstance(author, str):
+                        continue  # Skip invalid data types
+
+                    if len(quote_text) > 1000 or len(author) > 100:
+                        continue  # Skip overly long quotes to prevent UI overflow
 
                     # Check if quote matches selected category
                     if self.matches_category(quote_text, selected_category):
@@ -693,13 +700,14 @@ class QuoteOverlay:
                         normalized_text = self.normalize_text(quote_text)
                         return {
                             "text": normalized_text,
-                            "author": data.get("author", "Unknown")
+                            "author": author
                         }
                     # If not matching category, try again
                     continue
 
             except Exception as e:
-                print(f"API fetch attempt {attempt + 1} failed: {e}")
+                if DEBUG_MODE:
+                    print(f"API fetch attempt {attempt + 1} failed: {e}")
                 break
 
         # Fallback to curated quotes filtered by category
@@ -896,7 +904,6 @@ class QuoteOverlay:
 
     def start_timer(self):
         """Start the countdown timer"""
-        import time
         self.start_time = time.time()
         self.is_paused = False
         self.update_progress()
@@ -906,7 +913,6 @@ class QuoteOverlay:
         if self.is_paused:
             return
 
-        import time
         elapsed = (time.time() - self.start_time) * 1000  # Convert to milliseconds
         progress = min(elapsed / CONFIG["timer_duration"], 1.0)
 
@@ -923,14 +929,12 @@ class QuoteOverlay:
         if not self.is_paused and self.timer_id:
             self.root.after_cancel(self.timer_id)
             self.is_paused = True
-            import time
             elapsed = (time.time() - self.start_time) * 1000
             self.remaining_time = CONFIG["timer_duration"] - elapsed
 
     def resume_timer(self):
         """Resume the timer when mouse leaves"""
         if self.is_paused:
-            import time
             self.start_time = time.time() - ((CONFIG["timer_duration"] - self.remaining_time) / 1000)
             self.is_paused = False
             self.update_progress()
@@ -943,7 +947,6 @@ class QuoteOverlay:
 
     def search_quote(self, text):
         """Open Google search for the quote"""
-        import webbrowser
         search_query = url_quote(f'"{text}"')
         webbrowser.open(f'https://www.google.com/search?q={search_query}')
 
