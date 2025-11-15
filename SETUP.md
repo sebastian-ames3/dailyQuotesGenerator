@@ -115,6 +115,7 @@ By default, the quote appears in the **bottom-right corner**. To change this:
 If you want the quote to always open in a specific browser (e.g., Chrome, Edge, Firefox), edit `LaunchQuote.bat`:
 
 **For Google Chrome:**
+
 ```batch
 @echo off
 set "SCRIPT_DIR=%~dp0"
@@ -122,6 +123,7 @@ start "" "C:\Program Files\Google\Chrome\Application\chrome.exe" "%SCRIPT_DIR%in
 ```
 
 **For Firefox:**
+
 ```batch
 @echo off
 set "SCRIPT_DIR=%~dp0"
@@ -129,6 +131,7 @@ start "" "C:\Program Files\Mozilla Firefox\firefox.exe" "%SCRIPT_DIR%index.html"
 ```
 
 **For Microsoft Edge:**
+
 ```batch
 @echo off
 set "SCRIPT_DIR=%~dp0"
@@ -142,6 +145,7 @@ start "" "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" "%SCRIPT
 ### The quote doesn't appear on startup
 
 **Solutions:**
+
 1. Check that the shortcut is in the Startup folder (`shell:startup`)
 2. Verify `LaunchQuote.bat` is in the same folder as `index.html`
 3. Test the batch file manually by double-clicking it
@@ -150,12 +154,14 @@ start "" "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" "%SCRIPT
 ### Opens in a text editor instead of a browser
 
 **Solution:**
+
 - Ensure the file is named `LaunchQuote.bat` (not `LaunchQuote.bat.txt`)
 - Check your file extension settings in Windows Explorer (View → Show → File name extensions)
 
 ### Command window flashes briefly
 
 **Solution:**
+
 - Right-click the shortcut in the Startup folder
 - Properties → Run: **Minimized**
 - Click OK
@@ -163,6 +169,7 @@ start "" "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" "%SCRIPT
 ### Quote appears multiple times on startup
 
 **Solution:**
+
 - Check the Startup folder for duplicate shortcuts
 - Press `Windows + R`, type `shell:startup`, and remove duplicates
 
@@ -181,6 +188,7 @@ To stop the quote from launching automatically:
 5. Done! (The files remain in your Documents folder if you want to use them manually)
 
 To completely remove everything:
+
 - Delete the entire project folder from your Documents
 
 ---

@@ -9,8 +9,7 @@ test.describe('Responsive Quote Box', () => {
   test('Test 1: Short quote uses appropriate width', async ({ page }) => {
     // Inject a short quote (8 words)
     await page.evaluate(() => {
-      document.querySelector('.quote-text').textContent =
-        'Success is not final, failure is not.';
+      document.querySelector('.quote-text').textContent = 'Success is not final, failure is not.';
       document.querySelector('.quote-author').textContent = '— Test';
     });
 
@@ -31,7 +30,7 @@ test.describe('Responsive Quote Box', () => {
 
     await page.screenshot({
       path: 'test-results/responsive-01-short-quote.png',
-      fullPage: true
+      fullPage: true,
     });
   });
 
@@ -39,7 +38,7 @@ test.describe('Responsive Quote Box', () => {
     // Inject a medium quote (30 words)
     await page.evaluate(() => {
       document.querySelector('.quote-text').textContent =
-        'The only way to do great work is to love what you do. If you haven\'t found it yet, keep looking. Don\'t settle. As with all matters of the heart, you\'ll know when you find it.';
+        "The only way to do great work is to love what you do. If you haven't found it yet, keep looking. Don't settle. As with all matters of the heart, you'll know when you find it.";
       document.querySelector('.quote-author').textContent = '— Steve Jobs';
     });
 
@@ -55,7 +54,7 @@ test.describe('Responsive Quote Box', () => {
 
     await page.screenshot({
       path: 'test-results/responsive-02-medium-quote.png',
-      fullPage: true
+      fullPage: true,
     });
   });
 
@@ -80,7 +79,7 @@ test.describe('Responsive Quote Box', () => {
 
     await page.screenshot({
       path: 'test-results/responsive-03-long-quote.png',
-      fullPage: true
+      fullPage: true,
     });
   });
 
@@ -118,14 +117,17 @@ test.describe('Responsive Quote Box', () => {
 
     await page.screenshot({
       path: 'test-results/responsive-04-mobile.png',
-      fullPage: true
+      fullPage: true,
     });
   });
 
   test('Test 5: All UI elements remain visible', async ({ page }) => {
     // Inject long quote to test scrolling
     await page.evaluate(() => {
-      const longText = 'This is a very long quote that will test whether all UI elements remain visible. '.repeat(20);
+      const longText =
+        'This is a very long quote that will test whether all UI elements remain visible. '.repeat(
+          20
+        );
       document.querySelector('.quote-text').textContent = longText;
     });
 
@@ -148,7 +150,7 @@ test.describe('Responsive Quote Box', () => {
 
     await page.screenshot({
       path: 'test-results/responsive-05-ui-elements.png',
-      fullPage: true
+      fullPage: true,
     });
   });
 
@@ -172,7 +174,7 @@ test.describe('Responsive Quote Box', () => {
 
       await page.screenshot({
         path: `test-results/responsive-06-position-${position}.png`,
-        fullPage: true
+        fullPage: true,
       });
     }
   });

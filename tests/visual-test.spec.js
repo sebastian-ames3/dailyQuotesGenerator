@@ -25,8 +25,8 @@ test('visual verification - capture quote with visible buttons', async ({ page }
       x: Math.max(0, containerBox.x - 50),
       y: Math.max(0, containerBox.y - 50),
       width: Math.min(containerBox.width + 100, 600),
-      height: Math.min(containerBox.height + 100, 400)
-    }
+      height: Math.min(containerBox.height + 100, 400),
+    },
   });
 
   // Highlight the buttons by hovering over them
@@ -39,8 +39,8 @@ test('visual verification - capture quote with visible buttons', async ({ page }
       x: Math.max(0, containerBox.x - 50),
       y: Math.max(0, containerBox.y - 50),
       width: Math.min(containerBox.width + 100, 600),
-      height: Math.min(containerBox.height + 100, 400)
-    }
+      height: Math.min(containerBox.height + 100, 400),
+    },
   });
 
   console.log('Visual test screenshots saved to test-results/');

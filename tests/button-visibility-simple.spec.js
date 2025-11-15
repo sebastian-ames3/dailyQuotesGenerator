@@ -20,7 +20,7 @@ test.describe('Button Visibility - Simple Tests', () => {
     // Take a screenshot showing the full page
     await page.screenshot({
       path: 'test-results/full-page-view.png',
-      fullPage: true
+      fullPage: true,
     });
 
     console.log('\n=== BUTTON VISIBILITY TEST RESULTS ===\n');
@@ -73,20 +73,28 @@ test.describe('Button Visibility - Simple Tests', () => {
     console.log('  - Size: ' + quoteTextBox.width + 'x' + quoteTextBox.height);
 
     // Verify buttons are ABOVE the quote text (not overlapping)
-    const buttonsAboveContent = settingsBox.y < quoteTextBox.y &&
-                                 themeBox.y < quoteTextBox.y &&
-                                 closeBox.y < quoteTextBox.y;
+    const buttonsAboveContent =
+      settingsBox.y < quoteTextBox.y && themeBox.y < quoteTextBox.y && closeBox.y < quoteTextBox.y;
 
     console.log('\nLayout Check:');
     console.log('  - Buttons positioned above content:', buttonsAboveContent ? 'YES ✓' : 'NO ✗');
-    console.log('    Settings Y (' + settingsBox.y + ') < Content Y (' + quoteTextBox.y + '):', settingsBox.y < quoteTextBox.y);
-    console.log('    Theme Y (' + themeBox.y + ') < Content Y (' + quoteTextBox.y + '):', themeBox.y < quoteTextBox.y);
-    console.log('    Close Y (' + closeBox.y + ') < Content Y (' + quoteTextBox.y + '):', closeBox.y < quoteTextBox.y);
+    console.log(
+      '    Settings Y (' + settingsBox.y + ') < Content Y (' + quoteTextBox.y + '):',
+      settingsBox.y < quoteTextBox.y
+    );
+    console.log(
+      '    Theme Y (' + themeBox.y + ') < Content Y (' + quoteTextBox.y + '):',
+      themeBox.y < quoteTextBox.y
+    );
+    console.log(
+      '    Close Y (' + closeBox.y + ') < Content Y (' + quoteTextBox.y + '):',
+      closeBox.y < quoteTextBox.y
+    );
 
     expect(buttonsAboveContent).toBe(true);
 
     // Check container padding
-    const containerPadding = await quoteContainer.evaluate(el =>
+    const containerPadding = await quoteContainer.evaluate((el) =>
       window.getComputedStyle(el).getPropertyValue('padding-top')
     );
 
@@ -97,7 +105,7 @@ test.describe('Button Visibility - Simple Tests', () => {
 
     // Check quote-content overflow
     const quoteContent = page.locator('.quote-content');
-    const overflow = await quoteContent.evaluate(el =>
+    const overflow = await quoteContent.evaluate((el) =>
       window.getComputedStyle(el).getPropertyValue('overflow-y')
     );
 
@@ -135,7 +143,7 @@ test.describe('Button Visibility - Simple Tests', () => {
 
     await page.screenshot({
       path: 'test-results/settings-panel-opened.png',
-      fullPage: true
+      fullPage: true,
     });
 
     // Close panel (V3.0: use back button instead of settings button)
@@ -164,7 +172,7 @@ test.describe('Button Visibility - Simple Tests', () => {
 
     await page.screenshot({
       path: 'test-results/theme-toggled.png',
-      fullPage: true
+      fullPage: true,
     });
 
     console.log('\n=== ALL INTERACTION TESTS PASSED ✓ ===\n');
@@ -186,9 +194,7 @@ test.describe('Button Visibility - Simple Tests', () => {
     await page.keyboard.press('Tab');
 
     const settingsButton = page.locator('#settingsButton');
-    const settingsFocused = await settingsButton.evaluate(el =>
-      document.activeElement === el
-    );
+    const settingsFocused = await settingsButton.evaluate((el) => document.activeElement === el);
 
     console.log('Tab Navigation:');
     console.log('  - Settings button focused:', settingsFocused ? 'YES ✓' : 'NO ✗');

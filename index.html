@@ -23,7 +23,7 @@
       }
 
       /* Dark theme */
-      [data-theme="dark"] {
+      [data-theme='dark'] {
         --bg-color: #1e1e1e;
         --text-color: #e0e0e0;
         --author-color: #a0a0a0;
@@ -692,7 +692,10 @@
         localStorage.setItem('theme', theme);
         // Update theme toggle icon
         themeToggle.textContent = theme === 'dark' ? '☀️' : '🌙';
-        themeToggle.setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+        themeToggle.setAttribute(
+          'aria-label',
+          theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'
+        );
       }
 
       function toggleTheme() {
@@ -716,24 +719,72 @@
       // Category keywords for filtering
       const categoryKeywords = {
         motivation: [
-          'believe', 'achieve', 'success', 'dream', 'goal',
-          'start', 'begin', 'action', 'courage', 'brave', 'try',
-          'possible', 'impossible', 'persist', 'persevere',
-          'overcome', 'conquer', 'triumph', 'victory', 'fight',
-          'inspire', 'motivate', 'passion', 'purpose', 'destiny', 'future'
+          'believe',
+          'achieve',
+          'success',
+          'dream',
+          'goal',
+          'start',
+          'begin',
+          'action',
+          'courage',
+          'brave',
+          'try',
+          'possible',
+          'impossible',
+          'persist',
+          'persevere',
+          'overcome',
+          'conquer',
+          'triumph',
+          'victory',
+          'fight',
+          'inspire',
+          'motivate',
+          'passion',
+          'purpose',
+          'destiny',
+          'future',
         ],
         learning: [
-          'learn', 'grow', 'improve', 'better', 'change', 'adapt',
-          'develop', 'evolve', 'transform', 'progress', 'advance', 'knowledge'
+          'learn',
+          'grow',
+          'improve',
+          'better',
+          'change',
+          'adapt',
+          'develop',
+          'evolve',
+          'transform',
+          'progress',
+          'advance',
+          'knowledge',
         ],
         creativity: [
-          'create', 'build', 'make', 'innovation', 'innovative',
-          'creativity', 'creative', 'imagine', 'invention', 'design', 'art'
+          'create',
+          'build',
+          'make',
+          'innovation',
+          'innovative',
+          'creativity',
+          'creative',
+          'imagine',
+          'invention',
+          'design',
+          'art',
         ],
         productivity: [
-          'productivity', 'productive', 'focus', 'discipline',
-          'work', 'effort', 'dedication', 'commitment', 'perseverance', 'do'
-        ]
+          'productivity',
+          'productive',
+          'focus',
+          'discipline',
+          'work',
+          'effort',
+          'dedication',
+          'commitment',
+          'perseverance',
+          'do',
+        ],
       };
 
       function matchesCategory(quoteText, category) {
@@ -757,10 +808,10 @@
           timerDuration: 15,
           position: 'bottomRight',
           fontSize: 'medium',
-          category: 'motivation'
+          category: 'motivation',
         };
         const saved = localStorage.getItem('quoteSettings');
-        return saved ? {...defaults, ...JSON.parse(saved)} : defaults;
+        return saved ? { ...defaults, ...JSON.parse(saved) } : defaults;
       }
 
       function saveSettings(settings) {
@@ -819,7 +870,7 @@
         const sizes = {
           small: '16px',
           medium: '18px',
-          large: '20px'
+          large: '20px',
         };
         quoteText.style.fontSize = sizes[size] || sizes.medium;
       }
@@ -960,7 +1011,7 @@
         }
 
         // Filter fallback quotes by category
-        const filtered = fallbackQuotes.filter(q => matchesCategory(q.text, category));
+        const filtered = fallbackQuotes.filter((q) => matchesCategory(q.text, category));
 
         if (filtered.length > 0) {
           return filtered[Math.floor(Math.random() * filtered.length)];

@@ -12,6 +12,7 @@
 ### Key Features
 
 #### Core Features
+
 - **Random Motivational Quotes** - Fetches fresh, inspiring quotes from a curated API
 - **Clean Corner Pop-up** - Minimal, professional design that doesn't interrupt your workflow
 - **Smart Auto-close** - Disappears after 15 seconds (configurable 5-60s)
@@ -22,6 +23,7 @@
 - **Zero Dependencies** - Pure HTML, CSS, and JavaScript
 
 #### V2 Features (New!)
+
 - **🌙 Dark/Light Mode** - Toggle between themes or auto-detect system preference
 - **⚙️ Customization Panel** - Adjust timer, position, font size, and more
 - **📚 Quote Categories** - Filter by Motivation, Learning, Creativity, or Productivity
@@ -31,7 +33,7 @@
 
 ![Morning Motivation Quote Demo](quote_demo_screenshot.png)
 
-*A clean, minimal notification displaying an inspiring quote in the bottom-right corner of your screen.*
+_A clean, minimal notification displaying an inspiring quote in the bottom-right corner of your screen._
 
 ## Quick Start
 
@@ -67,7 +69,6 @@
    ```
 
 4. **Set up auto-launch** (optional):
-
    - **Windows:** Double-click `install_scheduled_quotes.bat` (one-click installation)
    - **Other platforms:** See [SETUP.md](SETUP.md) for detailed instructions
 
@@ -90,6 +91,7 @@ All settings are saved automatically and persist between sessions.
 You can also customize by editing `index.html`:
 
 **Change Auto-Close Timer**
+
 ```javascript
 const config = {
   timerDuration: 15000, // 15 seconds (in milliseconds)
@@ -98,6 +100,7 @@ const config = {
 ```
 
 **Change Quote Position**
+
 ```css
 /* Default: bottom-right */
 bottom: 24px;
@@ -115,7 +118,6 @@ right: 24px;
    ```
 
 2. **Add to Windows Startup:**
-
    - Press `Windows + R`
    - Type: `shell:startup`
    - Press Enter

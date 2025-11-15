@@ -43,39 +43,92 @@
     "motivation": {
       "name": "Motivation & Inspiration",
       "keywords": [
-        "believe", "achieve", "success", "dream", "goal",
-        "start", "begin", "action", "courage", "brave", "try",
-        "possible", "impossible", "persist", "persevere",
-        "overcome", "conquer", "triumph", "victory", "fight",
-        "inspire", "motivate", "passion", "purpose", "destiny", "future"
+        "believe",
+        "achieve",
+        "success",
+        "dream",
+        "goal",
+        "start",
+        "begin",
+        "action",
+        "courage",
+        "brave",
+        "try",
+        "possible",
+        "impossible",
+        "persist",
+        "persevere",
+        "overcome",
+        "conquer",
+        "triumph",
+        "victory",
+        "fight",
+        "inspire",
+        "motivate",
+        "passion",
+        "purpose",
+        "destiny",
+        "future"
       ]
     },
     "learning": {
       "name": "Learning & Growth",
       "keywords": [
-        "learn", "grow", "improve", "better", "change", "adapt",
-        "develop", "evolve", "transform", "progress", "advance"
+        "learn",
+        "grow",
+        "improve",
+        "better",
+        "change",
+        "adapt",
+        "develop",
+        "evolve",
+        "transform",
+        "progress",
+        "advance"
       ]
     },
     "creativity": {
       "name": "Creativity & Innovation",
       "keywords": [
-        "create", "build", "make", "innovation", "innovative",
-        "creativity", "creative", "imagine", "invention", "design"
+        "create",
+        "build",
+        "make",
+        "innovation",
+        "innovative",
+        "creativity",
+        "creative",
+        "imagine",
+        "invention",
+        "design"
       ]
     },
     "productivity": {
       "name": "Productivity & Focus",
       "keywords": [
-        "productivity", "productive", "focus", "discipline",
-        "work", "effort", "dedication", "commitment", "perseverance"
+        "productivity",
+        "productive",
+        "focus",
+        "discipline",
+        "work",
+        "effort",
+        "dedication",
+        "commitment",
+        "perseverance"
       ]
     },
     "wisdom": {
       "name": "Wisdom & Philosophy",
       "keywords": [
-        "philosophy", "wisdom", "knowledge", "truth", "reality",
-        "existence", "meaning", "understand", "wise", "enlightenment"
+        "philosophy",
+        "wisdom",
+        "knowledge",
+        "truth",
+        "reality",
+        "existence",
+        "meaning",
+        "understand",
+        "wise",
+        "enlightenment"
       ]
     }
   },
