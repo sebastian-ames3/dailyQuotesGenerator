@@ -330,7 +330,7 @@ Settings panel disappeared immediately after opening, even though Playwright tes
 **Key Architectural Decision:**
 Settings panel must be a **sibling** of quote-container, not a child, to avoid ARIA conflicts when hiding parent elements.
 
-### V4.0.0 - Python Overlay Feature Parity (2025-11-14) [PLANNED]
+### V4.0.0 - Python Overlay Feature Parity (2025-11-14) [COMPLETED]
 
 **Critical Discovery:**
 User has been running `quote_overlay.py` (Python/Tkinter frameless window) via LaunchQuote.bat, NOT the HTML version. All V2.0 and V3.0 features were developed in `index.html` but user never saw them because they use the Python overlay for daily startup experience.
@@ -339,10 +339,80 @@ User has been running `quote_overlay.py` (Python/Tkinter frameless window) via L
 
 - User wants **frameless desktop overlay** (no browser windows)
 - LaunchQuote.bat runs Python script, not browser
-- `quote_overlay.py` is stuck at V1.0.0 feature set
-- `index.html` will be used as reference, then deleted
+- `quote_overlay.py` was stuck at V1.0.0 feature set
+- `index.html` used as reference, then deleted
 
 **Goal:** Port all V2/V3 features from HTML to Python overlay, achieve feature parity.
+
+**Implementation Summary:**
+
+Successfully ported all HTML features to Python/Tkinter in a single session. All 4 phases completed:
+
+**Phase 1: Settings Infrastructure** ✅
+- Created `user_settings.json` for persistent storage (replaces localStorage)
+- Added settings button (⚙️) to main window
+- Created settings window (Toplevel) with all controls:
+  - Timer duration slider (5-60s, 5s increments)
+  - Position selector dropdown (4 corners)
+  - Font size selector (small/medium/large)
+  - Category selector (5 options)
+- Implemented `load_settings()` and `save_settings()` functions
+- Settings auto-save on change and persist across app restarts
+
+**Phase 2: Dark/Light Theme** ✅
+- Added theme toggle button (🌙/☀️) to main window
+- Defined complete color schemes in THEMES dictionary:
+  - Light theme: white background, dark text
+  - Dark theme: dark background, light text
+- Implemented `apply_theme()` function that updates all widget colors
+- Widget reference tracking system (self.widgets{}) for dynamic theming
+- Theme preference saved to user_settings.json
+- Theme toggle switches instantly without restart
+
+**Phase 3: Responsive Window Sizing** ✅
+- Implemented `calculate_window_width()` using font metrics
+- Window dynamically adapts to quote length
+- Constraints: min 320px, max 800px
+- Calculation: `max(320, min(text_width + padding + 60, 800))`
+- Window repositions correctly after resize
+- Short quotes = compact window, long quotes = wider window
+
+**Phase 4: Enhanced Category System** ✅
+- Ported all category keywords from HTML V3.0.0
+- Added CATEGORY_KEYWORDS constant with 4 categories:
+  - Motivation & Inspiration (26 keywords)
+  - Learning & Growth (12 keywords)
+  - Creativity & Innovation (11 keywords)
+  - Productivity & Focus (10 keywords)
+- Replaced `is_motivational()` with `matches_category()` function
+- Word-boundary regex matching to avoid false positives
+- API retry logic (up to 5 attempts) to find category match
+- Fallback quote filtering by category
+- Category selection in settings panel
+
+**Technical Achievements:**
+
+- Single-file architecture maintained (quote_overlay.py)
+- JSON file-based settings instead of localStorage
+- Full Tkinter theme system with widget reference tracking
+- Dynamic window sizing with font metrics
+- Settings window (Toplevel) with ttk.Combobox dropdowns
+- Real-time settings changes with immediate visual feedback
+
+**Files Modified:**
+- `quote_overlay.py` - Complete feature parity with HTML version
+- `user_settings.json` - Created for persistent storage
+
+**Testing Results:**
+- ✅ All 4 positions work correctly
+- ✅ Theme switching works instantly
+- ✅ Font size changes apply immediately
+- ✅ Category filtering works with API and fallback quotes
+- ✅ Settings persist across application restarts
+- ✅ Responsive window sizing adapts to quote length
+- ✅ Timer duration changes work
+- ✅ Hover-to-pause still works
+- ✅ No errors or warnings during testing
 
 ## Product Requirements Document (PRD) - V4.0.0
 
@@ -936,4 +1006,4 @@ Blocked aria-hidden on an element because its descendant retained focus.
 
 ---
 
-Last Updated: 2025-11-14 (V3.0.0)
+Last Updated: 2025-11-14 (V4.0.0 - Feature Parity Achieved)
