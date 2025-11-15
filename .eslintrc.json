@@ -34,12 +34,7 @@
       }
     },
     {
-      "files": [
-        "tests/**/*.js",
-        "**/*.spec.js",
-        "playwright.config.js",
-        "test-*.js"
-      ],
+      "files": ["tests/**/*.js", "**/*.spec.js", "playwright.config.js", "test-*.js"],
       "env": {
         "node": true,
         "browser": true
@@ -50,12 +45,7 @@
       }
     },
     {
-      "files": [
-        "design-preview.html",
-        "simple_test.html",
-        "test_buttons.html",
-        "index.html"
-      ],
+      "files": ["design-preview.html", "simple_test.html", "test_buttons.html", "index.html"],
       "rules": {
         "no-alert": "off",
         "no-console": "off"
