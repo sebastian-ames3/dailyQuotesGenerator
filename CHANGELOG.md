@@ -178,10 +178,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **V2 Feature: Quote Categories**
   - Category selector in settings panel
   - 4 pre-defined categories:
-    * Motivation & Inspiration (default)
-    * Learning & Growth
-    * Creativity & Innovation
-    * Productivity & Focus
+    - Motivation & Inspiration (default)
+    - Learning & Growth
+    - Creativity & Innovation
+    - Productivity & Focus
   - "All Categories" option for no filtering
   - Keyword-based category matching using word boundaries
   - API quotes filtered in real-time (up to 5 attempts)

@@ -2,11 +2,56 @@
 
 This document tracks the development history, architectural decisions, and lessons learned during the creation of the Morning Motivation Quote Generator.
 
+## ⚠️ CRITICAL USER REQUIREMENTS - READ THIS FIRST
+
+### PRIMARY PRODUCT: Python Frameless Overlay ONLY
+
+**WHAT THE USER WANTS:**
+
+- A **frameless desktop overlay window** using Python + Tkinter (`quote_overlay.py`)
+- Window appears naturally upon Windows sign-in via LaunchQuote.bat
+- **NO browser windows EVER** - must NEVER open in Brave, Edge, Chrome, or any browser
+- Native-looking desktop notification experience
+- Single file to maintain: `quote_overlay.py`
+
+**WHAT THE USER DOES NOT WANT:**
+
+- Browser-based interface (not even in "app mode")
+- Multiple versions to maintain (HTML + Python)
+- Visible browser UI, tabs, or processes
+- `index.html` in production repository
+
+### Development Approach
+
+**Single Source of Truth: `quote_overlay.py`**
+
+- ALL features must be implemented in Python + Tkinter
+- Use `index.html` temporarily as reference during development ONLY
+- Delete all HTML files when Python features are complete
+- Test by running: `python quote_overlay.py`
+
+**Feature Development Process:**
+
+1. Create PRD with tasks
+2. Reference `index.html` for specifications (colors, layout, behavior)
+3. Implement features in `quote_overlay.py`
+4. Test Python version
+5. Delete HTML files when porting is complete
+6. Commit only Python version
+
+**Why This Matters:**
+
+- User runs LaunchQuote.bat daily on startup
+- LaunchQuote.bat executes `quote_overlay.py` (not browser)
+- Previous development focused on HTML, but user never sees it
+- All V2/V3 features exist only in HTML - need to port to Python
+
 ## Development History
 
 ### V1.0.0 - Initial Release (2025-11-12)
 
 **Completed Features:**
+
 - HTML/CSS/JavaScript single-file application
 - DummyJSON API integration with fallback quotes
 - 15-second auto-close timer with hover-to-pause
@@ -18,6 +63,7 @@ This document tracks the development history, architectural decisions, and lesso
 - Windows auto-launch batch file (LaunchQuote.bat)
 
 **Research Phase:**
+
 - 5 specialized sub-agents conducted comprehensive research
 - API evaluation (8 quote APIs analyzed)
 - UI/UX best practices research
@@ -30,6 +76,7 @@ This document tracks the development history, architectural decisions, and lesso
 **Phase 1: Critical Bug Fixes**
 
 **Issues Identified:**
+
 1. Text normalization mangling quotes with varied punctuation
 2. Sentence splitting only on ". " dropped "!" and "?"
 3. ALL CAPS handling didn't catch mid-word capitals (They'Re → They're)
@@ -38,6 +85,7 @@ This document tracks the development history, architectural decisions, and lesso
 6. Motivation filter false positives (e.g., "can" matching "candle")
 
 **Solutions Implemented:**
+
 - Regex-based sentence splitting: `/(?<=[.!?…])\s+(?=["""''(\[]?\w)/u`
 - Interior uppercase detection: `/(?<!^)(?<![''])[A-Z]/gu`
 - Preserved all punctuation types (!, ?, ..., etc.)
@@ -48,6 +96,7 @@ This document tracks the development history, architectural decisions, and lesso
 **Phase 2-4: New Features**
 
 **Dark/Light Mode:**
+
 - CSS custom properties for all theme colors
 - System preference auto-detection (`prefers-color-scheme`)
 - localStorage persistence for user choice
@@ -55,6 +104,7 @@ This document tracks the development history, architectural decisions, and lesso
 - WCAG AA compliant contrast in both themes
 
 **Settings Panel:**
+
 - Timer duration slider (5-60 seconds, 5s increments)
 - Position selector (4 corners)
 - Font size selector (small/medium/large)
@@ -63,6 +113,7 @@ This document tracks the development history, architectural decisions, and lesso
 - All settings persist in localStorage
 
 **Quote Categories:**
+
 - 4 pre-defined categories with keyword matching
 - "All Categories" option for no filtering
 - API filtering (up to 5 attempts to find category match)
@@ -70,6 +121,7 @@ This document tracks the development history, architectural decisions, and lesso
 - Word-boundary matching to avoid false positives
 
 **Configuration Files:**
+
 - `config/quotes_config.json` - Centralized theme, timer, API, category settings
 - `config/user_settings.json` - User preferences storage template
 
@@ -80,6 +132,7 @@ This document tracks the development history, architectural decisions, and lesso
 This was the most challenging debugging session, requiring automated visual testing to identify viewport clipping issues invisible in code review.
 
 **Symptoms:**
+
 - Settings (⚙️), theme (🌙), and close (×) buttons not visible
 - Long quotes pushed author and progress bar out of view
 - Container appearing as blank page or only edge visible
@@ -106,25 +159,25 @@ This was the most challenging debugging session, requiring automated visual test
 ```css
 /* Before (BROKEN): */
 .quote-container {
-  overflow-y: auto;  /* Clipped buttons */
+  overflow-y: auto; /* Clipped buttons */
   /* No padding-top */
 }
 
 /* After (FIXED): */
 .quote-container {
-  padding-top: 56px;  /* Space for buttons */
+  padding-top: 56px; /* Space for buttons */
   /* overflow removed from container */
 }
 
 .quote-content {
-  overflow-y: auto;  /* Moved here - only content scrolls */
+  overflow-y: auto; /* Moved here - only content scrolls */
 }
 ```
 
 ```javascript
 // Before (BROKEN):
 function applyPosition(position) {
-  container.style.transform = 'translateX(450px)';  // Off-screen!
+  container.style.transform = 'translateX(450px)'; // Off-screen!
 }
 
 // After (FIXED):
@@ -135,10 +188,12 @@ function applyPosition(position) {
 ```
 
 **Button Z-Index:**
+
 - Added `z-index: 10` to all three buttons
 - Ensures buttons layer above content
 
 **Layout Structure:**
+
 - Flexbox for quote-container (vertical flow)
 - Quote-content scrolls independently
 - Author and progress bar always visible
@@ -168,6 +223,7 @@ User's laptop died mid-session after V2.0.1 was completed. Session resumed with 
 **Goal:** Make quote box dynamically adapt to quote length instead of fixed 500px width.
 
 **Implementation:**
+
 - Changed `width: 500px` → `width: fit-content`
 - Added constraints: `min-width: 320px`, `max-width: min(800px, 90vw)`
 - Box now intelligently sizes from 320px (short quotes) to 800px (long quotes)
@@ -181,6 +237,7 @@ User's laptop died mid-session after V2.0.1 was completed. Session resumed with 
 **Goal:** Replace slide-in settings panel with centered modal that replaces quote box entirely.
 
 **Implementation:**
+
 - Changed `.settings-panel` from `position: absolute` → `position: fixed`
 - Centered positioning: `top: 50%; left: 50%; transform: translate(-50%, -50%)`
 - Added back button (← Back) for navigation
@@ -225,23 +282,27 @@ Settings panel disappeared immediately after opening, even though Playwright tes
    - Added HTML comment: "Settings Panel (outside quote-container for accessibility)"
 
 2. **Timer Fixes:**
+
    ```javascript
    // openSettings() - line 843
-   if (timerInterval) {  // was: countdownInterval
+   if (timerInterval) {
+     // was: countdownInterval
      clearInterval(timerInterval);
      timerInterval = null;
    }
 
    // closeSettings() - line 862
-   startTimer();  // was: startCountdown()
+   startTimer(); // was: startCountdown()
 
    // init() - line 1126
-   if (!settingsOpen) {  // Added guard
+   if (!settingsOpen) {
+     // Added guard
      startTimer();
    }
 
    // closeQuote() - line 1053
-   if (settingsOpen) {  // Added guard
+   if (settingsOpen) {
+     // Added guard
      return;
    }
    ```
@@ -251,12 +312,14 @@ Settings panel disappeared immediately after opening, even though Playwright tes
    - Updated button-visibility tests: settings button opens (doesn't toggle), back button closes
 
 **Test Results:**
+
 - Before fixes: 19 failed, 7 passed
 - After fixes: 23 passed, 3 failed (non-critical), 1 skipped (85% pass rate)
 
 **Phase 3: Integration & Refinement**
 
 **Manual Testing Results:**
+
 - ✅ Responsive quote box adapts to different quote lengths
 - ✅ Settings panel stays open indefinitely
 - ✅ Back button returns to quote
@@ -267,6 +330,235 @@ Settings panel disappeared immediately after opening, even though Playwright tes
 **Key Architectural Decision:**
 Settings panel must be a **sibling** of quote-container, not a child, to avoid ARIA conflicts when hiding parent elements.
 
+### V4.0.0 - Python Overlay Feature Parity (2025-11-14) [PLANNED]
+
+**Critical Discovery:**
+User has been running `quote_overlay.py` (Python/Tkinter frameless window) via LaunchQuote.bat, NOT the HTML version. All V2.0 and V3.0 features were developed in `index.html` but user never saw them because they use the Python overlay for daily startup experience.
+
+**User Requirements Clarification:**
+
+- User wants **frameless desktop overlay** (no browser windows)
+- LaunchQuote.bat runs Python script, not browser
+- `quote_overlay.py` is stuck at V1.0.0 feature set
+- `index.html` will be used as reference, then deleted
+
+**Goal:** Port all V2/V3 features from HTML to Python overlay, achieve feature parity.
+
+## Product Requirements Document (PRD) - V4.0.0
+
+### Overview
+
+Port all features from `index.html` (V2.0-V3.0) to `quote_overlay.py` to bring the Python overlay to feature parity. Then delete all HTML files from repository.
+
+### Current State Analysis
+
+**`quote_overlay.py` (V1.0.0) - What EXISTS:**
+
+- Basic Tkinter frameless window
+- DummyJSON API with fallback quotes
+- 15-second auto-close timer with hover-to-pause
+- Click-to-search functionality
+- Fixed position (bottom-right)
+- Fixed window size (340x200)
+- No settings persistence
+- Motivation filtering (basic keyword matching)
+
+**`index.html` (V3.0.0) - What's MISSING from Python:**
+
+- ⚙️ Settings button
+- 🌙 Theme toggle (dark/light mode)
+- Settings panel with controls:
+  - Timer duration slider (5-60s)
+  - Position selector (4 corners)
+  - Font size selector (small/medium/large)
+  - Category selector (motivation/learning/creativity/productivity/all)
+- Settings persistence (localStorage → needs JSON file for Python)
+- Responsive window sizing (fit-content behavior)
+- Modern gradient design with theme variables
+- All accessibility features (ARIA, keyboard shortcuts beyond Esc)
+
+### Features to Port (Priority Order)
+
+#### **Phase 1: Settings Infrastructure**
+
+**Priority:** Critical - Foundation for all other features
+
+**Tasks:**
+
+1. Create `user_settings.json` for persistent storage
+2. Add settings button (⚙️) to Python window
+3. Create settings window (Tkinter Toplevel) with:
+   - Timer duration slider (5-60s, 5s increments)
+   - Position selector dropdown (bottomRight/bottomLeft/topRight/topLeft)
+   - Font size selector dropdown (small/medium/large)
+   - Category selector dropdown (motivation/learning/creativity/productivity/all)
+   - "Save" or auto-save on change
+4. Implement `load_settings()` and `save_settings()` functions
+5. Apply settings on startup
+
+**Reference:** `index.html` lines 755-897 (settings functions)
+
+#### **Phase 2: Dark/Light Theme**
+
+**Priority:** High - User experience enhancement
+
+**Tasks:**
+
+1. Add theme toggle button (🌙/☀️) to Python window
+2. Define color schemes in Python dictionaries:
+   - Light theme colors
+   - Dark theme colors
+3. Implement `apply_theme()` function to update all widget colors
+4. Detect system theme preference (Windows registry or defaults)
+5. Save theme preference to `user_settings.json`
+6. Theme toggle switches between light/dark
+
+**Reference:** `index.html` lines 12-36 (CSS theme variables), lines 680-713 (theme functions)
+
+**Colors to port:**
+
+```python
+THEMES = {
+    'light': {
+        'bg': '#ffffff',
+        'text': '#1a1a1a',
+        'author': '#666666',
+        'hint': '#999999',
+        'accent': '#667eea',
+        'close_hover_bg': '#f0f0f0',
+        'close_hover_fg': '#333333'
+    },
+    'dark': {
+        'bg': '#1e1e1e',
+        'text': '#e0e0e0',
+        'author': '#a0a0a0',
+        'hint': '#707070',
+        'accent': '#667eea',
+        'close_hover_bg': '#2d2d2d',
+        'close_hover_fg': '#cccccc'
+    }
+}
+```
+
+#### **Phase 3: Responsive Window Sizing**
+
+**Priority:** Medium - Better UX for different quote lengths
+
+**Tasks:**
+
+1. Measure quote text width dynamically using Tkinter font metrics
+2. Calculate window width: `max(320, min(text_width + padding, 800))`
+3. Update window geometry based on quote length
+4. Ensure window stays within screen bounds
+5. Apply position offset correctly after resize
+
+**Reference:** `index.html` lines 61-63 (responsive width CSS)
+
+#### **Phase 4: Enhanced Category System**
+
+**Priority:** Medium - Already partially implemented, needs expansion
+
+**Tasks:**
+
+1. Update category keywords from HTML version (more comprehensive)
+2. Add "learning", "creativity", "productivity" categories
+3. Filter fallback quotes by category
+4. Apply category filter from settings
+5. Retry API fetch up to 5 times for category match (already exists, verify)
+
+**Reference:** `index.html` lines 717-753 (category keywords and matching)
+
+**Category keywords to port:**
+
+```python
+CATEGORY_KEYWORDS = {
+    'motivation': ['believe', 'achieve', 'success', 'dream', 'goal', 'start', 'begin', 'action', 'courage', 'brave', 'try', 'possible', 'impossible', 'persist', 'persevere', 'overcome', 'conquer', 'triumph', 'victory', 'fight', 'inspire', 'motivate', 'passion', 'purpose', 'destiny', 'future'],
+    'learning': ['learn', 'grow', 'improve', 'better', 'change', 'adapt', 'develop', 'evolve', 'transform', 'progress', 'advance', 'knowledge'],
+    'creativity': ['create', 'build', 'make', 'innovation', 'innovative', 'creativity', 'creative', 'imagine', 'invention', 'design', 'art'],
+    'productivity': ['productivity', 'productive', 'focus', 'discipline', 'work', 'effort', 'dedication', 'commitment', 'perseverance', 'do']
+}
+```
+
+#### **Phase 5: UI Polish**
+
+**Priority:** Low - Nice to have, not critical
+
+**Tasks:**
+
+1. Update button styling to match HTML design
+2. Improve progress bar visual (gradient if possible in Tkinter)
+3. Add hover effects to buttons
+4. Smooth transitions where possible
+
+**Reference:** `index.html` lines 152-275 (button styles)
+
+### Post-Implementation Tasks
+
+1. **Testing:**
+   - Test all 4 position corners
+   - Test theme switching
+   - Test all font sizes
+   - Test all categories
+   - Test settings persistence across restarts
+   - Test responsive window sizing with short/long quotes
+   - Verify timer duration changes work
+   - Verify hover-to-pause still works
+
+2. **Cleanup:**
+   - Delete `index.html`
+   - Delete all test HTML files
+   - Delete Playwright tests (HTML-specific)
+   - Update README if it references HTML
+   - Update LaunchQuote.bat comments if needed
+
+3. **Documentation:**
+   - Update CLAUDE.md with V4.0.0 completion notes
+   - Document Python-specific settings storage (JSON vs localStorage)
+   - Note any feature differences between HTML and Python implementations
+
+### Technical Considerations
+
+**Settings Storage:**
+
+- HTML uses `localStorage` (browser-based)
+- Python will use `user_settings.json` file in same directory
+- Default location: `C:\Users\14102\Documents\Sebastian Ames\Projects\Daily Creations\dailyQuotesGenerator\user_settings.json`
+
+**Window Positioning:**
+
+- HTML: CSS `position: fixed` with top/bottom/left/right
+- Python: Tkinter `geometry()` with calculated x/y coordinates
+- Need to account for screen resolution and multi-monitor setups
+
+**Theme Detection:**
+
+- HTML: `window.matchMedia('(prefers-color-scheme: dark)')`
+- Python: Check Windows registry or default to light theme
+- May need `winreg` module for system theme detection
+
+**Responsive Sizing:**
+
+- HTML: CSS `width: fit-content` with min/max constraints
+- Python: Calculate dynamically using `font.Font().measure()` for text width
+
+**Color Gradients:**
+
+- HTML: CSS `linear-gradient(135deg, #667eea 0%, #764ba2 100%)`
+- Python: Tkinter doesn't support gradients natively - use solid accent color `#667eea` instead
+
+### Success Criteria
+
+- [ ] Python overlay has settings button and panel
+- [ ] Dark/light theme toggle works
+- [ ] All 4 position corners work correctly
+- [ ] Timer duration adjustable (5-60s)
+- [ ] Font size adjustable (small/medium/large)
+- [ ] Category filtering works (5 options)
+- [ ] Settings persist across application restarts
+- [ ] Window resizes based on quote length
+- [ ] All HTML files deleted from repository
+- [ ] User confirms Python overlay works as expected on Windows startup
+
 ## Architectural Decisions
 
 ### No Database Required
@@ -274,6 +566,7 @@ Settings panel must be a **sibling** of quote-container, not a child, to avoid A
 **User Directive**: "i dont want to track anything. even a local db isnt required"
 
 **Rationale:**
+
 - Single motivational quote per session = no history needed
 - User preferences stored in localStorage (lightweight, client-side)
 - No tracking, analytics, or usage data collection
@@ -284,6 +577,7 @@ Settings panel must be a **sibling** of quote-container, not a child, to avoid A
 **Choice**: Embedded CSS and JavaScript in index.html
 
 **Benefits:**
+
 - Easy distribution (single file to share)
 - No build process or dependencies
 - Works offline with fallback quotes
@@ -291,6 +585,7 @@ Settings panel must be a **sibling** of quote-container, not a child, to avoid A
 - Portable across systems
 
 **Tradeoffs:**
+
 - Harder to maintain separate concerns
 - No CSS/JS preprocessing
 - Manual minification if needed
@@ -300,19 +595,21 @@ Settings panel must be a **sibling** of quote-container, not a child, to avoid A
 **Implementation**: All colors defined as CSS custom properties
 
 **Benefits:**
+
 - Runtime theme switching without CSS reload
 - System preference detection works instantly
 - User preference override with one variable change
 - Maintainable color palette
 
 **Example:**
+
 ```css
 :root {
   --bg-primary: #ffffff;
   --text-primary: #2c3e50;
 }
 
-[data-theme="dark"] {
+[data-theme='dark'] {
   --bg-primary: #1a1a1a;
   --text-primary: #e0e0e0;
 }
@@ -321,6 +618,7 @@ Settings panel must be a **sibling** of quote-container, not a child, to avoid A
 ### localStorage for Persistence
 
 **What We Store:**
+
 - Theme preference (light/dark/auto)
 - Timer duration (5-60 seconds)
 - Position (bottomRight/bottomLeft/topRight/topLeft)
@@ -328,6 +626,7 @@ Settings panel must be a **sibling** of quote-container, not a child, to avoid A
 - Category preference (motivation/learning/creativity/productivity/all)
 
 **Why Not Cookies:**
+
 - No server communication needed
 - More storage space (5-10MB vs 4KB)
 - Simpler API (getItem/setItem)
@@ -347,12 +646,13 @@ const SENTENCE_SPLIT = /(?<=[.!?…])\s+(?=["""''(\[]?\w)/u;
 const INTERIOR_UPPER = /(?<!^)(?<![''])[A-Z]/gu;
 
 // Word boundary filtering (avoids "can" matching "candle")
-const isMotivational = MOTIVATIONAL_KEYWORDS.some(keyword =>
+const isMotivational = MOTIVATIONAL_KEYWORDS.some((keyword) =>
   new RegExp(`\\b${keyword}\\b`, 'i').test(quote.quote)
 );
 ```
 
 **Why This Matters:**
+
 - Previous approach used string splitting on ". " only
 - Lost exclamation points, question marks, ellipses
 - Missed curly apostrophes in contractions
@@ -363,6 +663,7 @@ const isMotivational = MOTIVATIONAL_KEYWORDS.some(keyword =>
 ### Manual Testing Checklist
 
 **Every Feature Should Test:**
+
 - [ ] Works in light mode
 - [ ] Works in dark mode
 - [ ] Persists across page reloads
@@ -377,17 +678,20 @@ const isMotivational = MOTIVATIONAL_KEYWORDS.some(keyword =>
 **Created During V2.0.1 Debugging:**
 
 `tests/button-visibility.spec.js`:
+
 - Verifies all 3 buttons visible
 - Checks button positions within viewport
 - Screenshots for visual regression
 - Tests in light and dark mode
 
 **Running Tests:**
+
 ```bash
 npx playwright test tests/button-visibility.spec.js --reporter=line
 ```
 
 **Why Playwright Was Essential:**
+
 - Human testing missed viewport clipping
 - Cache issues made manual testing unreliable
 - Screenshot comparison proved dark mode was working correctly
@@ -398,11 +702,13 @@ npx playwright test tests/button-visibility.spec.js --reporter=line
 **Problem**: User not seeing committed changes
 
 **Failed Approaches:**
+
 - Hard refresh (Ctrl+Shift+R)
 - Incognito mode
 - file:// protocol (terrible caching)
 
 **Working Solution:**
+
 ```bash
 # Start local HTTP server
 python -m http.server 8080
@@ -412,6 +718,7 @@ http://localhost:8080/index.html?v={timestamp}
 ```
 
 **Test Harness Created:**
+
 - `test_buttons.html` - Automated cache-buster with file content verification
 - `simple_test.html` - Minimal page to verify server working
 
@@ -474,6 +781,7 @@ http://localhost:8080/index.html?v={timestamp}
 **Decision**: Keep test_buttons.html and simple_test.html in repository
 
 **Rationale**:
+
 - Future debugging will need same cache-busting approach
 - Demonstrates testing methodology for contributors
 - Minimal size cost (~2KB each)
@@ -483,21 +791,25 @@ http://localhost:8080/index.html?v={timestamp}
 **Problem** (V3.0): Settings panel disappeared immediately, but Playwright showed it working
 
 **Root Cause**: Settings panel was nested inside quote-container
+
 - `openSettings()` set parent to `aria-hidden="true"`
 - Then tried to focus child element (back button)
 - Browser blocked focus for accessibility, breaking the entire flow
 
 **Console Error**:
+
 ```
 Blocked aria-hidden on an element because its descendant retained focus.
 ```
 
 **Why Playwright Didn't Catch It**:
+
 - Playwright's `page.click()` can force clicks even when accessibility blocks them
 - Real browsers (Chrome/Brave) enforce ARIA rules more strictly in manual use
 - Different behavior between automated testing and human interaction
 
 **Solution**:
+
 - Move interactive elements (settings panel) **outside** containers that get `aria-hidden`
 - DOM structure matters for accessibility, not just CSS positioning
 - Settings panel must be a sibling of quote-container, not a child
@@ -511,6 +823,7 @@ Blocked aria-hidden on an element because its descendant retained focus.
 **User Preference**: "add features incrementally using PRDs and tasks. and commit/merge them often"
 
 **V2 Followed:**
+
 1. Phase 1: Bug fixes → Commit
 2. Phase 2: Dark/light mode → Commit
 3. Phase 3: Settings panel → Commit
@@ -518,6 +831,7 @@ Blocked aria-hidden on an element because its descendant retained focus.
 5. Bug fix: Button visibility → Commit
 
 **Benefits:**
+
 - Easy to bisect if regression introduced
 - Clear changelog history
 - Can cherry-pick individual features
@@ -526,18 +840,21 @@ Blocked aria-hidden on an element because its descendant retained focus.
 ### When to Use Sub-Agents
 
 **Playwright Testing** (used in V2.0.1):
+
 - Visual regression testing
 - Screenshot comparison
 - Automated UI verification
 - Cross-browser testing
 
 **Research Phase** (used in V1):
+
 - API evaluation
 - UX best practices
 - Design alternatives
 - Platform-specific guides
 
 **Code Review** (not used yet):
+
 - Accessibility audit
 - Performance optimization
 - Security vulnerability scanning
@@ -547,11 +864,13 @@ Blocked aria-hidden on an element because its descendant retained focus.
 ### Potential Features
 
 **User Requested:**
+
 - ✅ Dark/light mode (completed V2.0.0)
 - ✅ Settings panel (completed V2.0.0)
 - ✅ Quote categories (completed V2.0.0)
 
 **Not Yet Implemented:**
+
 - Quote history view (conflicts with "no tracking" directive - needs user clarification)
 - Favorite quotes collection (would require localStorage, get user approval first)
 - Custom quote upload
@@ -564,21 +883,25 @@ Blocked aria-hidden on an element because its descendant retained focus.
 ### Technical Debt
 
 **Test Infrastructure:**
+
 - [ ] Clean up test files vs keep for documentation
 - [ ] Add to .gitignore or commit to repository
 - [ ] Document Playwright setup in README
 
 **Configuration:**
+
 - [ ] Move more hardcoded values to quotes_config.json
 - [ ] Document configuration file format
 - [ ] Validate JSON schema on load
 
 **Accessibility:**
+
 - [ ] Automated accessibility testing in CI/CD
 - [ ] Keyboard navigation testing
 - [ ] Screen reader testing with actual users
 
 **Performance:**
+
 - [ ] Lazy load fallback quotes
 - [ ] Minimize CSS (currently ~8KB unminified)
 - [ ] Consider service worker for offline support
@@ -586,16 +909,19 @@ Blocked aria-hidden on an element because its descendant retained focus.
 ## Questions for Future Sessions
 
 ### Architecture
+
 1. Should we commit test infrastructure (tests/, playwright.config.js) or add to .gitignore?
 2. Keep development helper files (test_buttons.html, simple_test.html) or remove after debugging complete?
 3. Create separate CSS/JS files or keep single-file architecture?
 
 ### Features
+
 1. User said "no tracking" - does this mean no quote history feature ever? Or just no analytics?
 2. Would user want favorite quotes (requires localStorage)?
 3. Should we build browser extension version for better auto-launch experience?
 
 ### Testing
+
 1. Add visual regression testing to CI/CD pipeline?
 2. Set up automated accessibility testing?
 3. Cross-browser testing matrix (Chrome/Firefox/Safari/Edge)?

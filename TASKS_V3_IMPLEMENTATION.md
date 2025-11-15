@@ -10,11 +10,13 @@
 ## Phase 1: Responsive Quote Box
 
 ### Task 1.1: Update Quote Container CSS
+
 **Priority:** P0
 **Estimated Time:** 15 minutes
 **Related REQ:** REQ-RQB-001 to REQ-RQB-008
 
 **Subtasks:**
+
 - [ ] Open `index.html` in editor
 - [ ] Locate `.quote-container` CSS (line ~56)
 - [ ] Change `width: 500px` → `width: fit-content`
@@ -26,17 +28,20 @@
 - [ ] Update transition property to include width/height if needed
 
 **Acceptance Criteria:**
+
 - CSS properties updated correctly
 - No syntax errors in CSS
 
 ---
 
 ### Task 1.2: Test Quote Box Responsiveness Locally
+
 **Priority:** P0
 **Estimated Time:** 20 minutes
 **Related REQ:** REQ-RQB-001 to REQ-RQB-015
 
 **Subtasks:**
+
 - [ ] Start local HTTP server: `python -m http.server 8081`
 - [ ] Open `http://localhost:8081/index.html` in browser
 - [ ] Test short quote (force fallback, select short quote)
@@ -49,6 +54,7 @@
 - [ ] Test on mobile viewport (Chrome DevTools: 375px width)
 
 **Acceptance Criteria:**
+
 - Box width adapts to quote length
 - Box never exceeds viewport boundaries
 - All UI elements remain visible
@@ -56,11 +62,13 @@
 ---
 
 ### Task 1.3: Create Playwright Tests for Quote Responsiveness
+
 **Priority:** P0
 **Estimated Time:** 30 minutes
 **Related REQ:** REQ-RQB-001 to REQ-RQB-018
 
 **Subtasks:**
+
 - [ ] Create `tests/responsive-quote-box.spec.js`
 - [ ] **Test Case 1:** Load quote, measure width, verify < 800px
 - [ ] **Test Case 2:** Force short quote (10 words), verify min-width: 320px
@@ -72,11 +80,13 @@
 - [ ] Add console logging for dimensions
 
 **Acceptance Criteria:**
+
 - All 6 test cases pass
 - Screenshots captured for review
 - No elements outside viewport
 
 **Test Code Structure:**
+
 ```javascript
 test('short quote uses min-width', async ({ page }) => {
   await page.goto('http://localhost:8081/index.html');
@@ -95,11 +105,13 @@ test('short quote uses min-width', async ({ page }) => {
 ---
 
 ### Task 1.4: Manual Cross-Browser Testing
+
 **Priority:** P1
 **Estimated Time:** 20 minutes
 **Related REQ:** REQ-RQB-001 to REQ-RQB-018
 
 **Subtasks:**
+
 - [ ] Test in Chrome (primary browser)
 - [ ] Test in Firefox
 - [ ] Test in Edge
@@ -110,6 +122,7 @@ test('short quote uses min-width', async ({ page }) => {
 - [ ] Test all 3 font sizes (small, medium, large)
 
 **Acceptance Criteria:**
+
 - Consistent behavior across all browsers
 - No layout issues detected
 
@@ -118,11 +131,13 @@ test('short quote uses min-width', async ({ page }) => {
 ## Phase 2: Settings Page Replacement
 
 ### Task 2.1: Update Settings Panel CSS
+
 **Priority:** P0
 **Estimated Time:** 20 minutes
 **Related REQ:** REQ-SPR-010 to REQ-SPR-014
 
 **Subtasks:**
+
 - [ ] Open `index.html` in editor
 - [ ] Locate `.settings-panel` CSS (line ~246)
 - [ ] Change `position: absolute` → `position: fixed`
@@ -138,6 +153,7 @@ test('short quote uses min-width', async ({ page }) => {
 - [ ] Update `.show` class to include `display: block`
 
 **Acceptance Criteria:**
+
 - Settings panel CSS updated correctly
 - Panel positioned at center of viewport
 - Panel respects size constraints
@@ -145,16 +161,19 @@ test('short quote uses min-width', async ({ page }) => {
 ---
 
 ### Task 2.2: Add CSS for Quote Box Hiding
+
 **Priority:** P0
 **Estimated Time:** 5 minutes
 **Related REQ:** REQ-SPR-001 to REQ-SPR-003
 
 **Subtasks:**
+
 - [ ] Add new CSS class `.quote-container.settings-open`
 - [ ] Set `opacity: 0` and `pointer-events: none`
 - [ ] Add smooth transition for opacity
 
 **CSS Code:**
+
 ```css
 .quote-container.settings-open {
   opacity: 0;
@@ -163,17 +182,20 @@ test('short quote uses min-width', async ({ page }) => {
 ```
 
 **Acceptance Criteria:**
+
 - CSS class added correctly
 - Transition is smooth
 
 ---
 
 ### Task 2.3: Add Back Button to Settings Panel HTML
+
 **Priority:** P0
 **Estimated Time:** 10 minutes
 **Related REQ:** REQ-SPR-005 to REQ-SPR-009
 
 **Subtasks:**
+
 - [ ] Locate settings panel HTML (line ~465)
 - [ ] Add back button HTML before `<h3>Settings</h3>`
 - [ ] Set button ID: `backButton`
@@ -182,29 +204,28 @@ test('short quote uses min-width', async ({ page }) => {
 - [ ] Add button text: "← Back"
 
 **HTML Code:**
+
 ```html
-<button
-  class="back-button"
-  id="backButton"
-  aria-label="Back to quote"
-  title="Back to Quote (Esc)"
->
+<button class="back-button" id="backButton" aria-label="Back to quote" title="Back to Quote (Esc)">
   ← Back
 </button>
 ```
 
 **Acceptance Criteria:**
+
 - Back button HTML added
 - Proper accessibility attributes included
 
 ---
 
 ### Task 2.4: Add Back Button CSS
+
 **Priority:** P0
 **Estimated Time:** 15 minutes
 **Related REQ:** REQ-SPR-005, REQ-SPR-024
 
 **Subtasks:**
+
 - [ ] Add `.back-button` CSS class
 - [ ] Position absolute, top-left (top: 16px, left: 16px)
 - [ ] Style similar to close button (transparent background, hover state)
@@ -213,6 +234,7 @@ test('short quote uses min-width', async ({ page }) => {
 - [ ] Add z-index: 10
 
 **CSS Code:**
+
 ```css
 .back-button {
   position: absolute;
@@ -226,7 +248,9 @@ test('short quote uses min-width', async ({ page }) => {
   cursor: pointer;
   padding: 8px 12px;
   border-radius: 6px;
-  transition: background 0.2s ease, color 0.2s ease;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
   z-index: 10;
 }
 
@@ -242,6 +266,7 @@ test('short quote uses min-width', async ({ page }) => {
 ```
 
 **Acceptance Criteria:**
+
 - Back button styled correctly
 - Hover and focus states work
 - Button visible in light and dark themes
@@ -249,11 +274,13 @@ test('short quote uses min-width', async ({ page }) => {
 ---
 
 ### Task 2.5: Update JavaScript - Settings State Management
+
 **Priority:** P0
 **Estimated Time:** 25 minutes
 **Related REQ:** REQ-SPR-015 to REQ-SPR-019
 
 **Subtasks:**
+
 - [ ] Locate JavaScript section (line ~600)
 - [ ] Add `let settingsOpen = false;` global variable
 - [ ] Rename `toggleSettings()` → `openSettings()` and `closeSettings()`
@@ -272,6 +299,7 @@ test('short quote uses min-width', async ({ page }) => {
 - [ ] Update settings button listener to call `openSettings()`
 
 **JavaScript Code:**
+
 ```javascript
 let settingsOpen = false;
 
@@ -306,6 +334,7 @@ settingsButton.addEventListener('click', openSettings);
 ```
 
 **Acceptance Criteria:**
+
 - Settings open/close functions work correctly
 - State variable tracks open/closed correctly
 - ARIA attributes updated properly
@@ -313,36 +342,43 @@ settingsButton.addEventListener('click', openSettings);
 ---
 
 ### Task 2.6: Add Back Button Event Listener
+
 **Priority:** P0
 **Estimated Time:** 5 minutes
 **Related REQ:** REQ-SPR-006, REQ-SPR-007
 
 **Subtasks:**
+
 - [ ] Get back button element: `const backButton = document.getElementById('backButton');`
 - [ ] Add click listener: `backButton.addEventListener('click', closeSettings);`
 
 **JavaScript Code:**
+
 ```javascript
 const backButton = document.getElementById('backButton');
 backButton.addEventListener('click', closeSettings);
 ```
 
 **Acceptance Criteria:**
+
 - Back button closes settings and returns to quote
 
 ---
 
 ### Task 2.7: Add Esc Key Listener
+
 **Priority:** P0
 **Estimated Time:** 10 minutes
 **Related REQ:** REQ-SPR-009
 
 **Subtasks:**
+
 - [ ] Update existing Esc key listener to check `settingsOpen` state
 - [ ] If settings open and Esc pressed, call `closeSettings()`
 - [ ] Ensure existing Esc behavior (close quote) still works
 
 **JavaScript Code:**
+
 ```javascript
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
@@ -356,22 +392,26 @@ document.addEventListener('keydown', (e) => {
 ```
 
 **Acceptance Criteria:**
+
 - Esc closes settings when settings are open
 - Esc closes quote when settings are closed
 
 ---
 
 ### Task 2.8: Pause Timer When Settings Open
+
 **Priority:** P1
 **Estimated Time:** 15 minutes
 **Related REQ:** Open Question #5 in PRD
 
 **Subtasks:**
+
 - [ ] In `openSettings()`, call `clearInterval(countdownInterval)` if timer is running
 - [ ] In `closeSettings()`, restart timer with remaining time
 - [ ] Store remaining time before pausing: `let pausedTimeRemaining`
 
 **JavaScript Code:**
+
 ```javascript
 let pausedTimeRemaining = null;
 
@@ -397,6 +437,7 @@ function closeSettings() {
 ```
 
 **Acceptance Criteria:**
+
 - Timer pauses when settings open
 - Timer resumes when settings close
 - Remaining time preserved
@@ -404,11 +445,13 @@ function closeSettings() {
 ---
 
 ### Task 2.9: Test Settings Page Replacement Locally
+
 **Priority:** P0
 **Estimated Time:** 20 minutes
 **Related REQ:** REQ-SPR-001 to REQ-SPR-022
 
 **Subtasks:**
+
 - [ ] Start local HTTP server
 - [ ] Open `http://localhost:8081/index.html`
 - [ ] Click ⚙️ settings button
@@ -424,6 +467,7 @@ function closeSettings() {
 - [ ] Test focus management (Tab, Shift+Tab)
 
 **Acceptance Criteria:**
+
 - Settings panel always visible when open
 - Quote box hidden when settings open
 - Back button works
@@ -433,11 +477,13 @@ function closeSettings() {
 ---
 
 ### Task 2.10: Create Playwright Tests for Settings Page Replacement
+
 **Priority:** P0
 **Estimated Time:** 30 minutes
 **Related REQ:** REQ-SPR-001 to REQ-SPR-026
 
 **Subtasks:**
+
 - [ ] Create `tests/settings-page-replacement.spec.js`
 - [ ] **Test Case 1:** Click ⚙️ → Settings visible, quote hidden
 - [ ] **Test Case 2:** Click back → Quote visible, settings hidden
@@ -450,11 +496,13 @@ function closeSettings() {
 - [ ] Add ARIA attribute verification
 
 **Acceptance Criteria:**
+
 - All 7 test cases pass
 - Screenshots captured
 - Settings always in viewport
 
 **Test Code Structure:**
+
 ```javascript
 test('settings panel replaces quote box', async ({ page }) => {
   await page.goto('http://localhost:8081/index.html');
@@ -481,11 +529,13 @@ test('settings panel replaces quote box', async ({ page }) => {
 ---
 
 ### Task 2.11: Accessibility Testing
+
 **Priority:** P1
 **Estimated Time:** 20 minutes
 **Related REQ:** REQ-SPR-026
 
 **Subtasks:**
+
 - [ ] Run axe-core accessibility tests: `npx @axe-core/cli http://localhost:8081/index.html`
 - [ ] Test with keyboard only (no mouse):
   - Tab to settings button, press Enter
@@ -501,6 +551,7 @@ test('settings panel replaces quote box', async ({ page }) => {
 - [ ] Test focus trap (Tab cycles within settings only)
 
 **Acceptance Criteria:**
+
 - No accessibility violations detected
 - Keyboard navigation works perfectly
 - Screen reader announces correctly
@@ -511,10 +562,12 @@ test('settings panel replaces quote box', async ({ page }) => {
 ## Phase 3: Integration & Refinement
 
 ### Task 3.1: Test Both Features Together
+
 **Priority:** P0
 **Estimated Time:** 20 minutes
 
 **Subtasks:**
+
 - [ ] Load short quote → Verify responsive box → Open settings → Close settings
 - [ ] Load long quote → Verify responsive box → Open settings → Close settings
 - [ ] Test all 4 positions with responsive box and settings panel
@@ -523,6 +576,7 @@ test('settings panel replaces quote box', async ({ page }) => {
 - [ ] Test category switching, verify quote box resizes appropriately
 
 **Acceptance Criteria:**
+
 - No conflicts between two features
 - Settings changes apply correctly to responsive quote box
 - No visual glitches
@@ -530,10 +584,12 @@ test('settings panel replaces quote box', async ({ page }) => {
 ---
 
 ### Task 3.2: Run Full Playwright Test Suite
+
 **Priority:** P0
 **Estimated Time:** 10 minutes
 
 **Subtasks:**
+
 - [ ] Run all Playwright tests: `npx playwright test --reporter=line`
 - [ ] Review test results
 - [ ] Fix any failing tests
@@ -541,6 +597,7 @@ test('settings panel replaces quote box', async ({ page }) => {
 - [ ] Verify no elements outside viewport in any test
 
 **Acceptance Criteria:**
+
 - All Playwright tests pass
 - No visual regressions detected
 - All screenshots show correct layout
@@ -548,10 +605,12 @@ test('settings panel replaces quote box', async ({ page }) => {
 ---
 
 ### Task 3.3: Cross-Browser Testing
+
 **Priority:** P1
 **Estimated Time:** 25 minutes
 
 **Subtasks:**
+
 - [ ] Test in Chrome (Windows/Mac)
 - [ ] Test in Firefox
 - [ ] Test in Edge
@@ -560,16 +619,19 @@ test('settings panel replaces quote box', async ({ page }) => {
 - [ ] Verify consistent behavior across all browsers
 
 **Acceptance Criteria:**
+
 - Features work identically in all browsers
 - No browser-specific bugs found
 
 ---
 
 ### Task 3.4: Performance Testing
+
 **Priority:** P1
 **Estimated Time:** 15 minutes
 
 **Subtasks:**
+
 - [ ] Open Chrome DevTools → Performance tab
 - [ ] Record: Load quote → Open settings → Close settings → Load new quote
 - [ ] Verify no layout thrashing (excessive reflows)
@@ -578,6 +640,7 @@ test('settings panel replaces quote box', async ({ page }) => {
 - [ ] Test with 20 consecutive quote loads
 
 **Acceptance Criteria:**
+
 - Page load time < 1 second
 - Transitions smooth (no janking)
 - No memory leaks detected
@@ -588,10 +651,12 @@ test('settings panel replaces quote box', async ({ page }) => {
 ## Phase 4: Documentation & Deployment
 
 ### Task 4.1: Update CHANGELOG.md
+
 **Priority:** P0
 **Estimated Time:** 15 minutes
 
 **Subtasks:**
+
 - [ ] Add V3.0 section to CHANGELOG.md
 - [ ] Document responsive quote box changes
 - [ ] Document settings page replacement changes
@@ -600,26 +665,31 @@ test('settings panel replaces quote box', async ({ page }) => {
 - [ ] Add migration notes (none needed)
 
 **Template:**
+
 ```markdown
 ## [3.0.0] - 2025-11-13
 
 ### Added
+
 - **Responsive Quote Box**: Box now dynamically adapts width (320-800px) and height based on quote length
 - **Settings Page Replacement**: Settings panel now appears as a centered modal that replaces the quote box instead of appearing below it
 - **Back Button**: Added back button (← Back) to settings panel for clear navigation
 
 ### Changed
+
 - Quote box width changed from fixed `500px` to dynamic `fit-content` with min/max constraints
 - Settings panel positioning changed from `absolute` (below box) to `fixed` (centered)
 - Settings panel now hides quote box when open (single view at a time)
 - Esc key now closes settings panel if open, otherwise closes quote
 
 ### Fixed
+
 - **Critical**: Settings panel no longer appears off-screen
 - Settings panel now 100% visible on all screen sizes including mobile
 - Quote box no longer wastes space with short quotes or feels cramped with long quotes
 
 ### Technical
+
 - CSS: Updated `.quote-container` with `width: fit-content`, `min-width: 320px`, `max-width: min(800px, 90vw)`
 - CSS: Updated `.settings-panel` with `position: fixed`, centered positioning
 - CSS: Added `.quote-container.settings-open` class for hiding quote
@@ -629,16 +699,19 @@ test('settings panel replaces quote box', async ({ page }) => {
 ```
 
 **Acceptance Criteria:**
+
 - CHANGELOG.md updated with complete V3.0 notes
 - All changes documented clearly
 
 ---
 
 ### Task 4.2: Update CLAUDE.md
+
 **Priority:** P0
 **Estimated Time:** 20 minutes
 
 **Subtasks:**
+
 - [ ] Add V3.0 section to CLAUDE.md
 - [ ] Document responsive quote box architectural decision
 - [ ] Document settings page replacement architectural decision
@@ -648,37 +721,44 @@ test('settings panel replaces quote box', async ({ page }) => {
 - [ ] Add user feedback notes
 
 **Key Points to Document:**
+
 - Why we chose `fit-content` over tiered sizing
 - Why we chose page replacement over overlay/modal
 - How Playwright helped validate the design
 - User's requirement: "quote box should be fully responsive"
 
 **Acceptance Criteria:**
+
 - CLAUDE.md updated with V3.0 development history
 - Architectural decisions documented
 
 ---
 
 ### Task 4.3: Update README.md (if needed)
+
 **Priority:** P2
 **Estimated Time:** 10 minutes
 
 **Subtasks:**
+
 - [ ] Review README.md for accuracy
 - [ ] Update feature list if needed
 - [ ] Update screenshots (if any)
 - [ ] Add V3.0 highlights to top of README
 
 **Acceptance Criteria:**
+
 - README.md reflects current state of project
 
 ---
 
 ### Task 4.4: Git Commit & Push
+
 **Priority:** P0
 **Estimated Time:** 10 minutes
 
 **Subtasks:**
+
 - [ ] Review all changes: `git diff`
 - [ ] Stage changes: `git add index.html tests/ CHANGELOG.md CLAUDE.md`
 - [ ] Write descriptive commit message
@@ -686,6 +766,7 @@ test('settings panel replaces quote box', async ({ page }) => {
 - [ ] Push to GitHub: `git push origin main`
 
 **Commit Message Template:**
+
 ```
 V3.0: Responsive Quote Box + Settings Page Replacement
 
@@ -740,6 +821,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 ```
 
 **Acceptance Criteria:**
+
 - Changes committed with descriptive message
 - Pushed to GitHub successfully
 
@@ -748,18 +830,21 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 ## Task Summary
 
 ### Total Tasks: 30
+
 - **Phase 1 (Responsive Quote Box)**: 4 tasks
 - **Phase 2 (Settings Page Replacement)**: 11 tasks
 - **Phase 3 (Integration & Refinement)**: 4 tasks
 - **Phase 4 (Documentation & Deployment)**: 4 tasks
 
 ### Estimated Total Time: ~7 hours
+
 - **Phase 1**: ~1.5 hours
 - **Phase 2**: ~3 hours
 - **Phase 3**: ~1.5 hours
 - **Phase 4**: ~1 hour
 
 ### Priority Breakdown
+
 - **P0 (Must Have)**: 24 tasks
 - **P1 (Should Have)**: 5 tasks
 - **P2 (Nice to Have)**: 1 task
@@ -769,6 +854,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 ## Implementation Order
 
 ### Session 1 (2-3 hours)
+
 1. Task 1.1: Update Quote Container CSS
 2. Task 1.2: Test Quote Box Responsiveness Locally
 3. Task 2.1: Update Settings Panel CSS
@@ -779,6 +865,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 **Checkpoint:** Visual changes complete, ready for JavaScript
 
 ### Session 2 (2-3 hours)
+
 7. Task 2.5: Update JavaScript - Settings State Management
 8. Task 2.6: Add Back Button Event Listener
 9. Task 2.7: Add Esc Key Listener
@@ -789,6 +876,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 **Checkpoint:** Features functional, ready for automated testing
 
 ### Session 3 (1-2 hours)
+
 13. Task 1.3: Create Playwright Tests for Quote Responsiveness
 14. Task 2.10: Create Playwright Tests for Settings Page Replacement
 15. Task 3.2: Run Full Playwright Test Suite
@@ -797,6 +885,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 **Checkpoint:** Automated tests complete, ready for deployment
 
 ### Session 4 (1 hour)
+
 17. Task 1.4: Manual Cross-Browser Testing
 18. Task 3.3: Cross-Browser Testing
 19. Task 4.1: Update CHANGELOG.md

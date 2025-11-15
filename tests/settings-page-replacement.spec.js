@@ -29,7 +29,7 @@ test.describe('Settings Page Replacement', () => {
     // Take screenshot
     await page.screenshot({
       path: 'test-results/settings-01-panel-open.png',
-      fullPage: true
+      fullPage: true,
     });
   });
 
@@ -56,7 +56,7 @@ test.describe('Settings Page Replacement', () => {
 
     await page.screenshot({
       path: 'test-results/settings-02-back-button.png',
-      fullPage: true
+      fullPage: true,
     });
   });
 
@@ -83,7 +83,7 @@ test.describe('Settings Page Replacement', () => {
 
     await page.screenshot({
       path: 'test-results/settings-03-esc-key.png',
-      fullPage: true
+      fullPage: true,
     });
   });
 
@@ -95,7 +95,9 @@ test.describe('Settings Page Replacement', () => {
     const settingsBox = await page.locator('.settings-panel').boundingBox();
     const viewport = page.viewportSize();
 
-    console.log(`Settings panel: x=${settingsBox.x}, y=${settingsBox.y}, w=${settingsBox.width}, h=${settingsBox.height}`);
+    console.log(
+      `Settings panel: x=${settingsBox.x}, y=${settingsBox.y}, w=${settingsBox.width}, h=${settingsBox.height}`
+    );
     console.log(`Viewport: w=${viewport.width}, h=${viewport.height}`);
 
     // Verify panel is within viewport
@@ -108,7 +110,7 @@ test.describe('Settings Page Replacement', () => {
 
     await page.screenshot({
       path: 'test-results/settings-04-viewport.png',
-      fullPage: true
+      fullPage: true,
     });
   });
 
@@ -137,7 +139,7 @@ test.describe('Settings Page Replacement', () => {
 
     await page.screenshot({
       path: 'test-results/settings-05-focus.png',
-      fullPage: true
+      fullPage: true,
     });
   });
 
@@ -179,7 +181,7 @@ test.describe('Settings Page Replacement', () => {
 
     await page.screenshot({
       path: 'test-results/settings-06-mobile.png',
-      fullPage: true
+      fullPage: true,
     });
   });
 
@@ -204,7 +206,7 @@ test.describe('Settings Page Replacement', () => {
 
     // Verify settings applied to quote box
     const quoteText = page.locator('.quote-text');
-    const fontSize = await quoteText.evaluate(el => window.getComputedStyle(el).fontSize);
+    const fontSize = await quoteText.evaluate((el) => window.getComputedStyle(el).fontSize);
 
     console.log(`Font size after settings: ${fontSize}`);
     expect(fontSize).toBe('20px'); // Large font size
@@ -213,7 +215,7 @@ test.describe('Settings Page Replacement', () => {
 
     await page.screenshot({
       path: 'test-results/settings-07-persist.png',
-      fullPage: true
+      fullPage: true,
     });
   });
 
@@ -257,7 +259,7 @@ test.describe('Settings Page Replacement', () => {
 
     await page.screenshot({
       path: 'test-results/settings-08-aria.png',
-      fullPage: true
+      fullPage: true,
     });
   });
 });

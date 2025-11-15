@@ -21,9 +21,9 @@ test.describe('Settings Button Visibility Test', () => {
     console.log('\n=== BUTTON EXISTENCE CHECK ===');
 
     // Check if buttons exist in DOM
-    const settingsExists = await settingsButton.count() > 0;
-    const themeExists = await themeToggle.count() > 0;
-    const closeExists = await closeButton.count() > 0;
+    const settingsExists = (await settingsButton.count()) > 0;
+    const themeExists = (await themeToggle.count()) > 0;
+    const closeExists = (await closeButton.count()) > 0;
 
     console.log('Settings button exists:', settingsExists);
     console.log('Theme toggle exists:', themeExists);
@@ -207,7 +207,7 @@ test.describe('Settings Button Visibility Test', () => {
           scrollHeight: container.scrollHeight,
           clientWidth: container.clientWidth,
           clientHeight: container.clientHeight,
-        }
+        },
       };
     });
 
@@ -223,14 +223,17 @@ test.describe('Settings Button Visibility Test', () => {
       const centerY = rect.top + rect.height / 2;
 
       const elementsAtPoint = document.elementsFromPoint(centerX, centerY);
-      return elementsAtPoint.map(el => ({
+      return elementsAtPoint.map((el) => ({
         tagName: el.tagName,
         id: el.id,
         className: el.className,
       }));
     });
 
-    console.log('Elements at settings button center:', JSON.stringify(elementsAtSettingsButton, null, 2));
+    console.log(
+      'Elements at settings button center:',
+      JSON.stringify(elementsAtSettingsButton, null, 2)
+    );
 
     // Highlight buttons for visual debugging
     await page.evaluate(() => {

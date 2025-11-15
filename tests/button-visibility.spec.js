@@ -14,7 +14,7 @@ test.describe('Button Visibility Tests', () => {
     // Take an initial screenshot
     await page.screenshot({
       path: 'test-results/initial-state.png',
-      fullPage: true
+      fullPage: true,
     });
 
     // Test 1: Settings button (⚙️)
@@ -57,7 +57,7 @@ test.describe('Button Visibility Tests', () => {
     // Take screenshot with annotations showing button positions
     await page.screenshot({
       path: 'test-results/buttons-visible.png',
-      fullPage: true
+      fullPage: true,
     });
 
     // Test 4: Verify buttons are not overlapping with content
@@ -82,7 +82,7 @@ test.describe('Button Visibility Tests', () => {
     // Take screenshot with settings panel open
     await page.screenshot({
       path: 'test-results/settings-panel-open.png',
-      fullPage: true
+      fullPage: true,
     });
 
     console.log('Settings panel opened successfully');
@@ -118,7 +118,7 @@ test.describe('Button Visibility Tests', () => {
     // Take screenshot in different theme
     await page.screenshot({
       path: 'test-results/theme-toggled.png',
-      fullPage: true
+      fullPage: true,
     });
 
     // Test 9: Verify all buttons are still clickable after interactions
@@ -158,7 +158,7 @@ test.describe('Button Visibility Tests', () => {
 
     // Check z-index values
     const settingsButton = page.locator('#settingsButton');
-    const zIndex = await settingsButton.evaluate(el =>
+    const zIndex = await settingsButton.evaluate((el) =>
       window.getComputedStyle(el).getPropertyValue('z-index')
     );
 
@@ -166,7 +166,7 @@ test.describe('Button Visibility Tests', () => {
     expect(parseInt(zIndex)).toBeGreaterThanOrEqual(10);
 
     // Verify buttons are positioned absolutely
-    const position = await settingsButton.evaluate(el =>
+    const position = await settingsButton.evaluate((el) =>
       window.getComputedStyle(el).getPropertyValue('position')
     );
 
@@ -184,7 +184,7 @@ test.describe('Button Visibility Tests', () => {
     await expect(quoteContainer).toBeVisible({ timeout: 10000 });
 
     // Check padding-top value
-    const paddingTop = await quoteContainer.evaluate(el =>
+    const paddingTop = await quoteContainer.evaluate((el) =>
       window.getComputedStyle(el).getPropertyValue('padding-top')
     );
 
@@ -195,7 +195,7 @@ test.describe('Button Visibility Tests', () => {
 
     // Check that quote-content has overflow
     const quoteContent = page.locator('.quote-content');
-    const overflow = await quoteContent.evaluate(el =>
+    const overflow = await quoteContent.evaluate((el) =>
       window.getComputedStyle(el).getPropertyValue('overflow-y')
     );
 
