@@ -414,6 +414,125 @@ Successfully ported all HTML features to Python/Tkinter in a single session. All
 - ✅ Hover-to-pause still works
 - ✅ No errors or warnings during testing
 
+### V4.0.1 - Button Visibility Fix (2025-11-14) [COMPLETED]
+
+**Issue:** Emoji buttons (⚙️, 🌙) didn't render on Windows/Tkinter. Quote text overlapped buttons.
+
+**Root Cause:**
+- Windows console can't encode emoji characters (UnicodeEncodeError)
+- Tkinter on Windows has poor emoji font support
+- Buttons placed in same frame as quote content
+
+**Solutions:**
+- Replaced emoji buttons with modern text buttons
+  - "Settings" (purple pill button)
+  - "Dark"/"Light" (purple pill, shows opposite theme)
+  - × (minimal, red on hover)
+- Created dedicated button_frame (30px height, fixed)
+- Positioned content_frame BELOW buttons
+- No more overlap!
+
+**Files Modified:**
+- `quote_overlay.py` - Button redesign, layout fix
+- `BUTTON_DESIGN.md` - New button documentation
+
+**Testing:** ✅ All buttons visible, no overlap, all features work
+
+---
+
+### V5.0.0 - Advanced Visual Design [PLANNED]
+
+**Status:** Planning phase - PRD created, awaiting user approval
+
+**User Feedback:**
+> "can we adjust the color of the background and text... something different but still simple is nice"
+> "is this the extent of how detailed we can design a python script overlay?"
+> **Decision:** "i think option b is best" (Advanced design with Pillow)
+
+**Goal:** Transform from basic Tkinter to modern, polished UI with Pillow (PIL).
+
+**Planned Features:**
+
+**Phase 1: Setup & Infrastructure**
+- Add Pillow dependency (`pip install Pillow`)
+- Create `requirements.txt`
+- Update installation documentation
+
+**Phase 2: Rounded Corners** (High Priority)
+- Window has 12px rounded corners
+- Use PIL to create rounded rectangle mask
+- Handle transparency and layered windows
+
+**Phase 3: Gradient Backgrounds** (Medium Priority)
+- Subtle gradients instead of flat colors
+- Ocean Breeze color scheme (or user-selected alternative)
+- Vertical/horizontal/diagonal options
+
+**Phase 4: Drop Shadow Effect** (Medium Priority)
+- Gaussian blur shadow (20px blur, 4px offset)
+- 15-25% opacity
+- Pre-rendered and cached for performance
+
+**Phase 5: Modern Button Design** (High Priority)
+- Icon buttons (SVG → PIL rendered)
+- Smooth hover animations (200ms)
+- Scale effect on hover (105%)
+
+**Phase 6: Smooth Animations** (Low Priority)
+- Improved fade in/out (300ms ease-out)
+- Settings panel slide animation
+- Theme switch cross-fade
+
+**Phase 7: Color Scheme** (High Priority)
+- Ocean Breeze (recommended):
+  - Light: #f0f4f8 → #e0e7ff gradient, #0891b2 accent
+  - Dark: #0f172a → #1e293b gradient, #06b6d4 accent
+- Alternative schemes available (see `COLOR_SCHEMES.md`)
+
+**Technical Requirements:**
+- **New Dependency:** Pillow ≥ 10.0.0
+- **Performance Budget:** Startup < 1 second, Memory < 100MB
+- **Compatibility:** Windows 10/11, Python 3.7+
+
+**Success Criteria:**
+- [ ] Rounded corners implemented
+- [ ] Gradient backgrounds working
+- [ ] Drop shadow adds depth
+- [ ] Modern button styling with icons
+- [ ] Smooth animations (60 FPS)
+- [ ] New color scheme applied
+- [ ] All V4.0.1 features still work
+- [ ] No performance regressions
+
+**Implementation Plan:**
+- **MVP:** Phases 1, 2, 7 (Setup, Rounded Corners, Color Scheme) - 3 hours
+- **Full:** All phases - 6 hours
+
+**Risks:**
+1. Performance degradation → Cache pre-rendered images
+2. Pillow installation issues → Clear instructions, fallback to basic design
+3. Rounded corners OS compatibility → Fallback to square corners if unsupported
+
+**Documentation:**
+- Created `PRD_V5.0.0_ADVANCED_DESIGN.md` - Full specifications
+- Created `COLOR_SCHEMES.md` - 5 color scheme options
+- `BUTTON_DESIGN.md` - Will be updated with icon buttons
+
+**Open Questions:**
+1. Confirm Ocean Breeze color scheme (or select alternative)
+2. Shadow in dark theme? (Can look muddy)
+3. Animation speed preference (subtle vs snappy)
+4. Icon style (outlined vs filled)
+5. Gradient direction (vertical vs horizontal vs diagonal)
+
+**Next Steps:**
+1. User reviews PRD and selects color scheme
+2. Install Pillow: `pip install Pillow`
+3. Begin implementation in fresh session
+4. Test each phase incrementally
+
+---
+
 ## Product Requirements Document (PRD) - V4.0.0
 
 ### Overview
@@ -1006,4 +1125,4 @@ Blocked aria-hidden on an element because its descendant retained focus.
 
 ---
 
-Last Updated: 2025-11-14 (V4.0.0 - Feature Parity Achieved)
+Last Updated: 2025-11-14 (V4.0.1 - Button Fix Complete, V5.0.0 Planning)
