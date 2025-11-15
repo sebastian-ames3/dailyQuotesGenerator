@@ -287,34 +287,37 @@ class QuoteOverlay:
         if 'top_bar' in self.widgets:
             self.widgets['top_bar'].configure(bg=colors['accent'])
 
+        if 'button_frame' in self.widgets:
+            self.widgets['button_frame'].configure(bg=colors['window_bg'])
+
         if 'content_frame' in self.widgets:
             self.widgets['content_frame'].configure(bg=colors['window_bg'])
 
         if 'settings_btn' in self.widgets:
             self.widgets['settings_btn'].configure(
-                fg=colors['hint'],
-                bg=colors['window_bg'],
-                activebackground=colors['close_hover_bg'],
-                activeforeground=colors['close_hover_fg']
+                bg='#667eea',
+                fg='white',
+                activebackground='#5568d3',
+                activeforeground='white'
             )
 
         if 'theme_btn' in self.widgets:
-            # Update theme button icon
-            icon = '☀️' if theme == 'dark' else '🌙'
+            # Update theme button text - shows opposite of current theme
+            button_text = 'Dark' if theme == 'light' else 'Light'
             self.widgets['theme_btn'].configure(
-                text=icon,
-                fg=colors['hint'],
-                bg=colors['window_bg'],
-                activebackground=colors['close_hover_bg'],
-                activeforeground=colors['close_hover_fg']
+                text=button_text,
+                bg='#667eea',
+                fg='white',
+                activebackground='#5568d3',
+                activeforeground='white'
             )
 
         if 'close_btn' in self.widgets:
             self.widgets['close_btn'].configure(
                 fg=colors['hint'],
                 bg=colors['window_bg'],
-                activebackground=colors['close_hover_bg'],
-                activeforeground=colors['close_hover_fg']
+                activebackground='#ff5555',
+                activeforeground='white'
             )
 
         if hasattr(self, 'quote_label'):
@@ -501,64 +504,76 @@ class QuoteOverlay:
         top_bar.pack(fill=tk.X, side=tk.TOP)
         self.widgets['top_bar'] = top_bar
 
-        # Content frame with padding
-        content_frame = tk.Frame(main_frame, bg='#e8eaed')
-        content_frame.pack(fill=tk.BOTH, expand=True, padx=CONFIG["window_padding"], pady=CONFIG["window_padding"])
-        self.widgets['content_frame'] = content_frame
+        # Button container frame at the top - ensures buttons don't overlap with content
+        button_frame = tk.Frame(main_frame, bg='#e8eaed', height=30)
+        button_frame.pack(fill=tk.X, side=tk.TOP, padx=CONFIG["window_padding"], pady=(CONFIG["window_padding"], 0))
+        button_frame.pack_propagate(False)  # Maintain fixed height
+        self.widgets['button_frame'] = button_frame
 
-        # Settings button (top-right, leftmost of three buttons)
-        settings_btn = tk.Button(
-            content_frame,
-            text='⚙️',
-            font=('Segoe UI', 14, 'normal'),
-            fg='#888',
-            bg='#e8eaed',
-            bd=0,
-            cursor='hand2',
-            command=self.show_settings,
-            activebackground='#d8dadd',
-            activeforeground='#333',
-            padx=6,
-            pady=2
-        )
-        settings_btn.place(relx=1.0, rely=0.0, anchor='ne', x=-60, y=0)
-        self.widgets['settings_btn'] = settings_btn
+        # Modern button styling - using text instead of emojis for Windows compatibility
+        # All buttons positioned in top-right with clear spacing
 
-        # Theme toggle button (top-right, between settings and close)
-        theme_btn = tk.Button(
-            content_frame,
-            text='🌙',
-            font=('Segoe UI', 14, 'normal'),
-            fg='#888',
-            bg='#e8eaed',
-            bd=0,
-            cursor='hand2',
-            command=self.toggle_theme,
-            activebackground='#d8dadd',
-            activeforeground='#333',
-            padx=6,
-            pady=2
-        )
-        theme_btn.place(relx=1.0, rely=0.0, anchor='ne', x=-30, y=0)
-        self.widgets['theme_btn'] = theme_btn
-
-        # Close button (top-right, rightmost)
+        # Close button (top-right, rightmost) - Using × symbol which renders well
         close_btn = tk.Button(
-            content_frame,
+            button_frame,
             text='×',
-            font=('Segoe UI', 16, 'normal'),
-            fg='#888',
+            font=('Segoe UI', 18, 'bold'),
+            fg='#666',
             bg='#e8eaed',
             bd=0,
             cursor='hand2',
             command=self.close_quote,
-            activebackground='#d8dadd',
-            activeforeground='#333',
-            padx=6,
-            pady=2
+            activebackground='#ff5555',
+            activeforeground='white',
+            padx=8,
+            pady=0,
+            relief=tk.FLAT
         )
-        close_btn.place(relx=1.0, rely=0.0, anchor='ne', x=0, y=0)
+        close_btn.place(relx=1.0, rely=0.5, anchor='e', x=0, y=0)
         self.widgets['close_btn'] = close_btn
+
+        # Theme toggle button (middle position) - Text-based
+        theme_btn = tk.Button(
+            button_frame,
+            text='Light',  # Will be updated by apply_theme
+            font=('Segoe UI', 8, 'bold'),
+            fg='white',
+            bg='#667eea',
+            bd=0,
+            cursor='hand2',
+            command=self.toggle_theme,
+            activebackground='#5568d3',
+            activeforeground='white',
+            padx=8,
+            pady=4,
+            relief=tk.FLAT
+        )
+        theme_btn.place(relx=1.0, rely=0.5, anchor='e', x=-35, y=0)
+        self.widgets['theme_btn'] = theme_btn
+
+        # Settings button (leftmost) - Text-based
+        settings_btn = tk.Button(
+            button_frame,
+            text='Settings',
+            font=('Segoe UI', 8, 'bold'),
+            fg='white',
+            bg='#667eea',
+            bd=0,
+            cursor='hand2',
+            command=self.show_settings,
+            activebackground='#5568d3',
+            activeforeground='white',
+            padx=8,
+            pady=4,
+            relief=tk.FLAT
+        )
+        settings_btn.place(relx=1.0, rely=0.5, anchor='e', x=-95, y=0)
+        self.widgets['settings_btn'] = settings_btn
+
+        # Content frame with padding - positioned BELOW buttons
+        content_frame = tk.Frame(main_frame, bg='#e8eaed')
+        content_frame.pack(fill=tk.BOTH, expand=True, padx=CONFIG["window_padding"], pady=(0, CONFIG["window_padding"]))
+        self.widgets['content_frame'] = content_frame
 
         # Quote text - NORMAL CASE, elegant typography
         quote_font = font.Font(family='Segoe UI', size=13, weight='normal')
@@ -572,7 +587,7 @@ class QuoteOverlay:
             justify=tk.LEFT,
             cursor='hand2'
         )
-        self.quote_label.pack(pady=(6, 10), anchor='w')
+        self.quote_label.pack(pady=(0, 10), anchor='w')
 
         # Bind click to search
         self.quote_label.bind('<Button-1>', lambda e: self.search_quote(quote_data["text"]))
