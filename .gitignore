@@ -56,5 +56,10 @@ test-results/
 # Quote tracker (user-specific state)
 .quote_tracker.json
 
-# Developer archive folder (personal use only)
-_archive_developer_files/
+# User settings (never commit - personal preferences)
+user_settings.json
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo

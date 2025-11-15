@@ -1,0 +1,572 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Design Preview - Morning Motivation Quotes</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 40px 20px;
+      }
+
+      .preview-container {
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        text-align: center;
+        color: white;
+        margin-bottom: 20px;
+        font-size: 32px;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+
+      .subtitle {
+        text-align: center;
+        color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 40px;
+        font-size: 16px;
+      }
+
+      .designs-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: 40px;
+        margin-bottom: 40px;
+      }
+
+      .design-wrapper {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        padding: 30px;
+        backdrop-filter: blur(10px);
+      }
+
+      .design-header {
+        margin-bottom: 20px;
+      }
+
+      .design-title {
+        color: white;
+        font-size: 24px;
+        margin-bottom: 8px;
+      }
+
+      .design-subtitle {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 14px;
+      }
+
+      .design-preview {
+        position: relative;
+        min-height: 300px;
+        background: rgba(0, 0, 0, 0.1);
+        border-radius: 12px;
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* ========================================
+           Design A: Clean Minimalist
+           ======================================== */
+
+      .quote-container.clean-minimalist {
+        position: relative;
+        width: 100%;
+        max-width: 380px;
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow:
+          0 4px 24px rgba(0, 0, 0, 0.1),
+          0 0 0 1px rgba(0, 0, 0, 0.05);
+        padding: 28px;
+        font-family:
+          'Segoe UI',
+          -apple-system,
+          BlinkMacSystemFont,
+          'Roboto',
+          sans-serif;
+        animation: fadeInUp 0.4s ease-out forwards;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .quote-container.clean-minimalist .close-btn {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        width: 32px;
+        height: 32px;
+        background: none;
+        border: none;
+        color: #9ca3af;
+        font-size: 28px;
+        line-height: 1;
+        cursor: pointer;
+        transition:
+          color 0.2s ease,
+          transform 0.2s ease;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 6px;
+      }
+
+      .quote-container.clean-minimalist .close-btn:hover {
+        color: #374151;
+        background-color: #f3f4f6;
+        transform: scale(1.1);
+      }
+
+      .quote-container.clean-minimalist .quote-content {
+        padding-right: 16px;
+      }
+
+      .quote-container.clean-minimalist .quote-text {
+        margin: 0 0 16px 0;
+        font-size: 18px;
+        line-height: 1.6;
+        color: #1a1a1a;
+        font-weight: 400;
+        letter-spacing: -0.01em;
+      }
+
+      .quote-container.clean-minimalist .quote-author {
+        margin: 0;
+        font-size: 14px;
+        color: #6b6b6b;
+        font-weight: 500;
+      }
+
+      .quote-container.clean-minimalist:hover {
+        box-shadow:
+          0 8px 32px rgba(0, 0, 0, 0.12),
+          0 0 0 1px rgba(0, 0, 0, 0.05);
+      }
+
+      /* ========================================
+           Design B: Modern Gradient
+           ======================================== */
+
+      .quote-container.modern-gradient {
+        position: relative;
+        width: 100%;
+        max-width: 380px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 16px;
+        padding: 2px;
+        font-family:
+          'Inter',
+          'SF Pro Display',
+          -apple-system,
+          system-ui,
+          sans-serif;
+        animation: slideInRight 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+
+      .quote-container.modern-gradient::before {
+        content: '';
+        position: absolute;
+        inset: 2px;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.97) 0%,
+          rgba(255, 255, 255, 0.95) 100%
+        );
+        border-radius: 14px;
+        z-index: -1;
+      }
+
+      @keyframes slideInRight {
+        from {
+          opacity: 0;
+          transform: translateX(100px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      .quote-container.modern-gradient .close-btn {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        width: 32px;
+        height: 32px;
+        background-color: rgba(0, 0, 0, 0.05);
+        border: none;
+        color: #4a5568;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        z-index: 1;
+      }
+
+      .quote-container.modern-gradient .close-btn:hover {
+        background-color: rgba(0, 0, 0, 0.1);
+        transform: rotate(90deg) scale(1.1);
+      }
+
+      .quote-container.modern-gradient .quote-content {
+        padding: 28px;
+        padding-right: 52px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .quote-container.modern-gradient .quote-text {
+        margin: 0 0 16px 0;
+        font-size: 18px;
+        line-height: 1.7;
+        color: #2d3748;
+        font-weight: 500;
+        letter-spacing: -0.02em;
+        position: relative;
+      }
+
+      .quote-container.modern-gradient .quote-text::before {
+        content: '';
+        position: absolute;
+        left: -20px;
+        top: 8px;
+        width: 4px;
+        height: calc(100% - 16px);
+        background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+        border-radius: 2px;
+        opacity: 0.6;
+      }
+
+      .quote-container.modern-gradient .quote-author {
+        margin: 0;
+        font-size: 14px;
+        color: #4a5568;
+        font-weight: 600;
+      }
+
+      .quote-container.modern-gradient:hover {
+        box-shadow:
+          0 12px 40px rgba(102, 126, 234, 0.4),
+          0 0 0 1px rgba(102, 126, 234, 0.1);
+      }
+
+      /* ========================================
+           Design C: Glassmorphism
+           ======================================== */
+
+      .quote-container.glassmorphism {
+        position: relative;
+        width: 100%;
+        max-width: 400px;
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(12px) saturate(180%);
+        -webkit-backdrop-filter: blur(12px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 20px;
+        padding: 32px;
+        font-family:
+          'SF Pro Display',
+          'Inter',
+          -apple-system,
+          system-ui,
+          sans-serif;
+        box-shadow:
+          0 8px 32px rgba(0, 0, 0, 0.1),
+          0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+        animation: scaleIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      }
+
+      .quote-container.glassmorphism .glass-background {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          135deg,
+          rgba(59, 130, 246, 0.1) 0%,
+          rgba(147, 51, 234, 0.1) 100%
+        );
+        border-radius: 20px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+      }
+
+      .quote-container.glassmorphism:hover .glass-background {
+        opacity: 1;
+      }
+
+      @keyframes scaleIn {
+        from {
+          opacity: 0;
+          transform: scale(0.8);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      .quote-container.glassmorphism .close-btn {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        width: 36px;
+        height: 36px;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        color: #374151;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        z-index: 1;
+      }
+
+      .quote-container.glassmorphism .close-btn:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: rotate(90deg) scale(1.15);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+
+      .quote-container.glassmorphism .quote-content {
+        position: relative;
+        z-index: 1;
+        padding-right: 24px;
+      }
+
+      .quote-container.glassmorphism .quote-text {
+        margin: 0 0 16px 0;
+        font-size: 17px;
+        line-height: 1.65;
+        color: #1f2937;
+        font-weight: 500;
+        letter-spacing: -0.015em;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+      }
+
+      .quote-container.glassmorphism .quote-author {
+        margin: 0;
+        font-size: 14px;
+        color: #374151;
+        font-weight: 600;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+      }
+
+      .quote-container.glassmorphism:hover {
+        box-shadow:
+          0 12px 40px rgba(59, 130, 246, 0.3),
+          0 0 0 1px rgba(255, 255, 255, 0.2) inset,
+          0 0 40px rgba(59, 130, 246, 0.1);
+        border-color: rgba(255, 255, 255, 0.4);
+      }
+
+      /* Info section */
+      .info-box {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        border-radius: 16px;
+        padding: 30px;
+        color: white;
+        margin-top: 40px;
+      }
+
+      .info-box h2 {
+        margin-bottom: 16px;
+        font-size: 24px;
+      }
+
+      .info-box p {
+        margin-bottom: 12px;
+        line-height: 1.6;
+        opacity: 0.95;
+      }
+
+      .info-box ul {
+        list-style: none;
+        padding-left: 0;
+      }
+
+      .info-box li {
+        padding: 8px 0;
+        padding-left: 24px;
+        position: relative;
+      }
+
+      .info-box li::before {
+        content: '→';
+        position: absolute;
+        left: 0;
+        font-weight: bold;
+      }
+
+      @media (max-width: 768px) {
+        .designs-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="preview-container">
+      <h1>Morning Motivation Quote Generator - Design Preview</h1>
+      <p class="subtitle">Compare all three design variations side-by-side</p>
+
+      <div class="designs-grid">
+        <!-- Design A -->
+        <div class="design-wrapper">
+          <div class="design-header">
+            <div class="design-title">Design A: Clean Minimalist</div>
+            <div class="design-subtitle">Timeless & Classic</div>
+          </div>
+          <div class="design-preview">
+            <div class="quote-container clean-minimalist">
+              <button class="close-btn" aria-label="Close quote">&times;</button>
+              <div class="quote-content">
+                <p class="quote-text">
+                  "The capacity to learn is a gift; the ability to learn is a skill; the willingness
+                  to learn is a choice."
+                </p>
+                <p class="quote-author">— Brian Herbert</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Design B -->
+        <div class="design-wrapper">
+          <div class="design-header">
+            <div class="design-title">Design B: Modern Gradient ⭐</div>
+            <div class="design-subtitle">Contemporary & Balanced (Recommended)</div>
+          </div>
+          <div class="design-preview">
+            <div class="quote-container modern-gradient">
+              <button class="close-btn" aria-label="Close quote">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 14 14"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M1 1L13 13M13 1L1 13"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                  />
+                </svg>
+              </button>
+              <div class="quote-content">
+                <p class="quote-text">
+                  "The capacity to learn is a gift; the ability to learn is a skill; the willingness
+                  to learn is a choice."
+                </p>
+                <p class="quote-author">— Brian Herbert</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Design C -->
+        <div class="design-wrapper">
+          <div class="design-header">
+            <div class="design-title">Design C: Glassmorphism</div>
+            <div class="design-subtitle">Cutting-edge & Modern</div>
+          </div>
+          <div class="design-preview">
+            <div class="quote-container glassmorphism">
+              <div class="glass-background"></div>
+              <button class="close-btn" aria-label="Close quote">
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M2 2L14 14M14 2L2 14"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                  />
+                </svg>
+              </button>
+              <div class="quote-content">
+                <p class="quote-text">
+                  "The capacity to learn is a gift; the ability to learn is a skill; the willingness
+                  to learn is a choice."
+                </p>
+                <p class="quote-author">— Brian Herbert</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <h2>How to Use This Preview</h2>
+        <p>This page displays all three design variations so you can compare them visually:</p>
+        <ul>
+          <li><strong>Hover</strong> over each design to see the hover effects</li>
+          <li><strong>Click</strong> the close buttons to test interactions</li>
+          <li><strong>Resize</strong> your browser to test responsiveness</li>
+          <li><strong>Observe</strong> the entrance animations when the page loads</li>
+        </ul>
+        <p style="margin-top: 20px">
+          <strong>Recommendation:</strong> Design B (Modern Gradient) provides the best balance of
+          aesthetics, performance, and compatibility.
+        </p>
+        <p>
+          For complete implementation details, see <code>DESIGN_AB_TEST.md</code> and
+          <code>DESIGN_QUICK_REFERENCE.md</code>
+        </p>
+      </div>
+    </div>
+
+    <script>
+      // Add click event to all close buttons for demo purposes
+      document.querySelectorAll('.close-btn').forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          alert('Close button clicked! In the actual app, this would dismiss the quote.');
+        });
+      });
+
+      // Log which design is being viewed
+      console.log('Design Preview loaded - Morning Motivation Quote Generator');
+      console.log('Hover over the quotes to see interactive effects!');
+    </script>
+  </body>
+</html>

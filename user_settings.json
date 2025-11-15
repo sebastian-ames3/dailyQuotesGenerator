@@ -1,7 +1,7 @@
 {
-  "timerDuration": 15,
+  "timerDuration": 20,
   "position": "bottomRight",
-  "fontSize": "medium",
+  "fontSize": "large",
   "category": "motivation",
   "theme": "dark"
 }
