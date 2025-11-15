@@ -34,10 +34,37 @@
       }
     },
     {
-      "files": ["design-preview.html"],
+      "files": [
+        "tests/**/*.js",
+        "**/*.spec.js",
+        "playwright.config.js",
+        "test-*.js"
+      ],
+      "env": {
+        "node": true,
+        "browser": true
+      },
+      "rules": {
+        "no-console": "off",
+        "no-unused-vars": "off"
+      }
+    },
+    {
+      "files": [
+        "design-preview.html",
+        "simple_test.html",
+        "test_buttons.html",
+        "index.html"
+      ],
       "rules": {
         "no-alert": "off",
         "no-console": "off"
+      }
+    },
+    {
+      "files": ["test_buttons.html"],
+      "rules": {
+        "no-unused-vars": "off"
       }
     }
   ]

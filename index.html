@@ -847,22 +847,22 @@
         container.style.transform = '';
 
         switch (position) {
-          case 'bottomRight':
-            container.style.bottom = '24px';
-            container.style.right = '24px';
-            break;
-          case 'bottomLeft':
-            container.style.bottom = '24px';
-            container.style.left = '24px';
-            break;
-          case 'topRight':
-            container.style.top = '24px';
-            container.style.right = '24px';
-            break;
-          case 'topLeft':
-            container.style.top = '24px';
-            container.style.left = '24px';
-            break;
+        case 'bottomRight':
+          container.style.bottom = '24px';
+          container.style.right = '24px';
+          break;
+        case 'bottomLeft':
+          container.style.bottom = '24px';
+          container.style.left = '24px';
+          break;
+        case 'topRight':
+          container.style.top = '24px';
+          container.style.right = '24px';
+          break;
+        case 'topLeft':
+          container.style.top = '24px';
+          container.style.left = '24px';
+          break;
         }
       }
 
@@ -978,7 +978,7 @@
 
       // Normalize text to fix capitalization issues
       // Preserves punctuation (!, ?, ...) and handles curly apostrophes
-      const SENTENCE_SPLIT = /(?<=[.!?…])\s+(?=["""''(\[]?\w)/u;
+      const SENTENCE_SPLIT = /(?<=[.!?…])\s+(?=["""''([]?\w)/u;
       const INTERIOR_UPPER = /(?<!^)(?<![''])[A-Z]/gu;
 
       function normalizeText(text) {

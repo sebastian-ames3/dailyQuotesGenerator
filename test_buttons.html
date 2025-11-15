@@ -46,11 +46,11 @@
         window.open(url, '_blank');
         document.getElementById('result').innerHTML =
           `<strong>Opened:</strong> index.html?v=${timestamp}<br>` +
-          `This forces a fresh load bypassing cache.<br><br>` +
-          `<strong>Look for these 3 buttons in top-right:</strong><br>` +
-          `⚙️ Settings (leftmost)<br>` +
-          `🌙 Theme toggle (middle)<br>` +
-          `× Close (rightmost)`;
+          'This forces a fresh load bypassing cache.<br><br>' +
+          '<strong>Look for these 3 buttons in top-right:</strong><br>' +
+          '⚙️ Settings (leftmost)<br>' +
+          '🌙 Theme toggle (middle)<br>' +
+          '× Close (rightmost)';
       }
 
       async function checkFile() {
@@ -64,7 +64,7 @@
           const hasPaddingTop = text.includes('padding-top: 56px');
 
           document.getElementById('result').innerHTML =
-            `<strong>File Check Results:</strong><br>` +
+            '<strong>File Check Results:</strong><br>' +
             `Settings button in HTML: ${hasSettings ? '✓ YES' : '✗ NO'}<br>` +
             `Theme button in HTML: ${hasTheme ? '✓ YES' : '✗ NO'}<br>` +
             `Close button in HTML: ${hasClose ? '✓ YES' : '✗ NO'}<br>` +
