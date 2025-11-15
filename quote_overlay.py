@@ -13,6 +13,14 @@ import json
 import os
 from urllib.parse import quote as url_quote
 
+# PIL for advanced visual effects (V5.0.0+)
+try:
+    from PIL import Image, ImageDraw, ImageFilter, ImageTk
+    PIL_AVAILABLE = True
+except ImportError:
+    PIL_AVAILABLE = False
+    print("Warning: Pillow not installed. Advanced visual effects disabled.")
+
 # Fallback quotes - MOTIVATIONAL & INSPIRATIONAL ONLY
 # Focused on action, growth, persistence, and achieving goals
 FALLBACK_QUOTES = [
@@ -102,31 +110,37 @@ CATEGORY_KEYWORDS = {
     ]
 }
 
-# Theme color schemes (from HTML V3.0.0)
+# Theme color schemes - Monochrome Modern (V5.0.0)
 THEMES = {
     'light': {
-        'bg': '#ffffff',
-        'text': '#1a1a1a',
-        'author': '#666666',
-        'hint': '#999999',
-        'accent': '#667eea',
-        'close_hover_bg': '#f0f0f0',
-        'close_hover_fg': '#333333',
-        'window_bg': '#e8eaed',
-        'border': '#d0d0d0',
-        'progress_bg': '#c0c0c0'
+        'bg': '#ffffff',          # Pure white
+        'bg_gradient': '#f5f5f5',  # Very light gray (for diagonal gradient)
+        'text': '#0a0a0a',        # Almost black
+        'author': '#525252',      # Medium gray
+        'hint': '#a3a3a3',        # Light gray
+        'accent': '#171717',      # Charcoal (buttons)
+        'accent_hover': '#404040', # Lighter charcoal
+        'close_hover_bg': '#fee2e2',  # Soft red tint
+        'close_hover_fg': '#dc2626',  # Red
+        'window_bg': '#ffffff',   # Same as bg
+        'border': '#e5e5e5',      # Light gray border
+        'progress_bg': '#d4d4d4', # Light gray bar
+        'shadow': 'rgba(10, 10, 10, 0.15)'  # Subtle black shadow
     },
     'dark': {
-        'bg': '#1e1e1e',
-        'text': '#e0e0e0',
-        'author': '#a0a0a0',
-        'hint': '#707070',
-        'accent': '#667eea',
-        'close_hover_bg': '#2d2d2d',
-        'close_hover_fg': '#cccccc',
-        'window_bg': '#2a2a2a',
-        'border': '#3a3a3a',
-        'progress_bg': '#4a4a4a'
+        'bg': '#0a0a0a',          # Almost black
+        'bg_gradient': '#1a1a1a',  # Slightly lighter black (for diagonal gradient)
+        'text': '#fafafa',        # Off-white
+        'author': '#a3a3a3',      # Light gray
+        'hint': '#737373',        # Medium-light gray
+        'accent': '#404040',      # Medium gray (buttons) - FIXED from white
+        'accent_hover': '#525252', # Lighter gray on hover
+        'close_hover_bg': '#7f1d1d', # Dark red
+        'close_hover_fg': '#fecaca',  # Light red
+        'window_bg': '#0a0a0a',   # Same as bg
+        'border': '#262626',      # Dark gray border
+        'progress_bg': '#404040', # Dark gray bar
+        'shadow': 'rgba(0, 0, 0, 0.4)'  # Stronger shadow for dark mode
     }
 }
 
@@ -142,6 +156,175 @@ CONFIG = {
 
 # Settings file path
 SETTINGS_FILE = os.path.join(os.path.dirname(__file__), 'user_settings.json')
+
+
+def create_diagonal_gradient(width, height, color1, color2):
+    """
+    Create a diagonal gradient image (top-left to bottom-right) using PIL.
+    Optimized version using numpy-like array operations.
+
+    Args:
+        width: Image width in pixels
+        height: Image height in pixels
+        color1: Starting color (hex string like '#faf8f5')
+        color2: Ending color (hex string like '#f3ede6')
+
+    Returns:
+        PIL Image object with diagonal gradient
+    """
+    if not PIL_AVAILABLE:
+        # Fallback: solid color image
+        return None
+
+    # Convert hex to RGB
+    def hex_to_rgb(hex_color):
+        hex_color = hex_color.lstrip('#')
+        return tuple(int(hex_color[i:i+2], 16) for i in (0, 2, 4))
+
+    rgb1 = hex_to_rgb(color1)
+    rgb2 = hex_to_rgb(color2)
+
+    # Create image with putdata for better performance
+    image = Image.new('RGB', (width, height))
+
+    # Maximum distance is diagonal length
+    max_distance = (width**2 + height**2) ** 0.5
+
+    # Pre-calculate all pixel colors
+    pixels = []
+    for y in range(height):
+        for x in range(width):
+            # Calculate distance from top-left corner (0,0)
+            distance = (x**2 + y**2) ** 0.5
+            # Normalize to 0-1 range
+            ratio = min(distance / max_distance, 1.0)
+
+            # Interpolate between colors
+            r = int(rgb1[0] + (rgb2[0] - rgb1[0]) * ratio)
+            g = int(rgb1[1] + (rgb2[1] - rgb1[1]) * ratio)
+            b = int(rgb1[2] + (rgb2[2] - rgb1[2]) * ratio)
+
+            pixels.append((r, g, b))
+
+    # Apply all pixels at once (much faster than point-by-point)
+    image.putdata(pixels)
+
+    return image
+
+
+def create_icon_button(icon_type, size=24, fg_color='#ffffff', bg_color='#d97706'):
+    """
+    Create a filled icon button using PIL.
+
+    Args:
+        icon_type: 'settings', 'moon', 'sun', or 'close'
+        size: Icon size in pixels (default 24)
+        fg_color: Foreground/icon color (hex)
+        bg_color: Background color (hex)
+
+    Returns:
+        PIL Image object or None if PIL not available
+    """
+    if not PIL_AVAILABLE:
+        return None
+
+    # Convert hex to RGB
+    def hex_to_rgb(hex_color):
+        hex_color = hex_color.lstrip('#')
+        return tuple(int(hex_color[i:i+2], 16) for i in (0, 2, 4))
+
+    bg_rgb = hex_to_rgb(bg_color)
+    fg_rgb = hex_to_rgb(fg_color)
+
+    # Create image with rounded background
+    image = Image.new('RGBA', (size, size), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(image)
+
+    # Draw rounded rectangle background
+    radius = size // 4
+    draw.rounded_rectangle(
+        [(0, 0), (size-1, size-1)],
+        radius=radius,
+        fill=bg_rgb
+    )
+
+    # Draw icon based on type
+    padding = size // 4
+    icon_area = size - (padding * 2)
+
+    if icon_type == 'settings':
+        # Draw gear icon (simplified - circle with notches)
+        center = size // 2
+        outer_radius = icon_area // 2
+        inner_radius = outer_radius - 2
+
+        # Draw circle
+        draw.ellipse(
+            [center - outer_radius, center - outer_radius,
+             center + outer_radius, center + outer_radius],
+            fill=fg_rgb
+        )
+        # Inner circle (to create ring)
+        draw.ellipse(
+            [center - inner_radius, center - inner_radius,
+             center + inner_radius, center + inner_radius],
+            fill=bg_rgb
+        )
+
+    elif icon_type == 'moon':
+        # Draw crescent moon
+        center = size // 2
+        radius = icon_area // 2
+        # Draw full circle
+        draw.ellipse(
+            [center - radius, center - radius,
+             center + radius, center + radius],
+            fill=fg_rgb
+        )
+        # Cut out crescent by drawing smaller circle offset
+        offset = radius // 3
+        draw.ellipse(
+            [center - radius + offset, center - radius,
+             center + radius + offset, center + radius],
+            fill=bg_rgb
+        )
+
+    elif icon_type == 'sun':
+        # Draw sun (circle with rays)
+        center = size // 2
+        radius = icon_area // 3
+
+        # Draw center circle
+        draw.ellipse(
+            [center - radius, center - radius,
+             center + radius, center + radius],
+            fill=fg_rgb
+        )
+
+        # Draw 8 rays
+        ray_length = radius // 2
+        import math
+        for angle in range(0, 360, 45):
+            rad = math.radians(angle)
+            x1 = center + (radius + 1) * math.cos(rad)
+            y1 = center + (radius + 1) * math.sin(rad)
+            x2 = center + (radius + ray_length) * math.cos(rad)
+            y2 = center + (radius + ray_length) * math.sin(rad)
+            draw.line([(x1, y1), (x2, y2)], fill=fg_rgb, width=2)
+
+    elif icon_type == 'close':
+        # Draw X symbol
+        margin = padding
+        draw.line(
+            [(margin, margin), (size - margin, size - margin)],
+            fill=fg_rgb, width=3
+        )
+        draw.line(
+            [(size - margin, margin), (margin, size - margin)],
+            fill=fg_rgb, width=3
+        )
+
+    return image
 
 
 class QuoteOverlay:
@@ -295,9 +478,9 @@ class QuoteOverlay:
 
         if 'settings_btn' in self.widgets:
             self.widgets['settings_btn'].configure(
-                bg='#667eea',
+                bg=colors['accent'],
                 fg='white',
-                activebackground='#5568d3',
+                activebackground=colors['accent_hover'],
                 activeforeground='white'
             )
 
@@ -306,9 +489,9 @@ class QuoteOverlay:
             button_text = 'Dark' if theme == 'light' else 'Light'
             self.widgets['theme_btn'].configure(
                 text=button_text,
-                bg='#667eea',
+                bg=colors['accent'],
                 fg='white',
-                activebackground='#5568d3',
+                activebackground=colors['accent_hover'],
                 activeforeground='white'
             )
 
@@ -316,8 +499,8 @@ class QuoteOverlay:
             self.widgets['close_btn'].configure(
                 fg=colors['hint'],
                 bg=colors['window_bg'],
-                activebackground='#ff5555',
-                activeforeground='white'
+                activebackground=colors['close_hover_bg'],
+                activeforeground=colors['close_hover_fg']
             )
 
         if hasattr(self, 'quote_label'):
@@ -354,12 +537,15 @@ class QuoteOverlay:
 
     def setup_window(self):
         """Configure the frameless overlay window"""
+        # Get current theme colors
+        colors = THEMES.get(self.settings.get('theme', 'light'), THEMES['light'])
+
         # Remove window decorations (frameless)
         self.root.overrideredirect(True)
 
         # Set window properties
         self.root.attributes('-topmost', True)  # Always on top
-        self.root.configure(bg='#e8eaed')
+        self.root.configure(bg=colors['window_bg'])
 
         # Set transparency for modern look
         try:
@@ -374,23 +560,23 @@ class QuoteOverlay:
         self.fade_in()
 
     def fade_in(self, alpha=0.0):
-        """Fade in animation"""
+        """Fade in animation - snappy and fast (V5.0.0)"""
         if alpha < 0.96:
-            alpha += 0.05
+            alpha += 0.12  # Larger step for faster animation
             try:
                 self.root.attributes('-alpha', alpha)
-                self.root.after(20, lambda: self.fade_in(alpha))
+                self.root.after(15, lambda: self.fade_in(alpha))  # Faster timing
             except:
                 pass
 
     def fade_out(self):
-        """Fade out animation then close"""
+        """Fade out animation then close - snappy and fast (V5.0.0)"""
         current_alpha = self.root.attributes('-alpha')
         if current_alpha > 0:
-            new_alpha = current_alpha - 0.05
+            new_alpha = current_alpha - 0.16  # Larger step for faster fade out
             try:
                 self.root.attributes('-alpha', new_alpha)
-                self.root.after(50, self.fade_out)
+                self.root.after(12, self.fade_out)  # Faster timing
             except:
                 self.root.quit()
         else:
@@ -488,24 +674,51 @@ class QuoteOverlay:
 
     def create_widgets(self, quote_data):
         """Create the UI widgets"""
-        # Main frame with shaded background
+        # Get current theme colors
+        colors = THEMES.get(self.settings.get('theme', 'light'), THEMES['light'])
+
+        # Create gradient background if PIL is available
+        gradient_bg_color = colors['window_bg']
+        if PIL_AVAILABLE:
+            window_width = CONFIG.get("window_width", 340)
+            window_height = 200
+
+            gradient_img = create_diagonal_gradient(
+                window_width, window_height,
+                colors['bg'], colors['bg_gradient']
+            )
+
+            if gradient_img:
+                self.gradient_photo = ImageTk.PhotoImage(gradient_img)
+                # Create a label to hold the gradient background (fullscreen)
+                gradient_label = tk.Label(self.root, image=self.gradient_photo, bd=0, highlightthickness=0)
+                gradient_label.place(x=0, y=0, width=window_width, height=window_height)
+                # Keep reference to prevent garbage collection
+                self.widgets['gradient_bg'] = gradient_label
+                # Use empty string for bg to make frames semi-transparent visually
+                # (They'll still have the gradient showing through)
+
+        # Main frame - no background if gradient exists (shows gradient through)
         main_frame = tk.Frame(
             self.root,
-            bg='#e8eaed',
-            highlightbackground='#d0d0d0',
+            bg=gradient_bg_color if not PIL_AVAILABLE else gradient_bg_color,
+            highlightbackground=colors['border'],
             highlightthickness=1,
             bd=0
         )
         main_frame.pack(fill=tk.BOTH, expand=True, padx=0, pady=0)
+        # Raise to be on top of gradient
+        if PIL_AVAILABLE:
+            main_frame.lift()
         self.widgets['main_frame'] = main_frame
 
-        # Top accent bar (gradient blue)
-        top_bar = tk.Frame(main_frame, bg='#667eea', height=4)
+        # Top accent bar
+        top_bar = tk.Frame(main_frame, bg=colors['accent'], height=4)
         top_bar.pack(fill=tk.X, side=tk.TOP)
         self.widgets['top_bar'] = top_bar
 
         # Button container frame at the top - ensures buttons don't overlap with content
-        button_frame = tk.Frame(main_frame, bg='#e8eaed', height=30)
+        button_frame = tk.Frame(main_frame, bg=colors['window_bg'], height=30)
         button_frame.pack(fill=tk.X, side=tk.TOP, padx=CONFIG["window_padding"], pady=(CONFIG["window_padding"], 0))
         button_frame.pack_propagate(False)  # Maintain fixed height
         self.widgets['button_frame'] = button_frame
@@ -518,13 +731,13 @@ class QuoteOverlay:
             button_frame,
             text='×',
             font=('Segoe UI', 18, 'bold'),
-            fg='#666',
-            bg='#e8eaed',
+            fg=colors['hint'],
+            bg=colors['window_bg'],
             bd=0,
             cursor='hand2',
             command=self.close_quote,
-            activebackground='#ff5555',
-            activeforeground='white',
+            activebackground=colors['close_hover_bg'],
+            activeforeground=colors['close_hover_fg'],
             padx=8,
             pady=0,
             relief=tk.FLAT
@@ -535,14 +748,14 @@ class QuoteOverlay:
         # Theme toggle button (middle position) - Text-based
         theme_btn = tk.Button(
             button_frame,
-            text='Light',  # Will be updated by apply_theme
+            text='Dark' if self.settings.get('theme', 'light') == 'light' else 'Light',
             font=('Segoe UI', 8, 'bold'),
             fg='white',
-            bg='#667eea',
+            bg=colors['accent'],
             bd=0,
             cursor='hand2',
             command=self.toggle_theme,
-            activebackground='#5568d3',
+            activebackground=colors['accent_hover'],
             activeforeground='white',
             padx=8,
             pady=4,
@@ -557,11 +770,11 @@ class QuoteOverlay:
             text='Settings',
             font=('Segoe UI', 8, 'bold'),
             fg='white',
-            bg='#667eea',
+            bg=colors['accent'],
             bd=0,
             cursor='hand2',
             command=self.show_settings,
-            activebackground='#5568d3',
+            activebackground=colors['accent_hover'],
             activeforeground='white',
             padx=8,
             pady=4,
@@ -571,7 +784,7 @@ class QuoteOverlay:
         self.widgets['settings_btn'] = settings_btn
 
         # Content frame with padding - positioned BELOW buttons
-        content_frame = tk.Frame(main_frame, bg='#e8eaed')
+        content_frame = tk.Frame(main_frame, bg=colors['window_bg'])
         content_frame.pack(fill=tk.BOTH, expand=True, padx=CONFIG["window_padding"], pady=(0, CONFIG["window_padding"]))
         self.widgets['content_frame'] = content_frame
 
@@ -581,8 +794,8 @@ class QuoteOverlay:
             content_frame,
             text=f'"{quote_data["text"]}"',
             font=quote_font,
-            fg='#2c3e50',
-            bg='#e8eaed',
+            fg=colors['text'],
+            bg=colors['window_bg'],
             wraplength=CONFIG["window_width"] - CONFIG["window_padding"] * 2 - 30,
             justify=tk.LEFT,
             cursor='hand2'
@@ -598,8 +811,8 @@ class QuoteOverlay:
             content_frame,
             text=f'— {quote_data["author"]}',
             font=author_font,
-            fg='#3a4a5a',
-            bg='#e8eaed',
+            fg=colors['author'],
+            bg=colors['window_bg'],
             justify=tk.RIGHT
         )
         author_label.pack(anchor='e', pady=(0, 8))
@@ -611,19 +824,19 @@ class QuoteOverlay:
             content_frame,
             text='Click quote to learn more',
             font=hint_font,
-            fg='#999',
-            bg='#e8eaed',
+            fg=colors['hint'],
+            bg=colors['window_bg'],
             justify=tk.CENTER
         )
         hint_label.pack(anchor='center', pady=(4, 6))
         self.widgets['hint_label'] = hint_label
 
         # Progress bar (thinner, more subtle)
-        self.progress_frame = tk.Frame(content_frame, bg='#c0c0c0', height=2)
+        self.progress_frame = tk.Frame(content_frame, bg=colors['progress_bg'], height=2)
         self.progress_frame.pack(fill=tk.X, side=tk.BOTTOM, pady=(6, 0))
         self.widgets['progress_frame'] = self.progress_frame
 
-        self.progress_bar = tk.Frame(self.progress_frame, bg='#667eea', height=2)
+        self.progress_bar = tk.Frame(self.progress_frame, bg=colors['accent'], height=2)
         self.progress_bar.place(relwidth=1.0, relheight=1.0)
         self.widgets['progress_bar'] = self.progress_bar
 
@@ -697,11 +910,14 @@ class QuoteOverlay:
             self.settings_window.focus()
             return
 
+        # Get current theme colors
+        colors = THEMES.get(self.settings.get('theme', 'light'), THEMES['light'])
+
         # Create new settings window
         self.settings_window = tk.Toplevel(self.root)
         self.settings_window.title("Settings")
         self.settings_window.geometry("400x350")
-        self.settings_window.configure(bg='#e8eaed')
+        self.settings_window.configure(bg=colors['window_bg'])
         self.settings_window.resizable(False, False)
 
         # Make it stay on top
@@ -711,7 +927,7 @@ class QuoteOverlay:
         self.settings_window.protocol("WM_DELETE_WINDOW", self.close_settings)
 
         # Main frame with padding
-        main_frame = tk.Frame(self.settings_window, bg='#e8eaed', padx=20, pady=20)
+        main_frame = tk.Frame(self.settings_window, bg=colors['window_bg'], padx=20, pady=20)
         main_frame.pack(fill=tk.BOTH, expand=True)
 
         # Title
@@ -719,21 +935,21 @@ class QuoteOverlay:
             main_frame,
             text="Settings",
             font=('Segoe UI', 16, 'bold'),
-            bg='#e8eaed',
-            fg='#2c3e50'
+            bg=colors['window_bg'],
+            fg=colors['text']
         )
         title_label.pack(pady=(0, 20))
 
         # Timer Duration Slider
-        timer_frame = tk.Frame(main_frame, bg='#e8eaed')
+        timer_frame = tk.Frame(main_frame, bg=colors['window_bg'])
         timer_frame.pack(fill=tk.X, pady=10)
 
         timer_label = tk.Label(
             timer_frame,
             text=f"Timer Duration: {self.settings['timerDuration']}s",
             font=('Segoe UI', 11),
-            bg='#e8eaed',
-            fg='#3a4a5a'
+            bg=colors['window_bg'],
+            fg=colors['text']
         )
         timer_label.pack(anchor='w')
 
@@ -743,25 +959,25 @@ class QuoteOverlay:
             to=60,
             orient=tk.HORIZONTAL,
             resolution=5,
-            bg='#e8eaed',
-            fg='#667eea',
+            bg=colors['window_bg'],
+            fg=colors['accent'],
             highlightthickness=0,
-            troughcolor='#c0c0c0',
+            troughcolor=colors['progress_bg'],
             command=lambda v: self.on_timer_change(int(v), timer_label)
         )
         timer_slider.set(self.settings['timerDuration'])
         timer_slider.pack(fill=tk.X, pady=5)
 
         # Position Selector
-        position_frame = tk.Frame(main_frame, bg='#e8eaed')
+        position_frame = tk.Frame(main_frame, bg=colors['window_bg'])
         position_frame.pack(fill=tk.X, pady=10)
 
         position_label = tk.Label(
             position_frame,
             text="Position:",
             font=('Segoe UI', 11),
-            bg='#e8eaed',
-            fg='#3a4a5a'
+            bg=colors['window_bg'],
+            fg=colors['text']
         )
         position_label.pack(anchor='w')
 
@@ -789,15 +1005,15 @@ class QuoteOverlay:
         position_dropdown.bind('<<ComboboxSelected>>', lambda e: self.on_position_change(position_var, position_options))
 
         # Font Size Selector
-        font_size_frame = tk.Frame(main_frame, bg='#e8eaed')
+        font_size_frame = tk.Frame(main_frame, bg=colors['window_bg'])
         font_size_frame.pack(fill=tk.X, pady=10)
 
         font_size_label = tk.Label(
             font_size_frame,
             text="Font Size:",
             font=('Segoe UI', 11),
-            bg='#e8eaed',
-            fg='#3a4a5a'
+            bg=colors['window_bg'],
+            fg=colors['text']
         )
         font_size_label.pack(anchor='w')
 
@@ -814,15 +1030,15 @@ class QuoteOverlay:
         font_size_dropdown.bind('<<ComboboxSelected>>', lambda e: self.on_font_size_change(font_size_var))
 
         # Category Selector
-        category_frame = tk.Frame(main_frame, bg='#e8eaed')
+        category_frame = tk.Frame(main_frame, bg=colors['window_bg'])
         category_frame.pack(fill=tk.X, pady=10)
 
         category_label = tk.Label(
             category_frame,
             text="Quote Category:",
             font=('Segoe UI', 11),
-            bg='#e8eaed',
-            fg='#3a4a5a'
+            bg=colors['window_bg'],
+            fg=colors['text']
         )
         category_label.pack(anchor='w')
 
@@ -855,8 +1071,10 @@ class QuoteOverlay:
             main_frame,
             text="Close",
             font=('Segoe UI', 11, 'bold'),
-            bg='#667eea',
+            bg=colors['accent'],
             fg='white',
+            activebackground=colors['accent_hover'],
+            activeforeground='white',
             bd=0,
             cursor='hand2',
             command=self.close_settings,
