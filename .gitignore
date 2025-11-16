@@ -63,3 +63,6 @@ user_settings.json
 __pycache__/
 *.pyc
 *.pyo
+
+# Developer archive folder (local only - not for GitHub)
+_archive_developer_files/
