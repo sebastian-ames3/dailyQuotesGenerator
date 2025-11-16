@@ -19,6 +19,84 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Release History
 
+## [5.0.2] - 2025-11-15
+
+### Added
+
+- **Security Hardening**
+  - API response validation with size limits (500KB max)
+  - Settings validation with whitelist enforcement
+  - Resource limits for gradient generation (4K resolution max)
+  - Atomic file writes with temp file + rename pattern
+  - Input validation for all user-controlled data
+  - Debug mode flag for development testing
+
+- **Production Repository Structure**
+  - Organized developer archive (local only, not on GitHub)
+  - Archive categories: v1_research/, v2_v3_planning/, v5_planning/, development_docs/, testing/, config_unused/
+  - Clean production root with only 12 essential files
+
+### Changed
+
+- **Code Quality Improvements**
+  - Removed 118 lines of dead code and commented-out blocks
+  - Optimized imports (removed unused PIL.ImageDraw)
+  - Added VERSION constants (__version__, __author__, __license__)
+  - Enhanced error messages with actionable guidance
+  - Improved code documentation and inline comments
+
+- **Dependency Management**
+  - Pinned Pillow version to >=10.0.0,<12.0.0
+  - Added requests>=2.28.0,<3.0.0 with security bounds
+  - Updated requirements.txt with explicit version constraints
+
+- **Documentation**
+  - Streamlined CLAUDE.md from 40,000 → 9,473 characters (76% reduction)
+  - Removed duplicate information and outdated sections
+  - Condensed verbose version histories to key points
+  - Kept only actionable, relevant development information
+
+### Fixed
+
+- **Security Issues**
+  - Potential unbounded memory usage from API responses
+  - Missing validation on settings file data
+  - No resource limits on image generation
+  - Race conditions in settings file writes
+
+### Removed
+
+- **Developer Files (Moved to Local Archive)**
+  - 6 planning documents (PRDs, TASKS)
+  - 5 development docs (CLAUDE.md, cleanup PRDs, TODO)
+  - Testing infrastructure (Playwright tests, package.json, 5 spec files)
+  - Unused configuration (quotes_config.json)
+  - Generated artifacts (node_modules ~12,000 files, test-results)
+  - Empty directories (tests/, scripts/)
+
+### Repository Cleanup
+
+- **Files Deleted:** ~12,000+ generated files (node_modules, test-results)
+- **Files Archived:** 32 developer/research files (local only)
+- **Root Directory:** 30 files → 12 files (60% reduction)
+- **GitHub Repository:** Production code only, no developer artifacts
+- **.gitignore Updated:** Added user_settings.json, Python cache, _archive_developer_files/
+
+### Technical Achievements
+
+- Comprehensive security audit passed
+- Code quality metrics improved
+- Repository structure production-ready
+- All features functional and tested
+- Zero breaking changes for users
+
+### Files Modified
+
+- quote_overlay.py - Security hardening, code cleanup (118 lines removed)
+- requirements.txt - Dependency pinning
+- .gitignore - Added user data exclusions
+- CHANGELOG.md - Documentation of V5.0.2 changes
+
 ## [5.0.1] - 2025-11-14
 
 ### Fixed
