@@ -17,6 +17,47 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [5.0.3] - 2025-11-17
+
+### Added
+
+- **Unlock Trigger Support**
+  - Quote now appears on both login AND unlock events
+  - New task_template.xml with dual trigger configuration
+  - SessionStateChangeTrigger for unlock detection
+
+### Changed
+
+- **Silent Execution (No Console Window)**
+  - Switched from `python.exe` to `pythonw.exe` for windowless execution
+  - Updated install_scheduled_quotes.bat to use XML template approach
+  - Updated LaunchQuote.bat to use pythonw/python3w/pyw
+  - Task scheduler now uses full path to pythonw.exe for reliability
+
+- **Improved Task Scheduler Installation**
+  - Replaced complex PowerShell approach with simple XML template
+  - More reliable multi-trigger configuration
+  - Better error handling and working directory support
+
+### Fixed
+
+- **Critical: Black console window appearing with quote**
+  - Eliminated CMD/PowerShell window that appeared when running quote overlay
+  - Quote now appears silently without any background windows
+
+- **Task Scheduler execution failures**
+  - Fixed "File Not Found" errors by using full pythonw.exe path
+  - Fixed working directory issues with proper WorkingDirectory XML element
+
+### Technical Details
+
+- Task template uses XML with both LogonTrigger and SessionStateChangeTrigger
+- WorkingDirectory properly set in task XML for relative path resolution
+- pythonw.exe ensures GUI-only execution without console window
+- Error code 2147942402 resolved with explicit python path
+
+---
+
 ## Release History
 
 ## [5.0.2] - 2025-11-15

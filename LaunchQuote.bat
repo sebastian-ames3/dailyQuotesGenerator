@@ -6,20 +6,20 @@ REM Place a shortcut to this file in your Windows Startup folder
 REM Get the directory where this batch file is located
 set "SCRIPT_DIR=%~dp0"
 
-REM Try to run the Python overlay script (frameless window - no browser UI at all)
-python "%SCRIPT_DIR%quote_overlay.py" >nul 2>&1
+REM Try to run the Python overlay script (frameless window - no console, no browser UI)
+pythonw "%SCRIPT_DIR%quote_overlay.py"
 if %ERRORLEVEL% EQU 0 (
     exit /b
 )
 
-REM If Python fails, try python3 command
-python3 "%SCRIPT_DIR%quote_overlay.py" >nul 2>&1
+REM If pythonw fails, try python3w command
+python3w "%SCRIPT_DIR%quote_overlay.py"
 if %ERRORLEVEL% EQU 0 (
     exit /b
 )
 
-REM If Python not found, try py launcher
-py "%SCRIPT_DIR%quote_overlay.py" >nul 2>&1
+REM If Python not found, try pyw launcher
+pyw "%SCRIPT_DIR%quote_overlay.py"
 if %ERRORLEVEL% EQU 0 (
     exit /b
 )
